@@ -4,6 +4,8 @@ Learn HTML, JavaScript, Processing, Python, C++, and Java with lessons, examples
 
 Progression: **CodeBuddy Basics** → clear a language → **CodeBuddy University** (advanced tracks).
 
+**Live site:** https://joelle-pixel.github.io/codebuddy/
+
 
 ## Stack
 
@@ -26,6 +28,10 @@ npm run dev
 
 - Web: http://localhost:5199  
 - Runner API: http://localhost:8787  
+
+## Deploy
+
+Pushing to `main` triggers the GitHub Pages workflow in `.github/workflows/deploy.yml`. The Vite `base` is set to `/codebuddy/` for project-pages hosting.
 
 ## Supabase (required for cloud sync)
 

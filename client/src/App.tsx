@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './state/AuthContext'
 import { Shell } from './components/Shell'
 import { HomePage } from './pages/HomePage'
@@ -11,7 +11,7 @@ import { AccountPage } from './pages/AccountPage'
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Shell>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -25,7 +25,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Shell>
-      </BrowserRouter>
+      </HashRouter>
     </AuthProvider>
   )
 }
