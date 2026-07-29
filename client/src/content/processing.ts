@@ -1,5 +1,6 @@
 import type { LanguageTrack } from '../types'
 import { processingCraftModule } from './craft/processing'
+import { processingEssentialsModule } from './essentials/processing'
 
 export const processingTrack: LanguageTrack = {
   id: 'processing',
@@ -83,6 +84,7 @@ export const processingTrack: LanguageTrack = {
         },
       ],
     },
+    processingEssentialsModule,
     {
       id: 'p5-drawing',
       title: 'Shapes & style',

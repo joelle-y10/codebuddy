@@ -1,5 +1,6 @@
 import type { LanguageTrack } from '../types'
 import { javaCraftModule } from './craft/java'
+import { javaEssentialsModule } from './essentials/java'
 
 export const javaTrack: LanguageTrack = {
   id: 'java',
@@ -127,6 +128,7 @@ export const javaTrack: LanguageTrack = {
         },
       ],
     },
+    javaEssentialsModule,
     {
       id: 'java-vars',
       title: 'Variables & types',

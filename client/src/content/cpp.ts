@@ -1,5 +1,6 @@
 import type { LanguageTrack } from '../types'
 import { cppCraftModule } from './craft/cpp'
+import { cppEssentialsModule } from './essentials/cpp'
 
 export const cppTrack: LanguageTrack = {
   id: 'cpp',
@@ -132,6 +133,7 @@ export const cppTrack: LanguageTrack = {
         },
       ],
     },
+    cppEssentialsModule,
     {
       id: 'cpp-vars',
       title: 'Variables & types',

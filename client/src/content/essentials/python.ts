@@ -1,0 +1,344 @@
+import type { Module } from '../../types'
+
+/** Core data types + how they print — essentials before bigger programs. */
+export const pythonEssentialsModule: Module = {
+  id: 'py-essentials',
+  title: 'Data essentials',
+  summary: 'Strings, numbers, booleans, None, and how each looks when you print it.',
+  lessons: [
+    {
+      id: 'py-ess-output',
+      title: 'Kinds of output',
+      summary: 'What print shows for text, numbers, booleans, and missing values.',
+      runner: 'python',
+      sections: [
+        {
+          heading: 'Output is just text on the screen',
+          body: `When you print(...), Python converts the value into characters and shows them in the console. Different types often look similar — so you must know what you meant to print.\n\nprint(42) and print("42") both look like 42, but one is a number and one is a string. That matters when you do math or join text later.`,
+        },
+        {
+          heading: 'How common types print',
+          body: `• Strings print their characters: print("hi") → hi (no quotes in the console)\n• Numbers print digits: print(3.5) → 3.5\n• Booleans print True or False (capital T/F)\n• None prints None — Python’s “no value” marker\n\nTip: print(type(value)) shows the real type when you’re unsure.`,
+        },
+        {
+          heading: 'Several values in one print',
+          body: `print("score", 10, True) prints the pieces separated by spaces: score 10 True.\n\nThat is handy for debugging. For polished messages, prefer f-strings: print(f"score {10}").`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Same look, different types',
+          code: `print(42)\nprint("42")\nprint(True)\nprint("True")\nprint(None)\nprint(type(42))\nprint(type("42"))`,
+          note: '42 and "42" look alike; type() reveals the difference.',
+        },
+        {
+          title: 'Multi-argument print',
+          code: `name = "Ada"\nprint("hello", name, 1843)`,
+          note: 'Pieces are separated by spaces automatically.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Print a number and a string',
+          prompt: 'Print 7 on the first line, then print seven on the second line (the word).',
+          difficulty: 1,
+          starterCode: `# number 7, then the word seven\n`,
+          tests: [
+            { id: 't1', description: 'Two-line output', hint: 'print(7) then print("seven")', kind: 'stdout', expect: '7\nseven' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'Boolean vs string',
+          prompt: 'Print the boolean False, then print the string False on the next line.',
+          difficulty: 2,
+          starterCode: `# boolean False, then string "False"\n`,
+          tests: [
+            { id: 't1', description: 'False then False', hint: 'print(False)\\nprint("False")', kind: 'stdout', expect: 'False\nFalse' },
+            { id: 't2', description: 'Uses boolean False', hint: 'False without quotes first', kind: 'codeMatches', expect: 'print\\(\\s*False\\s*\\)' },
+            { id: 't3', description: 'Uses string False', hint: 'print("False")', kind: 'codeIncludes', expect: '"False"' },
+          ],
+        },
+        {
+          id: 'p3',
+          title: 'Show None',
+          prompt: 'Print None (the special value, not a string).',
+          difficulty: 2,
+          starterCode: `# print None\n`,
+          tests: [
+            { id: 't1', description: 'Prints None', hint: 'print(None)', kind: 'stdout', expect: 'None' },
+            { id: 't2', description: 'Uses None literal', hint: 'None without quotes', kind: 'codeMatches', expect: '\\bNone\\b' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'py-ess-strings',
+      title: 'Strings (text)',
+      summary: 'Quotes, empty strings, length, and joining text.',
+      runner: 'python',
+      sections: [
+        {
+          heading: 'Text lives in quotes',
+          body: `A string is a sequence of characters. Write it with "double" or 'single' quotes.\n\nEmpty string "" has length 0 — useful as a starting place before you build a message.\n\nlen("code") is 4. Indexes start at 0: "code"[0] is "c".`,
+        },
+        {
+          heading: 'Joining and repeating',
+          body: `"Hi " + "Ada" joins strings. "ha" * 3 becomes "hahaha".\n\nYou cannot do "level " + 3 — convert with str(3) or use an f-string: f"level {3}".`,
+        },
+        {
+          heading: 'Escapes you’ll see',
+          body: `\\n is a newline inside a string. \\" lets you put a quote inside double-quoted text.\n\nTriple quotes """...""" can span multiple lines — handy for longer paragraphs later.`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Length and join',
+          code: `word = "code"\nprint(len(word))\nprint(word + "buddy")\nprint("go" * 2)`,
+          note: 'len counts characters, including spaces.',
+        },
+        {
+          title: 'Newline escape',
+          code: `print("line1\\nline2")`,
+          note: 'One print call, two lines of output.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Join a greeting',
+          prompt: 'Using greeting and name, print Hello Ada (space between).',
+          difficulty: 1,
+          starterCode: `greeting = "Hello"\nname = "Ada"\n# print Hello Ada\n`,
+          tests: [
+            { id: 't1', description: 'Prints Hello Ada', hint: 'print(greeting + " " + name)', kind: 'stdout', expect: 'Hello Ada' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'String length',
+          prompt: 'Print the length of word (should be 6).',
+          difficulty: 2,
+          starterCode: `word = "python"\n# print its length\n`,
+          tests: [
+            { id: 't1', description: 'Prints 6', hint: 'print(len(word))', kind: 'stdout', expect: '6' },
+            { id: 't2', description: 'Uses len', hint: 'len(...)', kind: 'codeIncludes', expect: 'len(' },
+          ],
+        },
+        {
+          id: 'p3',
+          title: 'Repeat text',
+          prompt: 'Print ha three times stuck together: hahaha',
+          difficulty: 2,
+          starterCode: `# print "ha" * 3\n`,
+          tests: [
+            { id: 't1', description: 'Prints hahaha', hint: 'print("ha" * 3)', kind: 'stdout', expect: 'hahaha' },
+            { id: 't2', description: 'Uses *', hint: 'string * number', kind: 'codeIncludes', expect: '*' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'py-ess-numbers',
+      title: 'Numbers (int & float)',
+      summary: 'Whole numbers, decimals, and the operators you’ll use daily.',
+      runner: 'python',
+      sections: [
+        {
+          heading: 'int vs float',
+          body: `int values are whole numbers: 0, 42, -3. float values have a decimal point: 3.14, 2.0.\n\nIn Python 3, division with / always gives a float: 7 / 2 is 3.5. Integer division // floors toward -∞ for ints in the usual case: 7 // 2 is 3. Remainder is %: 7 % 2 is 1.`,
+        },
+        {
+          heading: 'Math operators',
+          body: `• + - * /  add, subtract, multiply, divide\n• //  integer division\n• %   remainder (modulo)\n• **  power (2 ** 3 is 8)\n\nParentheses change order: (1 + 2) * 3 is 9.`,
+        },
+        {
+          heading: 'Watch the type',
+          body: `print(type(3)) shows int. print(type(3.0)) shows float. Mixing int and float in math usually produces a float.`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Division flavors',
+          code: `print(7 / 2)\nprint(7 // 2)\nprint(7 % 2)\nprint(2 ** 3)`,
+          note: '/ is true division; // is whole pieces; % is leftover.',
+        },
+        {
+          title: 'Types',
+          code: `print(type(10))\nprint(type(10 / 2))`,
+          note: '10 / 2 is 5.0 — a float.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Remainder',
+          prompt: 'Print the remainder of 17 divided by 5 (should be 2).',
+          difficulty: 1,
+          starterCode: `# 17 % 5\n`,
+          tests: [
+            { id: 't1', description: 'Prints 2', hint: 'print(17 % 5)', kind: 'stdout', expect: '2' },
+            { id: 't2', description: 'Uses %', hint: '% operator', kind: 'codeIncludes', expect: '%' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'True division',
+          prompt: 'Print 9 / 2 (the float result).',
+          difficulty: 2,
+          starterCode: `# print 9 / 2\n`,
+          tests: [
+            { id: 't1', description: 'Prints 4.5', hint: 'print(9 / 2)', kind: 'stdout', expect: '4.5' },
+            { id: 't2', description: 'Uses /', hint: 'Use / not //', kind: 'codeMatches', expect: '9\\s*/\\s*2' },
+          ],
+        },
+        {
+          id: 'p3',
+          title: 'Power',
+          prompt: 'Print 2 ** 8 (256).',
+          difficulty: 2,
+          starterCode: `# 2 to the power 8\n`,
+          tests: [
+            { id: 't1', description: 'Prints 256', hint: 'print(2 ** 8)', kind: 'stdout', expect: '256' },
+            { id: 't2', description: 'Uses **', hint: '** for power', kind: 'codeIncludes', expect: '**' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'py-ess-booleans',
+      title: 'Booleans (True / False)',
+      summary: 'Yes/no values, comparisons, and and / or / not.',
+      runner: 'python',
+      sections: [
+        {
+          heading: 'What is a boolean?',
+          body: `A boolean is only True or False (capital T and F in Python). They answer yes/no questions inside programs.\n\nComparisons produce booleans: 5 > 3 is True, "a" == "b" is False. You can store them: ready = True.`,
+        },
+        {
+          heading: 'Comparison operators',
+          body: `• == equal   • != not equal\n• <  <=  >  >=  less / greater (and or-equal)\n\nRemember: = assigns a value. == asks “are these equal?”`,
+        },
+        {
+          heading: 'and, or, not',
+          body: `• A and B — True only if both are True\n• A or B — True if at least one is True\n• not A — flips True↔False\n\nExample: age >= 13 and age <= 19 checks a teen range.`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Comparisons print as True/False',
+          code: `score = 85\nprint(score >= 60)\nprint(score == 100)\nprint(not False)`,
+          note: 'print shows the boolean result.',
+        },
+        {
+          title: 'Combining conditions',
+          code: `age = 15\nprint(age >= 13 and age <= 19)\nprint(age < 5 or age > 65)`,
+          note: 'and needs both; or needs one.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Print True',
+          prompt: 'Print the boolean True.',
+          difficulty: 1,
+          starterCode: `# print True\n`,
+          tests: [
+            { id: 't1', description: 'Prints True', hint: 'print(True)', kind: 'stdout', expect: 'True' },
+            { id: 't2', description: 'Uses True', hint: 'True without quotes', kind: 'codeMatches', expect: '\\bTrue\\b' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'Compare with >=',
+          prompt: 'Print whether score >= 60 (should be True).',
+          difficulty: 2,
+          starterCode: `score = 85\n# print the comparison result\n`,
+          tests: [
+            { id: 't1', description: 'Prints True', hint: 'print(score >= 60)', kind: 'stdout', expect: 'True' },
+            { id: 't2', description: 'Uses >=', hint: 'score >= 60', kind: 'codeIncludes', expect: '>=' },
+          ],
+        },
+        {
+          id: 'p3',
+          title: 'Use and',
+          prompt: 'Print whether ready is True and score >= 60 (should be True).',
+          difficulty: 3,
+          starterCode: `ready = True\nscore = 85\n# print ready and score >= 60\n`,
+          tests: [
+            { id: 't1', description: 'Prints True', hint: 'print(ready and score >= 60)', kind: 'stdout', expect: 'True' },
+            { id: 't2', description: 'Uses and', hint: 'and between conditions', kind: 'codeIncludes', expect: 'and' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'py-ess-convert',
+      title: 'Types & conversion',
+      summary: 'int, str, float, bool — and when to convert.',
+      runner: 'python',
+      sections: [
+        {
+          heading: 'Ask the type',
+          body: `type(x) returns the type object. print(type(x)) shows something like <class 'int'>.\n\nCommon types: int, float, str, bool, and NoneType for None.`,
+        },
+        {
+          heading: 'Convert between types',
+          body: `• str(5) → "5" (for joining text)\n• int("12") → 12 (for math on digits typed as text)\n• float("3.5") → 3.5\n• bool(0) is False; bool(1) is True; bool("") is False; bool("hi") is True\n\nint("12.5") fails — use float first if you need decimals.`,
+        },
+        {
+          heading: 'Why convert?',
+          body: `User input and some APIs give you strings even when the content looks like numbers. Convert before doing math. Convert numbers to strings when building messages with + (or just use f-strings).`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Convert for math and text',
+          code: `raw = "12"\nn = int(raw)\nprint(n + 1)\nprint("n=" + str(n))`,
+          note: 'int before math; str before + join.',
+        },
+        {
+          title: 'bool of values',
+          code: `print(bool(0))\nprint(bool(1))\nprint(bool(""))\nprint(bool("x"))`,
+          note: 'Empty / zero are False-y; most other values are True-y.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Stringify a number',
+          prompt: 'Print score: 7 using + and str (not an f-string).',
+          difficulty: 2,
+          starterCode: `n = 7\n# print "score: " + ...\n`,
+          tests: [
+            { id: 't1', description: 'Prints score: 7', hint: 'print("score: " + str(n))', kind: 'stdout', expect: 'score: 7' },
+            { id: 't2', description: 'Uses str(', hint: 'str(n)', kind: 'codeIncludes', expect: 'str(' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'Parse digits',
+          prompt: 'Convert raw to an int, add 3, print the result (15).',
+          difficulty: 2,
+          starterCode: `raw = "12"\n# int, add 3, print\n`,
+          tests: [
+            { id: 't1', description: 'Prints 15', hint: 'print(int(raw) + 3)', kind: 'stdout', expect: '15' },
+            { id: 't2', description: 'Uses int(', hint: 'int(raw)', kind: 'codeIncludes', expect: 'int(' },
+          ],
+        },
+        {
+          id: 'p3',
+          title: 'Type of True',
+          prompt: 'Print type(True) — output should mention bool.',
+          difficulty: 2,
+          starterCode: `# print type(True)\n`,
+          tests: [
+            { id: 't1', description: 'Mentions bool', hint: 'print(type(True))', kind: 'stdoutIncludes', expect: 'bool' },
+            { id: 't2', description: 'Uses type(', hint: 'type(...)', kind: 'codeIncludes', expect: 'type(' },
+          ],
+        },
+      ],
+    },
+  ],
+}

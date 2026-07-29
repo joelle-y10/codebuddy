@@ -1,5 +1,6 @@
 import type { LanguageTrack } from '../types'
 import { pythonCraftModule } from './craft/python'
+import { pythonEssentialsModule } from './essentials/python'
 
 export const pythonTrack: LanguageTrack = {
   id: 'python',
@@ -300,6 +301,7 @@ export const pythonTrack: LanguageTrack = {
         },
       ],
     },
+    pythonEssentialsModule,
     {
       id: 'py-vars',
       title: 'Variables & values',

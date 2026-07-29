@@ -1,5 +1,6 @@
 import type { LanguageTrack } from '../types'
 import { javascriptCraftModule } from './craft/javascript'
+import { javascriptEssentialsModule } from './essentials/javascript'
 
 export const javascriptTrack: LanguageTrack = {
   id: 'javascript',
@@ -225,6 +226,7 @@ export const javascriptTrack: LanguageTrack = {
         },
       ],
     },
+    javascriptEssentialsModule,
     {
       id: 'js-vars',
       title: 'Variables & values',

@@ -1,5 +1,6 @@
 import type { LanguageTrack } from '../types'
 import { htmlCraftModule } from './craft/html'
+import { htmlEssentialsModule } from './essentials/html'
 
 export const htmlTrack: LanguageTrack = {
   id: 'html',
@@ -147,6 +148,7 @@ export const htmlTrack: LanguageTrack = {
         },
       ],
     },
+    htmlEssentialsModule,
     {
       id: 'html-lists-links',
       title: 'Lists & links',
