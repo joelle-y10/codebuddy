@@ -9,6 +9,7 @@ export const cppTrack: LanguageTrack = {
   accent: '#ffb86b',
   tier: 'basic',
   modules: [
+    cppEssentialsModule,
     cppCraftModule,
     {
       id: 'cpp-start',
@@ -133,7 +134,6 @@ export const cppTrack: LanguageTrack = {
         },
       ],
     },
-    cppEssentialsModule,
     {
       id: 'cpp-vars',
       title: 'Variables & types',

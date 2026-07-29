@@ -9,6 +9,7 @@ export const javaTrack: LanguageTrack = {
   accent: '#ff7a59',
   tier: 'basic',
   modules: [
+    javaEssentialsModule,
     javaCraftModule,
     {
       id: 'java-start',
@@ -128,7 +129,6 @@ export const javaTrack: LanguageTrack = {
         },
       ],
     },
-    javaEssentialsModule,
     {
       id: 'java-vars',
       title: 'Variables & types',

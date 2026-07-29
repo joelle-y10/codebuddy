@@ -1,27 +1,29 @@
 import type { Module } from '../../types'
 
+/** First module in every coding track: what values are, when to use them, what they can't be. */
 export const htmlEssentialsModule: Module = {
   id: 'html-essentials',
-  title: 'Content essentials',
-  summary: 'Text, numbers in content, and boolean-style attributes — data ideas on the web.',
+  title: 'Values on the page',
+  summary:
+    'Start here: what content and attributes mean as data on a page — text, number-looking values, on/off attributes, and lists.',
   lessons: [
     {
       id: 'html-ess-text',
       title: 'Text as content',
-      summary: 'What users read lives between tags — treat it carefully.',
+      summary: 'HTML text content is like a string — define it, when to use it, what it can't be.',
       runner: 'html',
       sections: [
         {
-          heading: 'Content vs markup',
-          body: `In HTML, the “data” people see is usually text between tags: <p>Hello</p>.\n\nTags describe meaning. The text inside is the content — like a string in other languages.`,
+          heading: 'Define: text content',
+          body: `In HTML, the "data" people see is usually text between tags: <p>Hello</p>. That text is like a string in other languages — a sequence of characters the browser displays.\n\nTags describe meaning (<h1>, <p>, <strong>). The text inside is the content.`,
         },
         {
-          heading: 'Empty vs filled',
-          body: `<p></p> is an empty element (like an empty string). <p>Hello</p> has content.\n\nSome elements are empty by design and use attributes instead of inner text: <img src="..." alt="...">.`,
+          heading: 'When to use text content',
+          body: `• Headings, paragraphs, labels — anything the user reads\n• Names, messages, descriptions\n• Digits that are identifiers, not math (phone numbers, zip codes) — keep them as text so leading zeros aren't lost\n\nEmpty element <p></p> is like an empty string "". Some elements are empty by design and use attributes instead: <img src="..." alt="...">.`,
         },
         {
-          heading: 'Numbers are still text in HTML',
-          body: `HTML itself doesn’t have int/boolean types. <p>42</p> is text characters "4" and "2". Forms and JavaScript later interpret that text as numbers or booleans.`,
+          heading: 'What text content can't be',
+          body: `• HTML has no int or boolean types in content — <p>42</p> is the characters "4" and "2", not a typed number.\n• <p>true</p> is the word true as text, not a boolean — the browser won't treat it as on/off.\n• You can't do math on HTML content directly; JavaScript reads the text and converts later.`,
         },
       ],
       examples: [
@@ -60,20 +62,24 @@ export const htmlEssentialsModule: Module = {
     {
       id: 'html-ess-attributes',
       title: 'Attributes & boolean attributes',
-      summary: 'Name/value pairs on tags — including on/off attributes.',
+      summary: 'Boolean-like attributes (checked, disabled) — define them, when to use them, what they aren't.',
       runner: 'html',
       sections: [
         {
           heading: 'Attributes are data on tags',
-          body: `Attributes look like name="value" on an opening tag: <a href="https://example.com">.\n\nThey’re how HTML attaches extra data: links, image sources, labels, ids.`,
+          body: `Attributes look like name="value" on an opening tag: <a href="https://example.com">.\n\nThey're how HTML attaches extra data: links, image sources, labels, ids. Attribute values are always text strings, even when they look like numbers: value="42".`,
         },
         {
-          heading: 'Boolean-style attributes',
-          body: `Some attributes are on/off: checked, disabled, required, open.\n\nWrite them as <input type="checkbox" checked> or checked="checked". Presence means true; absence means false. That’s the HTML cousin of a boolean.`,
+          heading: 'Define: boolean-style attributes',
+          body: `Some attributes are on/off only: checked, disabled, required, open, readonly.\n\nWrite them as <input type="checkbox" checked> or checked="checked". Presence means true; absence means false. That's the HTML cousin of a boolean — but it's still markup, not a JavaScript true/false value.`,
         },
         {
-          heading: 'type on inputs',
-          body: `<input type="text">, type="number", type="checkbox" tell the browser what kind of value to expect — a soft version of “types” before JavaScript runs.`,
+          heading: 'When to use boolean attributes',
+          body: `• checked — checkbox/radio starts selected\n• disabled — user can't interact\n• required — form field must be filled\n• open — <details> starts expanded\n\nDon't write checked="false" — that still means checked! Remove the attribute to mean off.`,
+        },
+        {
+          heading: 'Number-looking attribute values',
+          body: `<input type="number" value="10"> stores "10" as text. The browser may validate or spin buttons, but HTML itself doesn't do math. JavaScript reads .value as a string and converts with Number(...) or parseInt(...) when needed.`,
         },
       ],
       examples: [
@@ -109,13 +115,80 @@ export const htmlEssentialsModule: Module = {
         },
         {
           id: 'p3',
-          title: 'Number input',
-          prompt: 'Add <input type="number" value="10">.',
+          title: 'Disabled button',
+          prompt: 'Add a button with the disabled attribute.',
           difficulty: 2,
-          starterCode: `<!-- number input with value 10 -->\n`,
+          starterCode: `<!-- button with disabled -->\n`,
           tests: [
-            { id: 't1', description: 'type number', hint: 'type="number"', kind: 'htmlIncludes', expect: 'number' },
-            { id: 't2', description: 'value 10', hint: 'value="10"', kind: 'htmlIncludes', expect: '10' },
+            { id: 't1', description: 'Has button', hint: '<button', kind: 'htmlIncludes', expect: '<button' },
+            { id: 't2', description: 'Is disabled', hint: 'Include disabled', kind: 'htmlIncludes', expect: 'disabled' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'html-ess-lists',
+      title: 'Lists (collections)',
+      summary: 'Ordered and unordered lists — the HTML equivalent of an array or collection.',
+      runner: 'html',
+      sections: [
+        {
+          heading: 'Define: list elements',
+          body: `A list is a collection of items using <ul> (unordered) or <ol> (ordered) wrapping <li> items:\n\n<ul>\n  <li>Apple</li>\n  <li>Banana</li>\n</ul>\n\nEach <li> is one item — like one element in an array. The browser numbers or bullets them for you.`,
+        },
+        {
+          heading: 'When to use ul vs ol',
+          body: `• <ul> — order doesn't matter: groceries, features, nav links\n• <ol> — order matters: steps in a recipe, rankings, instructions\n\nUse lists when you have many related items of the same kind — not separate paragraphs with manual "1." "2." typed in.`,
+        },
+        {
+          heading: 'What not to do',
+          body: `• Don't put <li> floating outside <ul> or <ol> — always wrap items in a list container.\n• Don't use lists for layout only — they're for grouped content.\n• List item text is still plain text (or inline markup) — <li>42</li> is text "42", not a number.\n• Empty list <ul></ul> is valid but usually you want at least one <li>.`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Unordered and ordered lists',
+          code: `<h2>Shopping</h2>\n<ul>\n  <li>Milk</li>\n  <li>Eggs</li>\n</ul>\n<h2>Steps</h2>\n<ol>\n  <li>Preheat oven</li>\n  <li>Mix batter</li>\n  <li>Bake 20 minutes</li>\n</ol>`,
+          note: 'ul gets bullets; ol gets numbers automatically.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Unordered list',
+          prompt: 'Create a ul with two li items: Ada and Grace.',
+          difficulty: 1,
+          starterCode: `<!-- ul with li Ada and li Grace -->\n`,
+          tests: [
+            { id: 't1', description: 'Has ul', hint: '<ul>', kind: 'htmlIncludes', expect: '<ul' },
+            { id: 't2', description: 'Has li items', hint: '<li>...</li>', kind: 'htmlIncludes', expect: '<li' },
+            { id: 't3', description: 'Mentions Ada', hint: 'Ada in an li', kind: 'htmlIncludes', expect: 'Ada' },
+            { id: 't4', description: 'Mentions Grace', hint: 'Grace in an li', kind: 'htmlIncludes', expect: 'Grace' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'Ordered list',
+          prompt: 'Create an ol with three numbered steps: Mix, Pour, Bake.',
+          difficulty: 2,
+          starterCode: `<!-- ol with three li steps -->\n`,
+          tests: [
+            { id: 't1', description: 'Has ol', hint: '<ol>', kind: 'htmlIncludes', expect: '<ol' },
+            { id: 't2', description: 'Has li items', hint: '<li>...</li>', kind: 'htmlIncludes', expect: '<li' },
+            { id: 't3', description: 'Mentions Mix', hint: 'Mix in an li', kind: 'htmlIncludes', expect: 'Mix' },
+          ],
+        },
+        {
+          id: 'p3',
+          title: 'List with numbers',
+          prompt: 'Create a ul with li items showing 10, 20, and 30 (as text content).',
+          difficulty: 2,
+          starterCode: `<!-- ul with numeric li content -->\n`,
+          tests: [
+            { id: 't1', description: 'Has ul', hint: '<ul>', kind: 'htmlIncludes', expect: '<ul' },
+            { id: 't2', description: 'Has 10', hint: '<li>10</li>', kind: 'htmlIncludes', expect: '10' },
+            { id: 't3', description: 'Has 20', hint: '<li>20</li>', kind: 'htmlIncludes', expect: '20' },
+            { id: 't4', description: 'Has 30', hint: '<li>30</li>', kind: 'htmlIncludes', expect: '30' },
           ],
         },
       ],

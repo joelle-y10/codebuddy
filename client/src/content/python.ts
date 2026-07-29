@@ -9,6 +9,7 @@ export const pythonTrack: LanguageTrack = {
   accent: '#5ec8ff',
   tier: 'basic',
   modules: [
+    pythonEssentialsModule,
     pythonCraftModule,
     {
       id: 'py-start',
@@ -301,7 +302,6 @@ export const pythonTrack: LanguageTrack = {
         },
       ],
     },
-    pythonEssentialsModule,
     {
       id: 'py-vars',
       title: 'Variables & values',

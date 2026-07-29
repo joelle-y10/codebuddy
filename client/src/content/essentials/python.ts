@@ -1,11 +1,63 @@
 import type { Module } from '../../types'
 
-/** Core data types + how they print — essentials before bigger programs. */
+/** First module in every coding track: what values are, when to use them, what they can’t be. */
 export const pythonEssentialsModule: Module = {
   id: 'py-essentials',
-  title: 'Data essentials',
-  summary: 'Strings, numbers, booleans, None, and how each looks when you print it.',
+  title: 'Values & types',
+  summary:
+    'Start here: what a value is, the main data types, when to use each, and what each type can’t do.',
   lessons: [
+    {
+      id: 'py-ess-values',
+      title: 'What is a value?',
+      summary: 'Programs store and use values. Every value has a type that decides what you can do with it.',
+      runner: 'python',
+      sections: [
+        {
+          heading: 'Values are the data your program works with',
+          body: `A value is a single piece of information: the number 7, the text "Ada", the yes/no answer True, or a list of scores [10, 20, 30].\n\nYou put values in variables (name = "Ada"), pass them to functions (print(name)), and combine them (score + 1).`,
+        },
+        {
+          heading: 'Type = the rules for that value',
+          body: `The type answers: what kind of value is this, and what operations are allowed?\n\n• int — whole numbers (count, index, score)\n• float — decimals (measurements, averages)\n• str — text (names, messages)\n• bool — True or False only (decisions)\n• list — ordered collection of values (many scores, many names)\n\nprint(type(x)) shows the type when you’re unsure.`,
+        },
+        {
+          heading: 'Wrong type = wrong result or an error',
+          body: `"3" + "4" is "34" (text join). 3 + 4 is 7 (math). Mixing types without converting often fails: "level " + 3 raises TypeError — convert with str(3) or use an f-string.\n\nRule of thumb: decide the type first, then write the code.`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Four core values',
+          code: `count = 3          # int\nname = "Ada"       # str\nready = True       # bool\nscores = [10, 20]  # list\nprint(type(count), type(name), type(ready), type(scores))`,
+          note: 'Same print(...) call can show several types.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Store each kind',
+          prompt: 'Create n = 5, label = "hi", ok = False, then print each on its own line (in that order).',
+          difficulty: 1,
+          starterCode: `# n, label, ok — then print each\n`,
+          tests: [
+            { id: 't1', description: 'Prints 5, hi, False', hint: 'print(n)\\nprint(label)\\nprint(ok)', kind: 'stdout', expect: '5\nhi\nFalse' },
+            { id: 't2', description: 'Uses False boolean', hint: 'ok = False (no quotes)', kind: 'codeMatches', expect: '\\bFalse\\b' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'Ask the type',
+          prompt: 'Print type(7) — output should mention int.',
+          difficulty: 2,
+          starterCode: `# print type(7)\n`,
+          tests: [
+            { id: 't1', description: 'Mentions int', hint: 'print(type(7))', kind: 'stdoutIncludes', expect: 'int' },
+            { id: 't2', description: 'Uses type(', hint: 'type(...)', kind: 'codeIncludes', expect: 'type(' },
+          ],
+        },
+      ],
+    },
     {
       id: 'py-ess-output',
       title: 'Kinds of output',
@@ -18,7 +70,7 @@ export const pythonEssentialsModule: Module = {
         },
         {
           heading: 'How common types print',
-          body: `• Strings print their characters: print("hi") → hi (no quotes in the console)\n• Numbers print digits: print(3.5) → 3.5\n• Booleans print True or False (capital T/F)\n• None prints None — Python’s “no value” marker\n\nTip: print(type(value)) shows the real type when you’re unsure.`,
+          body: `• Strings print their characters: print("hi") → hi (no quotes in the console)\n• Numbers print digits: print(3.5) → 3.5\n• Booleans print True or False (capital T/F)\n• None prints None — Python’s “no value” marker\n• Lists print with brackets: print([1, 2]) → [1, 2]\n\nTip: print(type(value)) shows the real type when you’re unsure.`,
         },
         {
           heading: 'Several values in one print',
@@ -30,11 +82,6 @@ export const pythonEssentialsModule: Module = {
           title: 'Same look, different types',
           code: `print(42)\nprint("42")\nprint(True)\nprint("True")\nprint(None)\nprint(type(42))\nprint(type("42"))`,
           note: '42 and "42" look alike; type() reveals the difference.',
-        },
-        {
-          title: 'Multi-argument print',
-          code: `name = "Ada"\nprint("hello", name, 1843)`,
-          note: 'Pieces are separated by spaces automatically.',
         },
       ],
       practices: [
@@ -74,100 +121,29 @@ export const pythonEssentialsModule: Module = {
       ],
     },
     {
-      id: 'py-ess-strings',
-      title: 'Strings (text)',
-      summary: 'Quotes, empty strings, length, and joining text.',
-      runner: 'python',
-      sections: [
-        {
-          heading: 'Text lives in quotes',
-          body: `A string is a sequence of characters. Write it with "double" or 'single' quotes.\n\nEmpty string "" has length 0 — useful as a starting place before you build a message.\n\nlen("code") is 4. Indexes start at 0: "code"[0] is "c".`,
-        },
-        {
-          heading: 'Joining and repeating',
-          body: `"Hi " + "Ada" joins strings. "ha" * 3 becomes "hahaha".\n\nYou cannot do "level " + 3 — convert with str(3) or use an f-string: f"level {3}".`,
-        },
-        {
-          heading: 'Escapes you’ll see',
-          body: `\\n is a newline inside a string. \\" lets you put a quote inside double-quoted text.\n\nTriple quotes """...""" can span multiple lines — handy for longer paragraphs later.`,
-        },
-      ],
-      examples: [
-        {
-          title: 'Length and join',
-          code: `word = "code"\nprint(len(word))\nprint(word + "buddy")\nprint("go" * 2)`,
-          note: 'len counts characters, including spaces.',
-        },
-        {
-          title: 'Newline escape',
-          code: `print("line1\\nline2")`,
-          note: 'One print call, two lines of output.',
-        },
-      ],
-      practices: [
-        {
-          id: 'p1',
-          title: 'Join a greeting',
-          prompt: 'Using greeting and name, print Hello Ada (space between).',
-          difficulty: 1,
-          starterCode: `greeting = "Hello"\nname = "Ada"\n# print Hello Ada\n`,
-          tests: [
-            { id: 't1', description: 'Prints Hello Ada', hint: 'print(greeting + " " + name)', kind: 'stdout', expect: 'Hello Ada' },
-          ],
-        },
-        {
-          id: 'p2',
-          title: 'String length',
-          prompt: 'Print the length of word (should be 6).',
-          difficulty: 2,
-          starterCode: `word = "python"\n# print its length\n`,
-          tests: [
-            { id: 't1', description: 'Prints 6', hint: 'print(len(word))', kind: 'stdout', expect: '6' },
-            { id: 't2', description: 'Uses len', hint: 'len(...)', kind: 'codeIncludes', expect: 'len(' },
-          ],
-        },
-        {
-          id: 'p3',
-          title: 'Repeat text',
-          prompt: 'Print ha three times stuck together: hahaha',
-          difficulty: 2,
-          starterCode: `# print "ha" * 3\n`,
-          tests: [
-            { id: 't1', description: 'Prints hahaha', hint: 'print("ha" * 3)', kind: 'stdout', expect: 'hahaha' },
-            { id: 't2', description: 'Uses *', hint: 'string * number', kind: 'codeIncludes', expect: '*' },
-          ],
-        },
-      ],
-    },
-    {
       id: 'py-ess-numbers',
-      title: 'Numbers (int & float)',
-      summary: 'Whole numbers, decimals, and the operators you’ll use daily.',
+      title: 'Integers & numbers',
+      summary: 'Whole numbers (int), decimals (float) — when to use each, and what they can’t do.',
       runner: 'python',
       sections: [
         {
-          heading: 'int vs float',
-          body: `int values are whole numbers: 0, 42, -3. float values have a decimal point: 3.14, 2.0.\n\nIn Python 3, division with / always gives a float: 7 / 2 is 3.5. Integer division // floors toward -∞ for ints in the usual case: 7 // 2 is 3. Remainder is %: 7 % 2 is 1.`,
+          heading: 'Define: int and float',
+          body: `An int is a whole number with no fractional part: 0, 42, -3. A float has a decimal point: 3.14, 2.0.\n\nUse ints for counts, indexes, and scores that must stay whole. Use floats for measurements, averages, and anything that can be “in between.”`,
         },
         {
-          heading: 'Math operators',
-          body: `• + - * /  add, subtract, multiply, divide\n• //  integer division\n• %   remainder (modulo)\n• **  power (2 ** 3 is 8)\n\nParentheses change order: (1 + 2) * 3 is 9.`,
+          heading: 'When to use them',
+          body: `• Counting loops, list indexes, “how many?” → int\n• Division that should keep a fraction → float (7 / 2 is 3.5)\n• Money/grades you display with decimals → float (or Decimal later)\n\nInteger division // keeps a whole result: 7 // 2 is 3. Remainder is %: 7 % 2 is 1.`,
         },
         {
-          heading: 'Watch the type',
-          body: `print(type(3)) shows int. print(type(3.0)) shows float. Mixing int and float in math usually produces a float.`,
+          heading: 'What numbers can’t be / common mistakes',
+          body: `• An int is not text — you can’t do "level " + 3 without converting.\n• Dividing with / always gives a float in Python 3, even 8 / 2 → 4.0.\n• Don’t use a string of digits as if it were a number: "10" + "1" is "101", not 11.\n• Don’t use a float as a list index (indexes must be ints).`,
         },
       ],
       examples: [
         {
           title: 'Division flavors',
-          code: `print(7 / 2)\nprint(7 // 2)\nprint(7 % 2)\nprint(2 ** 3)`,
+          code: `print(7 / 2)\nprint(7 // 2)\nprint(7 % 2)\nprint(2 ** 3)\nprint(type(10))\nprint(type(10 / 2))`,
           note: '/ is true division; // is whole pieces; % is leftover.',
-        },
-        {
-          title: 'Types',
-          code: `print(type(10))\nprint(type(10 / 2))`,
-          note: '10 / 2 is 5.0 — a float.',
         },
       ],
       practices: [
@@ -207,34 +183,90 @@ export const pythonEssentialsModule: Module = {
       ],
     },
     {
-      id: 'py-ess-booleans',
-      title: 'Booleans (True / False)',
-      summary: 'Yes/no values, comparisons, and and / or / not.',
+      id: 'py-ess-strings',
+      title: 'Strings (text)',
+      summary: 'Define text values — when to use them, and what you can’t do with them.',
       runner: 'python',
       sections: [
         {
-          heading: 'What is a boolean?',
-          body: `A boolean is only True or False (capital T and F in Python). They answer yes/no questions inside programs.\n\nComparisons produce booleans: 5 > 3 is True, "a" == "b" is False. You can store them: ready = True.`,
+          heading: 'Define: string',
+          body: `A string (str) is a sequence of characters — letters, digits, spaces, punctuation — wrapped in "double" or 'single' quotes.\n\nEmpty string "" has length 0. len("code") is 4. Indexes start at 0: "code"[0] is "c".`,
         },
         {
-          heading: 'Comparison operators',
-          body: `• == equal   • != not equal\n• <  <=  >  >=  less / greater (and or-equal)\n\nRemember: = assigns a value. == asks “are these equal?”`,
+          heading: 'When to use strings',
+          body: `• Names, messages, file paths, labels on screen\n• Anything the user reads as text\n• Digits that are identifiers, not math (zip codes, phone numbers) — keep them as strings so leading zeros aren’t lost\n\nJoin with + or f-strings. Repeat with *: "ha" * 3 → "hahaha".`,
         },
         {
-          heading: 'and, or, not',
-          body: `• A and B — True only if both are True\n• A or B — True if at least one is True\n• not A — flips True↔False\n\nExample: age >= 13 and age <= 19 checks a teen range.`,
+          heading: 'What strings can’t do',
+          body: `• "3" + 1 fails — convert with int("3") for math, or str(1) for joining.\n• Strings are not lists of numbers; don’t expect "10" > 5 to mean numeric compare the way you hope (convert first).\n• You can’t change one character in place like a mutable list item — build a new string instead.`,
         },
       ],
       examples: [
         {
-          title: 'Comparisons print as True/False',
-          code: `score = 85\nprint(score >= 60)\nprint(score == 100)\nprint(not False)`,
-          note: 'print shows the boolean result.',
+          title: 'Length and join',
+          code: `word = "code"\nprint(len(word))\nprint(word + "buddy")\nprint("go" * 2)\nprint("line1\\nline2")`,
+          note: 'len counts characters, including spaces.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Join a greeting',
+          prompt: 'Using greeting and name, print Hello Ada (space between).',
+          difficulty: 1,
+          starterCode: `greeting = "Hello"\nname = "Ada"\n# print Hello Ada\n`,
+          tests: [
+            { id: 't1', description: 'Prints Hello Ada', hint: 'print(greeting + " " + name)', kind: 'stdout', expect: 'Hello Ada' },
+          ],
         },
         {
-          title: 'Combining conditions',
-          code: `age = 15\nprint(age >= 13 and age <= 19)\nprint(age < 5 or age > 65)`,
-          note: 'and needs both; or needs one.',
+          id: 'p2',
+          title: 'String length',
+          prompt: 'Print the length of word (should be 6).',
+          difficulty: 2,
+          starterCode: `word = "python"\n# print its length\n`,
+          tests: [
+            { id: 't1', description: 'Prints 6', hint: 'print(len(word))', kind: 'stdout', expect: '6' },
+            { id: 't2', description: 'Uses len', hint: 'len(...)', kind: 'codeIncludes', expect: 'len(' },
+          ],
+        },
+        {
+          id: 'p3',
+          title: 'Repeat text',
+          prompt: 'Print ha three times stuck together: hahaha',
+          difficulty: 2,
+          starterCode: `# print "ha" * 3\n`,
+          tests: [
+            { id: 't1', description: 'Prints hahaha', hint: 'print("ha" * 3)', kind: 'stdout', expect: 'hahaha' },
+            { id: 't2', description: 'Uses *', hint: 'string * number', kind: 'codeIncludes', expect: '*' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'py-ess-booleans',
+      title: 'Booleans (True / False)',
+      summary: 'Yes/no values — define them, when to use them, what they can’t be.',
+      runner: 'python',
+      sections: [
+        {
+          heading: 'Define: boolean',
+          body: `A boolean (bool) is only True or False (capital T and F in Python). Nothing else is a boolean — not "True", not 1, not "yes" (those are other types that can be converted).\n\nComparisons produce booleans: 5 > 3 is True. You can store them: ready = True.`,
+        },
+        {
+          heading: 'When to use booleans',
+          body: `• Flags: game_over, is_logged_in, ready\n• Conditions in if / while\n• Results of checks: score >= 60, name == "Ada"\n\nCombine with and / or / not: age >= 13 and age <= 19.`,
+        },
+        {
+          heading: 'What booleans aren’t',
+          body: `• "True" (with quotes) is a string, not a boolean — if "True": is always truthy as non-empty text, which is a different rule.\n• Don’t use = when you mean ==. = assigns; == compares.\n• Prefer real True/False over 1/0 unless you’re doing numeric math on purpose.`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Comparisons and logic',
+          code: `score = 85\nprint(score >= 60)\nprint(score == 100)\nprint(not False)\nage = 15\nprint(age >= 13 and age <= 19)`,
+          note: 'print shows the boolean result.',
         },
       ],
       practices: [
@@ -274,6 +306,68 @@ export const pythonEssentialsModule: Module = {
       ],
     },
     {
+      id: 'py-ess-lists',
+      title: 'Lists (collections)',
+      summary: 'Ordered collections of values — define, when to use, what they can’t be.',
+      runner: 'python',
+      sections: [
+        {
+          heading: 'Define: list',
+          body: `A list is an ordered collection of values in square brackets: scores = [10, 20, 30].\n\nIndexes start at 0: scores[0] is 10. len(scores) is 3. Lists can hold mixed types, but beginners should keep one type per list when possible.`,
+        },
+        {
+          heading: 'When to use lists',
+          body: `• Many related values of the same kind (names, scores, prices)\n• When you’ll loop through every item\n• When the collection can grow: scores.append(40)\n\nfor n in scores: visits each element. Use range(len(scores)) when you need the index.`,
+        },
+        {
+          heading: 'What lists aren’t / can’t do',
+          body: `• A list is not a string — "abc"[0] is a character; [1, 2, 3] + 4 fails (use append).\n• Index out of range: scores[3] on a length-3 list crashes (valid indexes 0..2).\n• Don’t confuse the list with one element inside it — print(scores) vs print(scores[0]).\n• A single int is not a list: 5 has no [0].`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Create, index, loop',
+          code: `nums = [3, 6, 9]\nprint(nums[0])\nprint(len(nums))\nfor n in nums:\n    print(n)`,
+          note: 'First index is 0; len is how many items.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'First item',
+          prompt: 'Print the first item of nums (3).',
+          difficulty: 1,
+          starterCode: `nums = [3, 6, 9]\n# print first item\n`,
+          tests: [
+            { id: 't1', description: 'Prints 3', hint: 'print(nums[0])', kind: 'stdout', expect: '3' },
+            { id: 't2', description: 'Indexes 0', hint: 'nums[0]', kind: 'codeIncludes', expect: '[0]' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'List length',
+          prompt: 'Print how many items are in nums (3).',
+          difficulty: 2,
+          starterCode: `nums = [3, 6, 9]\n# print length\n`,
+          tests: [
+            { id: 't1', description: 'Prints 3', hint: 'print(len(nums))', kind: 'stdout', expect: '3' },
+            { id: 't2', description: 'Uses len', hint: 'len(nums)', kind: 'codeIncludes', expect: 'len(' },
+          ],
+        },
+        {
+          id: 'p3',
+          title: 'Loop the list',
+          prompt: 'Use a for loop to print each number in nums on its own line.',
+          difficulty: 2,
+          starterCode: `nums = [3, 6, 9]\n# for loop printing each\n`,
+          tests: [
+            { id: 't1', description: 'Prints 3\\n6\\n9', hint: 'for n in nums: print(n)', kind: 'stdout', expect: '3\n6\n9' },
+            { id: 't2', description: 'Uses for', hint: 'for n in nums', kind: 'codeIncludes', expect: 'for ' },
+          ],
+        },
+      ],
+    },
+    {
       id: 'py-ess-convert',
       title: 'Types & conversion',
       summary: 'int, str, float, bool — and when to convert.',
@@ -281,11 +375,11 @@ export const pythonEssentialsModule: Module = {
       sections: [
         {
           heading: 'Ask the type',
-          body: `type(x) returns the type object. print(type(x)) shows something like <class 'int'>.\n\nCommon types: int, float, str, bool, and NoneType for None.`,
+          body: `type(x) returns the type object. print(type(x)) shows something like <class 'int'>.\n\nCommon types: int, float, str, bool, list, and NoneType for None.`,
         },
         {
           heading: 'Convert between types',
-          body: `• str(5) → "5" (for joining text)\n• int("12") → 12 (for math on digits typed as text)\n• float("3.5") → 3.5\n• bool(0) is False; bool(1) is True; bool("") is False; bool("hi") is True\n\nint("12.5") fails — use float first if you need decimals.`,
+          body: `• str(5) → "5" (for joining text)\n• int("12") → 12 (for math on digits typed as text)\n• float("3.5") → 3.5\n• bool(0) is False; bool(1) is True; bool("") is False; bool("hi") is True\n• list("ab") → ["a", "b"] (characters)\n\nint("12.5") fails — use float first if you need decimals.`,
         },
         {
           heading: 'Why convert?',
@@ -297,11 +391,6 @@ export const pythonEssentialsModule: Module = {
           title: 'Convert for math and text',
           code: `raw = "12"\nn = int(raw)\nprint(n + 1)\nprint("n=" + str(n))`,
           note: 'int before math; str before + join.',
-        },
-        {
-          title: 'bool of values',
-          code: `print(bool(0))\nprint(bool(1))\nprint(bool(""))\nprint(bool("x"))`,
-          note: 'Empty / zero are False-y; most other values are True-y.',
         },
       ],
       practices: [

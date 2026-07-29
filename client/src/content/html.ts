@@ -9,6 +9,7 @@ export const htmlTrack: LanguageTrack = {
   accent: '#7dffb3',
   tier: 'basic',
   modules: [
+    htmlEssentialsModule,
     htmlCraftModule,
     {
       id: 'html-start',
@@ -148,7 +149,6 @@ export const htmlTrack: LanguageTrack = {
         },
       ],
     },
-    htmlEssentialsModule,
     {
       id: 'html-lists-links',
       title: 'Lists & links',

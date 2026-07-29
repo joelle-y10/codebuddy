@@ -9,6 +9,7 @@ export const javascriptTrack: LanguageTrack = {
   accent: '#c8f542',
   tier: 'basic',
   modules: [
+    javascriptEssentialsModule,
     javascriptCraftModule,
     {
       id: 'js-start',
@@ -226,7 +227,6 @@ export const javascriptTrack: LanguageTrack = {
         },
       ],
     },
-    javascriptEssentialsModule,
     {
       id: 'js-vars',
       title: 'Variables & values',

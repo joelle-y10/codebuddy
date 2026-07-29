@@ -9,6 +9,7 @@ export const processingTrack: LanguageTrack = {
   accent: '#d4a1ff',
   tier: 'basic',
   modules: [
+    processingEssentialsModule,
     processingCraftModule,
     {
       id: 'p5-start',
@@ -84,7 +85,6 @@ export const processingTrack: LanguageTrack = {
         },
       ],
     },
-    processingEssentialsModule,
     {
       id: 'p5-drawing',
       title: 'Shapes & style',
