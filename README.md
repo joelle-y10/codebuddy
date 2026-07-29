@@ -4,7 +4,7 @@ Learn HTML, JavaScript, Processing, Python, C++, and Java with lessons, examples
 
 Progression: **CodeBuddy Basics** → clear a language → **CodeBuddy University** (advanced tracks).
 
-**Live site:** https://joelle-pixel.github.io/codebuddy/
+**Live site:** https://joelle-y10.github.io/codebuddy/
 
 
 ## Stack
