@@ -15,6 +15,16 @@ import {
   type ProfileAvatar,
 } from '../lib/profileAvatar'
 import type { LangId, Lesson } from '../types'
+import {
+  emptyHelp,
+  helpKey,
+  loadHelpMap,
+  mergeHelp,
+  saveHelpMap,
+  type HelpEvent,
+  type HelpMap,
+  type PracticeHelpRecord,
+} from '../lib/practiceHelp'
 
 type ProgressMap = Record<string, { completed: boolean; bestScore: number }>
 type SyncStatus = 'idle' | 'syncing' | 'cloud' | 'local-only' | 'needs-schema' | 'error'
@@ -31,6 +41,9 @@ type AuthContextValue = {
   passwordRecovery: boolean
   clearPasswordRecovery: () => void
   progress: ProgressMap
+  helpMap: HelpMap
+  getPracticeHelp: (language: LangId, lessonId: string, practiceId: string) => PracticeHelpRecord
+  recordPracticeHelp: (event: HelpEvent) => Promise<void>
   signUp: (email: string, password: string) => Promise<string | null>
   signIn: (email: string, password: string) => Promise<string | null>
   signOut: () => Promise<void>
@@ -100,6 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [passwordRecovery, setPasswordRecovery] = useState(false)
   const [authReady, setAuthReady] = useState(false)
   const [progress, setProgress] = useState<ProgressMap>(() => loadCache())
+  const [helpMap, setHelpMap] = useState<HelpMap>(() => loadHelpMap())
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
   const [syncMessage, setSyncMessage] = useState('Connecting…')
 
@@ -152,6 +166,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setProgress(cloud)
     saveCache(cloud)
+
+    const { data: helpRows } = await supabase
+      .from('codebuddy_practice_help')
+      .select(
+        'language, lesson_id, practice_id, failed_attempts, used_hint, used_answer, struggling, topics',
+      )
+      .eq('user_id', uid)
+
+    if (helpRows) {
+      setHelpMap((prev) => {
+        const next = { ...prev }
+        for (const row of helpRows) {
+          const k = helpKey(String(row.language), String(row.lesson_id), String(row.practice_id))
+          next[k] = mergeHelp(prev[k], {
+            failedAttempts: Number(row.failed_attempts) || 0,
+            usedHint: Boolean(row.used_hint),
+            usedAnswer: Boolean(row.used_answer),
+            topics: Array.isArray(row.topics) ? row.topics.map(String) : [],
+          })
+        }
+        saveHelpMap(next)
+        return next
+      })
+    }
+
     setSyncStatus('cloud')
     setSyncMessage('Progress is saved in Supabase (cloud), not only on this device.')
   }, [])
@@ -414,6 +453,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return null
   }, [user])
 
+  const getPracticeHelp = useCallback(
+    (language: LangId, lessonId: string, practiceId: string) =>
+      helpMap[helpKey(language, lessonId, practiceId)] ?? emptyHelp(),
+    [helpMap],
+  )
+
+  const recordPracticeHelp = useCallback(
+    async (event: HelpEvent) => {
+      const k = helpKey(event.language, event.lessonId, event.practiceId)
+      let nextRecord: PracticeHelpRecord = emptyHelp()
+      setHelpMap((prev) => {
+        nextRecord = mergeHelp(prev[k], {
+          failedAttempts: event.failedAttempts,
+          usedHint: event.usedHint,
+          usedAnswer: event.usedAnswer,
+          topics: event.topics,
+        })
+        const next = { ...prev, [k]: nextRecord }
+        saveHelpMap(next)
+        return next
+      })
+
+      if (!supabase || !user) return
+      const { error } = await supabase.from('codebuddy_practice_help').upsert(
+        {
+          user_id: user.id,
+          language: event.language,
+          lesson_id: event.lessonId,
+          practice_id: event.practiceId,
+          failed_attempts: nextRecord.failedAttempts,
+          used_hint: nextRecord.usedHint,
+          used_answer: nextRecord.usedAnswer,
+          struggling: nextRecord.struggling,
+          topics: nextRecord.topics,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'user_id,language,lesson_id,practice_id' },
+      )
+      if (error && !/could not find the table|PGRST205|schema cache/i.test(error.message)) {
+        // Non-fatal — local tracking still works
+        console.warn('practice help sync:', error.message)
+      }
+    },
+    [user],
+  )
+
   const markPracticeComplete = useCallback(
     async (language: LangId, lessonId: string, practiceId: string, score: number, code: string) => {
       if (!supabase) return 'Supabase is not configured.'
@@ -539,6 +624,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       passwordRecovery,
       clearPasswordRecovery,
       progress,
+      helpMap,
+      getPracticeHelp,
+      recordPracticeHelp,
       signUp,
       signIn,
       signOut,
@@ -566,6 +654,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       passwordRecovery,
       clearPasswordRecovery,
       progress,
+      helpMap,
+      getPracticeHelp,
+      recordPracticeHelp,
       signUp,
       signIn,
       signOut,

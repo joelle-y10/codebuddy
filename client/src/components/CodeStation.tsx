@@ -1,11 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Editor from '@monaco-editor/react'
-import type { CheckResult, Practice, RunnerId, RunResult } from '../types'
+import type { CheckResult, LangId, Practice, RunnerId, RunResult } from '../types'
 import { gradePractice } from '../lib/grader'
 import { explainRunnerError } from '../lib/errorExplain'
 import { enableHtmlTagAutoClose } from '../lib/monacoTagClose'
 import { htmlIssuesToConsole, validateHtml } from '../lib/htmlValidate'
 import { answerPayload, coachBlurb, mediumHintPayload } from '../lib/practiceCoach'
+import {
+  ANSWER_UNLOCK_AFTER,
+  HINT_UNLOCK_AFTER,
+  struggleLabel,
+  type PracticeHelpRecord,
+} from '../lib/practiceHelp'
+import { useAuth } from '../state/AuthContext'
 import { ErrorAssistant } from './ErrorAssistant'
 import {
   buildHtmlPreviewDoc,
@@ -16,6 +23,8 @@ import {
 
 type Props = {
   runner: RunnerId
+  language: LangId
+  lessonId: string
   practice: Practice
   cleared: boolean
   onPass: (score: number, code: string, checks: CheckResult[]) => void
@@ -23,26 +32,36 @@ type Props = {
 
 const diffLabel = { 1: 'Warm-up', 2: 'Practice', 3: 'Challenge' }
 
-export function CodeStation({ runner, practice, cleared, onPass }: Props) {
+export function CodeStation({ runner, language, lessonId, practice, cleared, onPass }: Props) {
+  const { recordPracticeHelp, getPracticeHelp } = useAuth()
+  const savedHelp = getPracticeHelp(language, lessonId, practice.id)
+
   const [code, setCode] = useState(practice.starterCode)
   const [running, setRunning] = useState(false)
   const [result, setResult] = useState<RunResult | null>(null)
   const [checks, setChecks] = useState<CheckResult[] | null>(null)
   const [previewDoc, setPreviewDoc] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [hintLevel, setHintLevel] = useState<0 | 1 | 2>(0)
+  const [failedAttempts, setFailedAttempts] = useState(savedHelp.failedAttempts)
+  const [usedHint, setUsedHint] = useState(savedHelp.usedHint)
+  const [usedAnswer, setUsedAnswer] = useState(savedHelp.usedAnswer)
+  const [hintLevel, setHintLevel] = useState<0 | 1 | 2>(savedHelp.usedAnswer ? 2 : savedHelp.usedHint ? 1 : 0)
   const [hintText, setHintText] = useState<string | null>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
   useEffect(() => {
+    const help = getPracticeHelp(language, lessonId, practice.id)
     setCode(practice.starterCode)
     setResult(null)
     setChecks(null)
     setPreviewDoc(null)
     setError(null)
-    setHintLevel(0)
+    setFailedAttempts(help.failedAttempts)
+    setUsedHint(help.usedHint)
+    setUsedAnswer(help.usedAnswer)
+    setHintLevel(help.usedAnswer ? 2 : help.usedHint ? 1 : 0)
     setHintText(null)
-  }, [practice.id, practice.starterCode])
+  }, [practice.id, practice.starterCode, language, lessonId, getPracticeHelp])
 
   const monacoLang = useMemo(() => {
     if (runner === 'cpp') return 'cpp'
@@ -71,13 +90,40 @@ export function CodeStation({ runner, practice, cleared, onPass }: Props) {
   )
 
   const showConsole = isBackendLanguage(runner) || runner === 'html'
+  const hintUnlocked = failedAttempts >= HINT_UNLOCK_AFTER
+  const answerUnlocked = failedAttempts >= ANSWER_UNLOCK_AFTER
+  const hintRemaining = Math.max(0, HINT_UNLOCK_AFTER - failedAttempts)
+  const answerRemaining = Math.max(0, ANSWER_UNLOCK_AFTER - failedAttempts)
+
+  function hadErrorResult(r: RunResult | null) {
+    if (!r) return false
+    return Boolean(r.compileError || r.timedOut || (r.stderr && r.exitCode !== 0))
+  }
+
+  function topicsFromChecks(graded: CheckResult[]) {
+    return graded.filter((c) => !c.passed).map((c) => c.description).slice(0, 8)
+  }
+
+  async function persistHelp(patch: {
+    failedAttempts: number
+    usedHint?: boolean
+    usedAnswer?: boolean
+    topics?: string[]
+  }) {
+    await recordPracticeHelp({
+      language,
+      lessonId,
+      practiceId: practice.id,
+      failedAttempts: patch.failedAttempts,
+      usedHint: patch.usedHint,
+      usedAnswer: patch.usedAnswer,
+      topics: patch.topics ?? [practice.title],
+    })
+  }
 
   async function handleRun() {
     setRunning(true)
     setError(null)
-    setChecks(null)
-    setHintLevel(0)
-    setHintText(null)
     try {
       let runResult: RunResult | null = null
       let preview: string | undefined
@@ -112,36 +158,65 @@ export function CodeStation({ runner, practice, cleared, onPass }: Props) {
       const graded = gradePractice(practice, code, runResult, preview ?? code)
       setChecks(graded)
       const passedCount = graded.filter((c) => c.passed).length
-      if (passedCount === graded.length && graded.length > 0 && !hadErrorResult(runResult)) {
+      const failed = passedCount < graded.length || hadErrorResult(runResult)
+
+      if (failed) {
+        const nextFails = failedAttempts + 1
+        setFailedAttempts(nextFails)
+        void persistHelp({
+          failedAttempts: nextFails,
+          topics: topicsFromChecks(graded).length ? topicsFromChecks(graded) : [practice.title],
+        })
+      } else if (graded.length > 0) {
         onPass(passedCount, code, graded)
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Run failed')
       setResult(null)
+      const nextFails = failedAttempts + 1
+      setFailedAttempts(nextFails)
+      void persistHelp({ failedAttempts: nextFails, topics: [practice.title] })
     } finally {
       setRunning(false)
     }
   }
 
-  function hadErrorResult(r: RunResult | null) {
-    if (!r) return false
-    return Boolean(r.compileError || r.timedOut || (r.stderr && r.exitCode !== 0))
-  }
-
   function onNeedHint() {
+    if (!hintUnlocked) return
     const text = mediumHintPayload(practice, checks)
     setHintLevel(1)
     setHintText(text)
+    setUsedHint(true)
+    void persistHelp({
+      failedAttempts,
+      usedHint: true,
+      topics: checks ? topicsFromChecks(checks) : [practice.title],
+    })
   }
 
   function onNeedAnswer() {
+    if (!answerUnlocked) return
     const text = answerPayload(practice, checks)
     setHintLevel(2)
     setHintText(text)
+    setUsedAnswer(true)
+    void persistHelp({
+      failedAttempts,
+      usedHint: true,
+      usedAnswer: true,
+      topics: checks ? topicsFromChecks(checks) : [practice.title],
+    })
   }
 
   const allPassed = Boolean(checks && checks.length > 0 && checks.every((c) => c.passed))
   const anyFailed = Boolean(checks && checks.some((c) => !c.passed))
+  const badge = struggleLabel({
+    failedAttempts,
+    usedHint,
+    usedAnswer,
+    struggling: usedHint || usedAnswer || failedAttempts >= HINT_UNLOCK_AFTER,
+    topics: [],
+  } satisfies PracticeHelpRecord)
 
   return (
     <article
@@ -153,6 +228,8 @@ export function CodeStation({ runner, practice, cleared, onPass }: Props) {
           <p className="eyebrow">
             {diffLabel[practice.difficulty]} · Difficulty {practice.difficulty}/3
             {cleared ? ' · Cleared' : ''}
+            {badge ? ` · ${badge}` : ''}
+            {failedAttempts > 0 ? ` · ${failedAttempts} failed attempt${failedAttempts === 1 ? '' : 's'}` : ''}
           </p>
           <h3>{practice.title}</h3>
           <p className="body practice-prompt">{practice.prompt}</p>
@@ -245,16 +322,40 @@ export function CodeStation({ runner, practice, cleared, onPass }: Props) {
           <aside className={`buddy-coach ${anyFailed || hadRuntimeError ? 'active' : 'idle'}`}>
             <p className="pane-label">CodeBuddy</p>
             <p className="body">{coach}</p>
-            {(anyFailed || hadRuntimeError || !allPassed) && (
-              <div className="hint-actions">
-                <button type="button" className="ghost-btn" onClick={onNeedHint}>
-                  I need a hint
-                </button>
-                <button type="button" className="ghost-btn" onClick={onNeedAnswer}>
-                  I need the answer
-                </button>
-              </div>
-            )}
+            <p className="muted unlock-note">
+              Hint unlocks after {HINT_UNLOCK_AFTER} failed attempts
+              {hintUnlocked ? ' ✓' : ` (${hintRemaining} to go)`}. Answer unlocks after{' '}
+              {ANSWER_UNLOCK_AFTER} failed attempts
+              {answerUnlocked ? ' ✓' : ` (${answerRemaining} to go)`}.
+            </p>
+            <div className="hint-actions">
+              <button
+                type="button"
+                className="ghost-btn"
+                onClick={onNeedHint}
+                disabled={!hintUnlocked}
+                title={
+                  hintUnlocked
+                    ? 'Get a directional hint (not the full answer)'
+                    : `Keep trying — unlocks after ${HINT_UNLOCK_AFTER} failed runs`
+                }
+              >
+                I need a hint
+              </button>
+              <button
+                type="button"
+                className="ghost-btn"
+                onClick={onNeedAnswer}
+                disabled={!answerUnlocked}
+                title={
+                  answerUnlocked
+                    ? 'Reveal the answer for this practice'
+                    : `Keep trying — unlocks after ${ANSWER_UNLOCK_AFTER} failed runs`
+                }
+              >
+                I need help with the answer
+              </button>
+            </div>
             {hintText && (
               <div className={`reveal-box ${hintLevel === 2 ? 'reveal-answer' : 'reveal-hint'}`}>
                 <strong>{hintLevel === 2 ? 'Answer' : 'Hint'}</strong>

@@ -4,11 +4,12 @@ import type { LangId, TrackTier } from '../types'
 import { CodeStation } from '../components/CodeStation'
 import { CloudSignInGate } from '../components/CloudSignInGate'
 import { useAuth } from '../state/AuthContext'
+import { struggleLabel } from '../lib/practiceHelp'
 
 export function LessonPage({ tier }: { tier: TrackTier }) {
   const { lang, lessonId } = useParams()
   const data = getLesson(lang as LangId, lessonId || '', tier)
-  const { markPracticeComplete, isPracticeComplete, isLessonComplete } = useAuth()
+  const { markPracticeComplete, isPracticeComplete, isLessonComplete, getPracticeHelp } = useAuth()
   const base = tierPath(tier)
 
   if (!data) {
@@ -111,12 +112,27 @@ export function LessonPage({ tier }: { tier: TrackTier }) {
                 </p>
                 <CodeStation
                   runner={lesson.runner}
+                  language={track.id}
+                  lessonId={lesson.id}
                   practice={practice}
                   cleared={isPracticeComplete(track.id, lesson.id, practice.id)}
                   onPass={(score, code) => {
                     void markPracticeComplete(track.id, lesson.id, practice.id, score, code)
                   }}
                 />
+                {(() => {
+                  const help = getPracticeHelp(track.id, lesson.id, practice.id)
+                  const label = struggleLabel(help)
+                  if (!label && help.topics.length === 0) return null
+                  return (
+                    <p className="struggle-note muted">
+                      {label ? <strong>{label}. </strong> : null}
+                      {help.topics.length > 0
+                        ? `Focus areas: ${help.topics.slice(0, 4).join(' · ')}`
+                        : null}
+                    </p>
+                  )
+                })()}
               </div>
             ))}
           </div>

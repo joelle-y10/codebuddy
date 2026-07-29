@@ -1166,3 +1166,18 @@ code {
   line-height: 1.45;
   color: var(--ink);
 }
+
+.unlock-note {
+  font-size: 0.8rem;
+  margin: 0 0 0.55rem;
+}
+
+.hint-actions .ghost-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.struggle-note {
+  margin: 0.35rem 0 1rem;
+  font-size: 0.85rem;
+}

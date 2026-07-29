@@ -6,7 +6,7 @@
 
 1. Project URL set in `client/.env`
 2. Paste **anon public** key into `client/.env` as `VITE_SUPABASE_ANON_KEY`
-3. Run [`schema.sql`](./schema.sql) in this project's SQL Editor (includes avatar columns + delete account)
+3. Run [`schema.sql`](./schema.sql) in this project's SQL Editor (includes avatar columns, delete account, and practice-help tracking)
 4. Enable Email auth (Authentication → Providers → Email)
 5. **Turn off email confirmation for sign-up** so new accounts can sign in immediately:
    - Authentication → Providers → Email

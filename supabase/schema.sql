@@ -140,6 +140,42 @@ select
 from auth.users u
 on conflict (id) do nothing;
 
+-- Track when learners struggle / use hints & answers on practices
+create table if not exists public.codebuddy_practice_help (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  language text not null,
+  lesson_id text not null,
+  practice_id text not null,
+  failed_attempts integer not null default 0,
+  used_hint boolean not null default false,
+  used_answer boolean not null default false,
+  struggling boolean not null default false,
+  topics text[] not null default '{}',
+  updated_at timestamptz not null default now(),
+  unique (user_id, language, lesson_id, practice_id)
+);
+
+create index if not exists codebuddy_practice_help_user_idx
+  on public.codebuddy_practice_help (user_id, updated_at desc);
+
+alter table public.codebuddy_practice_help enable row level security;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'codebuddy_practice_help'
+      and policyname = 'codebuddy_practice_help_own'
+  ) then
+    create policy "codebuddy_practice_help_own"
+      on public.codebuddy_practice_help for all
+      using (auth.uid() = user_id)
+      with check (auth.uid() = user_id);
+  end if;
+end
+$$;
+
 -- Let a signed-in user permanently delete their own auth account (+ cascaded rows).
 create or replace function public.codebuddy_delete_own_account()
 returns void
