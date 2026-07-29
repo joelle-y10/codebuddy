@@ -961,3 +961,154 @@ code {
   display: inline-flex;
   text-decoration: none;
 }
+
+/* Avatar bubbles */
+.avatar-bubble {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+  font-weight: 800;
+  color: #0b0f14;
+  overflow: hidden;
+}
+
+.avatar-sm {
+  width: 1.7rem;
+  height: 1.7rem;
+  font-size: 0.75rem;
+}
+
+.avatar-md {
+  width: 2.4rem;
+  height: 2.4rem;
+  font-size: 1rem;
+}
+
+.avatar-lg {
+  width: 3.1rem;
+  height: 3.1rem;
+  font-size: 1.35rem;
+}
+
+.avatar-emoji {
+  color: inherit;
+}
+
+.profile-chip-bubble {
+  margin: 0;
+}
+
+.profile-tabs {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.profile-tabs button {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font: inherit;
+  padding: 0.45rem 0.5rem;
+  cursor: pointer;
+}
+
+.profile-tabs button.active {
+  color: var(--ink);
+  border-color: rgba(200, 245, 66, 0.5);
+  background: rgba(200, 245, 66, 0.08);
+}
+
+.avatar-kind-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.kind-active {
+  border-color: rgba(200, 245, 66, 0.55) !important;
+  color: var(--lime) !important;
+}
+
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.emoji-opt {
+  background: rgba(232, 240, 233, 0.06);
+  border: 1px solid var(--line);
+  font-size: 1.25rem;
+  padding: 0.35rem;
+  cursor: pointer;
+}
+
+.emoji-opt.selected {
+  border-color: var(--lime);
+  box-shadow: 0 0 0 1px rgba(200, 245, 66, 0.35);
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.color-opt {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.color-opt.selected {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px rgba(200, 245, 66, 0.55);
+}
+
+.image-upload {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.image-upload input[type='file'] {
+  font: inherit;
+  color: var(--muted);
+}
+
+.auth-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+
+.account-signed-in {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.auth-recovery {
+  margin: 1.25rem 0;
+  padding: 1rem;
+  border: 1px solid rgba(200, 245, 66, 0.35);
+  background: rgba(200, 245, 66, 0.06);
+}
+
+.auth-recovery h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+}

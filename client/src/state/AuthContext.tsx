@@ -9,6 +9,11 @@ import {
 } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { checkCodeBuddySchema, supabase } from '../lib/supabase'
+import {
+  authEmailRedirect,
+  DEFAULT_AVATAR,
+  type ProfileAvatar,
+} from '../lib/profileAvatar'
 import type { LangId, Lesson } from '../types'
 
 type ProgressMap = Record<string, { completed: boolean; bestScore: number }>
@@ -21,11 +26,18 @@ type AuthContextValue = {
   syncStatus: SyncStatus
   syncMessage: string
   displayName: string
+  avatar: ProfileAvatar
+  /** True after clicking a password-reset / change-password email link */
+  passwordRecovery: boolean
+  clearPasswordRecovery: () => void
   progress: ProgressMap
   signUp: (email: string, password: string) => Promise<string | null>
   signIn: (email: string, password: string) => Promise<string | null>
   signOut: () => Promise<void>
+  requestPasswordReset: (email: string) => Promise<string | null>
+  requestPasswordChangeEmail: () => Promise<string | null>
   updateDisplayName: (name: string) => Promise<string | null>
+  updateAvatar: (avatar: ProfileAvatar) => Promise<string | null>
   updateEmail: (email: string) => Promise<string | null>
   updatePassword: (password: string) => Promise<string | null>
   deleteAccount: () => Promise<string | null>
@@ -42,6 +54,7 @@ type AuthContextValue = {
   isComplete: (language: LangId, lessonId: string, lesson?: Lesson) => boolean
   refreshCloud: () => Promise<void>
 }
+
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 const LOCAL_CACHE_KEY = 'codebuddy-progress-cache-v3'
@@ -83,6 +96,8 @@ function clearPendingUpload() {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [displayName, setDisplayName] = useState('')
+  const [avatar, setAvatar] = useState<ProfileAvatar>(DEFAULT_AVATAR)
+  const [passwordRecovery, setPasswordRecovery] = useState(false)
   const [authReady, setAuthReady] = useState(false)
   const [progress, setProgress] = useState<ProgressMap>(() => loadCache())
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
@@ -187,8 +202,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     })
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null)
+      if (event === 'PASSWORD_RECOVERY') {
+        setPasswordRecovery(true)
+      }
     })
     return () => sub.subscription.unsubscribe()
   }, [refreshSchemaStatus])
@@ -238,18 +256,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProgress({})
     saveCache({})
     setDisplayName('')
+    setAvatar(DEFAULT_AVATAR)
+    setPasswordRecovery(false)
     setSyncStatus('local-only')
     setSyncMessage('Signed out. Sign in again to use cloud progress.')
   }, [])
 
+  const clearPasswordRecovery = useCallback(() => setPasswordRecovery(false), [])
+
   const refreshProfile = useCallback(async () => {
     if (!supabase || !user) {
       setDisplayName('')
+      setAvatar(DEFAULT_AVATAR)
       return
     }
     const { data } = await supabase
       .from('codebuddy_profiles')
-      .select('display_name')
+      .select('display_name, avatar_kind, avatar_emoji, avatar_color, avatar_url')
       .eq('id', user.id)
       .maybeSingle()
     const name =
@@ -258,11 +281,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user.email?.split('@')[0] ||
       ''
     setDisplayName(String(name))
+    const kind = (data?.avatar_kind as ProfileAvatar['kind'] | null) || 'color'
+    setAvatar({
+      kind: kind === 'emoji' || kind === 'image' || kind === 'color' ? kind : 'color',
+      emoji: data?.avatar_emoji || DEFAULT_AVATAR.emoji,
+      color: data?.avatar_color || DEFAULT_AVATAR.color,
+      imageUrl: data?.avatar_url || '',
+    })
   }, [user])
 
   useEffect(() => {
     void refreshProfile()
   }, [refreshProfile])
+
+  const requestPasswordReset = useCallback(async (email: string) => {
+    if (!supabase) return 'Supabase is not configured.'
+    const cleaned = email.trim()
+    if (!cleaned) return 'Enter the email for your account.'
+    const { error } = await supabase.auth.resetPasswordForEmail(cleaned, {
+      redirectTo: authEmailRedirect('/account'),
+    })
+    if (error) return error.message
+    return null
+  }, [])
+
+  const requestPasswordChangeEmail = useCallback(async () => {
+    if (!supabase) return 'Supabase is not configured.'
+    if (!user?.email) return 'Sign in first.'
+    const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+      redirectTo: authEmailRedirect('/account'),
+    })
+    if (error) return error.message
+    return null
+  }, [user])
 
   const updateDisplayName = useCallback(
     async (name: string) => {
@@ -274,12 +325,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         { id: user.id, display_name: cleaned },
         { onConflict: 'id' },
       )
-      if (error) return error.message
+      if (error) {
+        if (/avatar_|column/i.test(error.message)) {
+          return `${error.message} — Re-run supabase/schema.sql to add profile avatar columns.`
+        }
+        return error.message
+      }
       await supabase.auth.updateUser({ data: { display_name: cleaned } })
       setDisplayName(cleaned)
       return null
     },
     [user],
+  )
+
+  const updateAvatar = useCallback(
+    async (next: ProfileAvatar) => {
+      if (!supabase) return 'Supabase is not configured.'
+      if (!user) return 'Sign in first.'
+      const { error } = await supabase.from('codebuddy_profiles').upsert(
+        {
+          id: user.id,
+          display_name: displayName || user.email?.split('@')[0] || 'learner',
+          avatar_kind: next.kind,
+          avatar_emoji: next.emoji,
+          avatar_color: next.color,
+          avatar_url: next.kind === 'image' ? next.imageUrl : null,
+        },
+        { onConflict: 'id' },
+      )
+      if (error) {
+        if (/avatar_|column/i.test(error.message)) {
+          return `${error.message} — Re-run supabase/schema.sql to add profile avatar columns.`
+        }
+        return error.message
+      }
+      setAvatar(next)
+      return null
+    },
+    [user, displayName],
   )
 
   const updateEmail = useCallback(
@@ -288,8 +371,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!user) return 'Sign in first.'
       const cleaned = email.trim()
       if (!cleaned) return 'Enter an email.'
+      if (cleaned.toLowerCase() === user.email?.toLowerCase()) {
+        return 'That is already your current email.'
+      }
       const { error } = await supabase.auth.updateUser({ email: cleaned })
       if (error) return error.message
+      // Supabase sends confirmation to the new address (and often the old one when Secure email change is on).
       return null
     },
     [user],
@@ -302,6 +389,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (password.length < 6) return 'Password must be at least 6 characters.'
       const { error } = await supabase.auth.updateUser({ password })
       if (error) return error.message
+      setPasswordRecovery(false)
       return null
     },
     [user],
@@ -318,6 +406,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     saveCache({})
     clearPendingUpload()
     setDisplayName('')
+    setAvatar(DEFAULT_AVATAR)
+    setPasswordRecovery(false)
     await supabase.auth.signOut()
     setSyncStatus('local-only')
     setSyncMessage('Account deleted.')
@@ -445,11 +535,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       syncStatus,
       syncMessage,
       displayName,
+      avatar,
+      passwordRecovery,
+      clearPasswordRecovery,
       progress,
       signUp,
       signIn,
       signOut,
+      requestPasswordReset,
+      requestPasswordChangeEmail,
       updateDisplayName,
+      updateAvatar,
       updateEmail,
       updatePassword,
       deleteAccount,
@@ -466,11 +562,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       syncStatus,
       syncMessage,
       displayName,
+      avatar,
+      passwordRecovery,
+      clearPasswordRecovery,
       progress,
       signUp,
       signIn,
       signOut,
+      requestPasswordReset,
+      requestPasswordChangeEmail,
       updateDisplayName,
+      updateAvatar,
       updateEmail,
       updatePassword,
       deleteAccount,

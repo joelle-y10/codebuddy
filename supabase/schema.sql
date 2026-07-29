@@ -10,8 +10,18 @@
 create table if not exists public.codebuddy_profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   display_name text,
+  avatar_kind text default 'color',
+  avatar_emoji text default '🙂',
+  avatar_color text default '#5ec8ff',
+  avatar_url text,
   created_at timestamptz not null default now()
 );
+
+-- Safe upgrades for existing projects
+alter table public.codebuddy_profiles add column if not exists avatar_kind text default 'color';
+alter table public.codebuddy_profiles add column if not exists avatar_emoji text default '🙂';
+alter table public.codebuddy_profiles add column if not exists avatar_color text default '#5ec8ff';
+alter table public.codebuddy_profiles add column if not exists avatar_url text;
 
 create table if not exists public.codebuddy_progress (
   id uuid primary key default gen_random_uuid(),

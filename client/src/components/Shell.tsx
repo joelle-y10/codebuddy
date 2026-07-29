@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../state/AuthContext'
 import { ProfileDrawer } from './ProfileDrawer'
+import { AvatarBubble } from './AvatarBubble'
 
 export function Shell({ children }: { children: React.ReactNode }) {
-  const { user, displayName, syncAvailable, syncStatus, syncMessage } = useAuth()
+  const { user, displayName, avatar, syncAvailable, syncStatus, syncMessage } = useAuth()
   const [profileOpen, setProfileOpen] = useState(false)
 
   const pill =
@@ -17,8 +18,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
           : user
             ? 'Signed in'
             : 'Sign in for cloud'
-
-  const initial = (displayName || user?.email || '?').slice(0, 1).toUpperCase()
 
   return (
     <div className="app-shell">
@@ -42,10 +41,21 @@ export function Shell({ children }: { children: React.ReactNode }) {
             aria-expanded={profileOpen}
             title={user ? 'Open profile settings' : 'Account'}
           >
-            <span className="profile-chip-avatar" aria-hidden>
-              {user ? initial : '↪'}
+            {user ? (
+              <AvatarBubble
+                avatar={avatar}
+                label={displayName || user.email || 'Profile'}
+                size="sm"
+                className="profile-chip-bubble"
+              />
+            ) : (
+              <span className="profile-chip-avatar" aria-hidden>
+                ↪
+              </span>
+            )}
+            <span className="profile-chip-label">
+              {user ? displayName || 'Profile' : 'Account'}
             </span>
-            <span className="profile-chip-label">{user ? displayName || 'Profile' : 'Account'}</span>
           </button>
         </div>
       </header>

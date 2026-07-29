@@ -1,28 +1,40 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../state/AuthContext'
+import { AvatarBubble } from './AvatarBubble'
+import {
+  AVATAR_COLORS,
+  AVATAR_EMOJIS,
+  fileToAvatarDataUrl,
+  type AvatarKind,
+  type ProfileAvatar,
+} from '../lib/profileAvatar'
 
 type Props = {
   open: boolean
   onClose: () => void
 }
 
+type Tab = 'profile' | 'account'
+
 export function ProfileDrawer({ open, onClose }: Props) {
   const {
     user,
     displayName,
+    avatar,
     signOut,
     updateDisplayName,
+    updateAvatar,
     updateEmail,
-    updatePassword,
+    requestPasswordChangeEmail,
     deleteAccount,
     refreshProfile,
   } = useAuth()
 
+  const [tab, setTab] = useState<Tab>('profile')
   const [name, setName] = useState('')
+  const [draftAvatar, setDraftAvatar] = useState<ProfileAvatar>(avatar)
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [msg, setMsg] = useState<string | null>(null)
   const [err, setErr] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -32,13 +44,13 @@ export function ProfileDrawer({ open, onClose }: Props) {
     if (!open) return
     setMsg(null)
     setErr(null)
-    setPassword('')
-    setConfirmPassword('')
     setConfirmDelete(false)
+    setTab('profile')
     setName(displayName || user?.email?.split('@')[0] || '')
     setEmail(user?.email ?? '')
+    setDraftAvatar(avatar)
     void refreshProfile()
-  }, [open, user, displayName, refreshProfile])
+  }, [open, user, displayName, avatar, refreshProfile])
 
   useEffect(() => {
     if (!open) return
@@ -61,32 +73,43 @@ export function ProfileDrawer({ open, onClose }: Props) {
     else setMsg(ok)
   }
 
-  async function onSaveName(e: FormEvent) {
+  function setKind(kind: AvatarKind) {
+    setDraftAvatar((prev) => ({ ...prev, kind }))
+  }
+
+  async function onSaveProfile(e: FormEvent) {
     e.preventDefault()
-    await run(() => updateDisplayName(name.trim()), 'Display name saved.')
+    await run(async () => {
+      const nameErr = await updateDisplayName(name.trim())
+      if (nameErr) return nameErr
+      return updateAvatar(draftAvatar)
+    }, 'Profile saved.')
+  }
+
+  async function onPickImage(file: File | null) {
+    if (!file) return
+    setErr(null)
+    try {
+      const imageUrl = await fileToAvatarDataUrl(file)
+      setDraftAvatar((prev) => ({ ...prev, kind: 'image', imageUrl }))
+    } catch (error) {
+      setErr(error instanceof Error ? error.message : 'Could not use that image.')
+    }
   }
 
   async function onSaveEmail(e: FormEvent) {
     e.preventDefault()
-    await run(() => updateEmail(email.trim()), 'Email updated. Use the new email next time you sign in.')
+    await run(
+      () => updateEmail(email.trim()),
+      'Confirmation email sent. Check your inbox (and the original email) and click the link to finish changing your email.',
+    )
   }
 
-  async function onSavePassword(e: FormEvent) {
-    e.preventDefault()
-    if (password.length < 6) {
-      setErr('Password must be at least 6 characters.')
-      return
-    }
-    if (password !== confirmPassword) {
-      setErr('Passwords do not match.')
-      return
-    }
-    await run(async () => {
-      const error = await updatePassword(password)
-      setPassword('')
-      setConfirmPassword('')
-      return error
-    }, 'Password updated.')
+  async function onRequestPasswordEmail() {
+    await run(
+      () => requestPasswordChangeEmail(),
+      `Password change link sent to ${user?.email ?? 'your email'}. Open that email to set a new password.`,
+    )
   }
 
   async function onDelete() {
@@ -97,19 +120,15 @@ export function ProfileDrawer({ open, onClose }: Props) {
     }, 'Account deleted.')
   }
 
-  const initial = (displayName || user?.email || '?').slice(0, 1).toUpperCase()
-
   return (
     <div className="profile-drawer-root" role="presentation">
       <button type="button" className="profile-backdrop" aria-label="Close profile" onClick={onClose} />
       <aside className="profile-drawer" role="dialog" aria-modal="true" aria-labelledby="profile-drawer-title">
         <header className="profile-drawer-head">
-          <div className="profile-avatar" aria-hidden>
-            {initial}
-          </div>
+          <AvatarBubble avatar={draftAvatar} label={name || displayName || 'Profile'} size="lg" />
           <div>
-            <p className="eyebrow">Profile</p>
-            <h2 id="profile-drawer-title">{displayName || 'Your account'}</h2>
+            <p className="eyebrow">Your space</p>
+            <h2 id="profile-drawer-title">{displayName || 'Profile'}</h2>
             <p className="muted">{user?.email}</p>
           </div>
           <button type="button" className="ghost-btn profile-close" onClick={onClose}>
@@ -119,104 +138,184 @@ export function ProfileDrawer({ open, onClose }: Props) {
 
         {!user ? (
           <div className="profile-section">
-            <p className="body">Sign in to manage your profile, password, and cloud progress.</p>
+            <p className="body">Sign in to set a profile picture and manage account settings.</p>
             <Link className="primary-btn" to="/account" onClick={onClose}>
               Go to sign in
             </Link>
           </div>
         ) : (
           <>
-            <form className="profile-section auth-form" onSubmit={(e) => void onSaveName(e)}>
-              <h3>Display name</h3>
-              <label>
-                Name shown on your profile
-                <input value={name} onChange={(e) => setName(e.target.value)} maxLength={40} required />
-              </label>
-              <button type="submit" className="primary-btn" disabled={busy}>
-                Save name
-              </button>
-            </form>
-
-            <form className="profile-section auth-form" onSubmit={(e) => void onSaveEmail(e)}>
-              <h3>Email</h3>
-              <label>
-                Account email
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </label>
-              <button type="submit" className="primary-btn" disabled={busy}>
-                Update email
-              </button>
-            </form>
-
-            <form className="profile-section auth-form" onSubmit={(e) => void onSavePassword(e)}>
-              <h3>Password</h3>
-              <label>
-                New password
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  minLength={6}
-                  required
-                  autoComplete="new-password"
-                />
-              </label>
-              <label>
-                Confirm password
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  minLength={6}
-                  required
-                  autoComplete="new-password"
-                />
-              </label>
-              <button type="submit" className="primary-btn" disabled={busy}>
-                Change password
-              </button>
-            </form>
-
-            <div className="profile-section">
-              <h3>Session</h3>
+            <div className="profile-tabs" role="tablist">
               <button
                 type="button"
-                className="ghost-btn"
-                onClick={() => {
-                  void signOut()
-                  onClose()
-                }}
+                role="tab"
+                className={tab === 'profile' ? 'active' : ''}
+                aria-selected={tab === 'profile'}
+                onClick={() => setTab('profile')}
               >
-                Sign out
+                Profile
+              </button>
+              <button
+                type="button"
+                role="tab"
+                className={tab === 'account' ? 'active' : ''}
+                aria-selected={tab === 'account'}
+                onClick={() => setTab('account')}
+              >
+                Account settings
               </button>
             </div>
 
-            <div className="profile-section danger-zone">
-              <h3>Delete account</h3>
-              <p className="muted">
-                Permanently deletes your CodeBuddy account and cloud progress. This cannot be undone.
-              </p>
-              {!confirmDelete ? (
-                <button type="button" className="danger-btn" onClick={() => setConfirmDelete(true)}>
-                  Delete my account…
+            {tab === 'profile' && (
+              <form className="profile-section auth-form" onSubmit={(e) => void onSaveProfile(e)}>
+                <h3>Display name</h3>
+                <label>
+                  Name
+                  <input value={name} onChange={(e) => setName(e.target.value)} maxLength={40} required />
+                </label>
+
+                <h3>Profile picture</h3>
+                <p className="muted">Pick an emoji, a color, or upload an image.</p>
+                <div className="avatar-kind-row">
+                  {(['emoji', 'color', 'image'] as AvatarKind[]).map((kind) => (
+                    <button
+                      key={kind}
+                      type="button"
+                      className={`ghost-btn ${draftAvatar.kind === kind ? 'kind-active' : ''}`}
+                      onClick={() => setKind(kind)}
+                    >
+                      {kind === 'emoji' ? 'Emoji' : kind === 'color' ? 'Color' : 'Image'}
+                    </button>
+                  ))}
+                </div>
+
+                {draftAvatar.kind === 'emoji' && (
+                  <div className="emoji-grid" role="listbox" aria-label="Choose emoji">
+                    {AVATAR_EMOJIS.map((emoji) => (
+                      <button
+                        key={emoji}
+                        type="button"
+                        className={`emoji-opt ${draftAvatar.emoji === emoji ? 'selected' : ''}`}
+                        onClick={() => setDraftAvatar((p) => ({ ...p, emoji }))}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {draftAvatar.kind === 'color' && (
+                  <div className="color-grid" role="listbox" aria-label="Choose color">
+                    {AVATAR_COLORS.map((color) => (
+                      <button
+                        key={color}
+                        type="button"
+                        className={`color-opt ${draftAvatar.color === color ? 'selected' : ''}`}
+                        style={{ background: color }}
+                        aria-label={color}
+                        onClick={() => setDraftAvatar((p) => ({ ...p, color }))}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {draftAvatar.kind === 'image' && (
+                  <label className="image-upload">
+                    Upload photo
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp,image/gif"
+                      onChange={(e) => void onPickImage(e.target.files?.[0] ?? null)}
+                    />
+                  </label>
+                )}
+
+                <button type="submit" className="primary-btn" disabled={busy}>
+                  Save profile
                 </button>
-              ) : (
-                <div className="danger-confirm">
-                  <p className="body">Really delete everything?</p>
-                  <button type="button" className="danger-btn" disabled={busy} onClick={() => void onDelete()}>
-                    Yes, delete forever
+              </form>
+            )}
+
+            {tab === 'account' && (
+              <>
+                <form className="profile-section auth-form" onSubmit={(e) => void onSaveEmail(e)}>
+                  <h3>Change email</h3>
+                  <p className="muted">
+                    We’ll email a confirmation link to finish the change (typically to your new address,
+                    and often your current one too when secure email change is enabled in Supabase).
+                  </p>
+                  <label>
+                    New email
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </label>
+                  <button type="submit" className="primary-btn" disabled={busy}>
+                    Send email change confirmation
                   </button>
-                  <button type="button" className="ghost-btn" onClick={() => setConfirmDelete(false)}>
-                    Cancel
+                </form>
+
+                <div className="profile-section">
+                  <h3>Change password</h3>
+                  <p className="muted">
+                    For safety, we email a link to <strong>{user.email}</strong>. Open that link to
+                    choose a new password.
+                  </p>
+                  <button
+                    type="button"
+                    className="primary-btn"
+                    disabled={busy}
+                    onClick={() => void onRequestPasswordEmail()}
+                  >
+                    Email me a password change link
                   </button>
                 </div>
-              )}
-            </div>
+
+                <div className="profile-section">
+                  <h3>Session</h3>
+                  <button
+                    type="button"
+                    className="ghost-btn"
+                    onClick={() => {
+                      void signOut()
+                      onClose()
+                    }}
+                  >
+                    Sign out
+                  </button>
+                </div>
+
+                <div className="profile-section danger-zone">
+                  <h3>Delete account</h3>
+                  <p className="muted">
+                    Permanently deletes your CodeBuddy account and cloud progress. This cannot be undone.
+                  </p>
+                  {!confirmDelete ? (
+                    <button type="button" className="danger-btn" onClick={() => setConfirmDelete(true)}>
+                      Delete my account…
+                    </button>
+                  ) : (
+                    <div className="danger-confirm">
+                      <p className="body">Really delete everything?</p>
+                      <button
+                        type="button"
+                        className="danger-btn"
+                        disabled={busy}
+                        onClick={() => void onDelete()}
+                      >
+                        Yes, delete forever
+                      </button>
+                      <button type="button" className="ghost-btn" onClick={() => setConfirmDelete(false)}>
+                        Cancel
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </>
         )}
 
