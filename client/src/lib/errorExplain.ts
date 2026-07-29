@@ -316,11 +316,18 @@ export function explainRunnerError(
   fetchError?: string | null,
 ): ErrorExplanation | null {
   if (fetchError) {
+    const pagesish = /405|404|C\+\+|Java needs the CodeBuddy runner|in the browser/i.test(fetchError)
     return {
-      title: 'Could not reach the runner',
-      meaning: 'CodeBuddy’s backend runner did not return a normal result.',
-      likelyCause: 'The API server may be offline, or the network request failed.',
-      whatToTry: 'Make sure the CodeBuddy server is running (npm run dev), then try Run again.',
+      title: pagesish ? 'This language needs a special runner' : 'Could not reach the runner',
+      meaning: pagesish
+        ? 'The live website can run JavaScript, Python, HTML, and Processing in your browser. C++ and Java need the full CodeBuddy app running on your computer.'
+        : 'CodeBuddy’s code runner did not return a normal result.',
+      likelyCause: pagesish
+        ? 'You are on the hosted site (GitHub Pages), which has no C++/Java server.'
+        : 'The API server may be offline, or the network request failed.',
+      whatToTry: pagesish
+        ? 'Try a JavaScript or Python practice on the live site, or run `npm run dev` locally for C++ and Java.'
+        : 'Make sure the CodeBuddy server is running (`npm run dev`), then try Run again.',
     }
   }
 

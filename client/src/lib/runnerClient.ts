@@ -1,22 +1,57 @@
 import type { LangId, RunResult } from '../types'
+import { runJavascriptInBrowser, runPythonInBrowser } from './browserRunner'
 
 const BACKEND_LANGS = new Set(['javascript', 'python', 'cpp', 'java'])
+
+function apiRunUrl() {
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '')
+  return `${base}/api/run`
+}
+
+function isRunnerUnavailable(status: number) {
+  // GitHub Pages (static) answers POST with 404/405; local proxy may be down (502/503/504).
+  return status === 404 || status === 405 || status === 502 || status === 503 || status === 504
+}
+
+async function runInBrowserFallback(
+  language: 'javascript' | 'python' | 'cpp' | 'java',
+  code: string,
+  stdin?: string,
+): Promise<RunResult> {
+  if (language === 'javascript') return runJavascriptInBrowser(code)
+  if (language === 'python') return runPythonInBrowser(code, stdin)
+  throw new Error(
+    `${language === 'cpp' ? 'C++' : 'Java'} needs the CodeBuddy runner server. On the live site only JavaScript, Python, HTML, and Processing can Run in the browser. Locally, start the app with npm run dev.`,
+  )
+}
 
 export async function runOnServer(
   language: 'javascript' | 'python' | 'cpp' | 'java',
   code: string,
   stdin?: string,
 ): Promise<RunResult> {
-  const res = await fetch('/api/run', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ language, code, stdin }),
-  })
-  if (!res.ok) {
+  try {
+    const res = await fetch(apiRunUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ language, code, stdin }),
+    })
+
+    if (res.ok) return res.json()
+
+    if (isRunnerUnavailable(res.status)) {
+      return runInBrowserFallback(language, code, stdin)
+    }
+
     const err = await res.json().catch(() => ({}))
-    throw new Error(err.error || `Runner HTTP ${res.status}`)
+    throw new Error((err as { error?: string }).error || `Runner HTTP ${res.status}`)
+  } catch (e) {
+    // Network failure (Pages has no /api, or local API is down) → browser fallback when possible
+    if (e instanceof TypeError || (e instanceof Error && /Failed to fetch|NetworkError/i.test(e.message))) {
+      return runInBrowserFallback(language, code, stdin)
+    }
+    throw e
   }
-  return res.json()
 }
 
 export function isBackendLanguage(lang: string): lang is 'javascript' | 'python' | 'cpp' | 'java' {
