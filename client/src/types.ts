@@ -7,7 +7,12 @@ export type RunnerId = 'javascript' | 'python' | 'cpp' | 'java' | 'html' | 'proc
 export type LessonTest = {
   id: string
   description: string
+  /** Stronger / legacy hint — shown only when the learner asks (not auto-spoiled). */
   hint: string
+  /** Optional gentle nudge that never pastes the full answer. */
+  softHint?: string
+  /** Optional explicit answer for “I need the answer”. */
+  answer?: string
   kind: TestKind
   expect: string
   stdin?: string
@@ -32,6 +37,10 @@ export type Practice = {
   difficulty: 1 | 2 | 3
   starterCode: string
   tests: LessonTest[]
+  /** Optional full solution code for “I need the answer”. */
+  solution?: string
+  /** Optional practice-level gentle nudge. */
+  softHint?: string
 }
 
 export type Lesson = {
@@ -75,8 +84,11 @@ export type CheckResult = {
   id: string
   description: string
   passed: boolean
+  /** Learner-safe status — must not paste the expected answer. */
   message: string
   hint: string
+  softHint?: string
+  kind?: TestKind
 }
 
 export function flattenLessons(track: LanguageTrack): Lesson[] {

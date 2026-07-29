@@ -10,33 +10,38 @@ export function evaluateTest(
   result: RunResult | null,
   previewHtml?: string,
 ): CheckResult {
-  const fail = (message: string): CheckResult => ({
+  const base = {
     id: test.id,
     description: test.description,
+    hint: test.hint,
+    softHint: test.softHint,
+    kind: test.kind,
+  }
+  const fail = (message: string): CheckResult => ({
+    ...base,
     passed: false,
     message,
-    hint: test.hint,
   })
   const pass = (message: string): CheckResult => ({
-    id: test.id,
-    description: test.description,
+    ...base,
     passed: true,
     message,
-    hint: test.hint,
   })
 
   if (test.kind === 'codeIncludes') {
     return code.includes(test.expect)
       ? pass('Found the expected code pattern.')
-      : fail(`Missing: ${test.expect}`)
+      : fail('Missing a required piece of code for this check. Re-read the prompt — don’t peek at the answer yet.')
   }
 
   if (test.kind === 'codeMatches') {
     try {
       const re = new RegExp(test.expect, 'm')
-      return re.test(code) ? pass('Code matches the required pattern.') : fail('Pattern not found in your code.')
+      return re.test(code)
+        ? pass('Code matches the required pattern.')
+        : fail('Your code’s structure doesn’t match what this check looks for yet.')
     } catch {
-      return fail('Invalid test pattern.')
+      return fail('Invalid test pattern (authoring issue).')
     }
   }
 
@@ -44,14 +49,16 @@ export function evaluateTest(
     const hay = previewHtml ?? code
     return hay.includes(test.expect)
       ? pass('HTML includes the expected markup.')
-      : fail(`Expected HTML to include: ${test.expect}`)
+      : fail('Your HTML is missing markup this check expects. Compare tags/attributes to the prompt.')
   }
 
   if (!result) return fail('Run your code first.')
   if (result.timedOut) return fail('Your program timed out.')
-  if (result.compileError) return fail(`Compile error: ${result.compileError.split('\n')[0]}`)
+  if (result.compileError) {
+    return fail('Your program didn’t compile or parse. Read the console error (and the Error coach).')
+  }
   if (result.stderr && result.exitCode !== 0) {
-    return fail(`Runtime error: ${result.stderr.split('\n')[0]}`)
+    return fail('Your program hit a runtime error. Read the console error (and the Error coach).')
   }
 
   const out = norm(result.stdout)
@@ -59,13 +66,17 @@ export function evaluateTest(
   if (test.kind === 'stdout') {
     return out === norm(test.expect)
       ? pass('Output matches exactly.')
-      : fail(`Expected output:\n${test.expect}\n\nGot:\n${out || '(empty)'}`)
+      : fail(
+          out
+            ? 'Output doesn’t match yet — check spelling, spaces, and new lines.'
+            : 'No output yet. Make sure you print / log what the prompt asks for.',
+        )
   }
 
   if (test.kind === 'stdoutIncludes') {
     return out.includes(test.expect)
       ? pass('Output contains the expected text.')
-      : fail(`Expected output to include: ${test.expect}`)
+      : fail('Output is missing some of the text this check looks for.')
   }
 
   return fail('Unknown check.')

@@ -263,11 +263,50 @@ const javaRules: Rule[] = [
   },
 ]
 
+const htmlRules: Rule[] = [
+  {
+    test: /HTMLSyntaxError: Unterminated string/i,
+    title: 'HTMLSyntaxError — unterminated string',
+    meaning: 'A quote was opened but never closed, so the markup is invalid.',
+    likelyCause: 'An odd number of " characters, or a missing closing quote on an attribute.',
+    whatToTry: 'Count your quotes. Every attribute value should look like name="value".',
+  },
+  {
+    test: /HTMLSyntaxError: Mismatched tags/i,
+    title: 'HTMLSyntaxError — mismatched tags',
+    meaning: 'You closed a different tag than the one that was most recently opened.',
+    likelyCause: 'Nested tags closed in the wrong order, like <div><p></div></p>.',
+    whatToTry: 'Close the innermost tag first. Keep a mental stack: last opened → first closed.',
+  },
+  {
+    test: /HTMLSyntaxError: Unclosed element/i,
+    title: 'HTMLSyntaxError — unclosed element',
+    meaning: 'An opening tag never got a matching closing tag.',
+    likelyCause: 'Forgot </p>, </div>, </h1>, etc.',
+    whatToTry: 'Find the opening tag named in the message and add its closing partner.',
+  },
+  {
+    test: /HTMLSyntaxError: Unexpected closing tag/i,
+    title: 'HTMLSyntaxError — unexpected closing tag',
+    meaning: 'You wrote a closing tag when nothing matching was open.',
+    likelyCause: 'An extra </…> or a typo in the tag name.',
+    whatToTry: 'Remove the extra closer, or fix the tag name so it matches an open element.',
+  },
+  {
+    test: /HTMLSyntaxError:/i,
+    title: 'HTMLSyntaxError',
+    meaning: 'The HTML checker found a structural problem in your markup.',
+    likelyCause: 'Unclosed tags, mismatched tags, or unfinished <…> on a line.',
+    whatToTry: 'Read the console line carefully — it usually names the tag and line number.',
+  },
+]
+
 function rulesFor(runner: RunnerId): Rule[] {
   if (runner === 'python') return pythonRules
   if (runner === 'javascript') return javascriptRules
   if (runner === 'cpp') return cppRules
   if (runner === 'java') return javaRules
+  if (runner === 'html') return htmlRules
   return []
 }
 
@@ -365,6 +404,15 @@ export function explainRunnerError(
       meaning: 'javac errors are compile-time; Exception in thread "main" messages are runtime.',
       likelyCause: 'Compile errors must be fixed before the program can run.',
       whatToTry: 'If you see error:, fix compile issues first. If you see Exception, read the exception type.',
+    }
+  }
+
+  if (runner === 'html') {
+    return {
+      title: 'HTML reported a problem',
+      meaning: 'The console lists HTMLSyntaxError / HTMLWarning lines about your markup structure.',
+      likelyCause: 'Unclosed tags, mismatched closers, or unfinished tag punctuation.',
+      whatToTry: 'Fix the first error line, then Run again — later messages often clear up after that.',
     }
   }
 
