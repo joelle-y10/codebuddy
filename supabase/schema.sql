@@ -1,10 +1,7 @@
 -- =============================================================================
 -- CodeBuddy SAFE SETUP — NON-DESTRUCTIVE (add-only)
 -- =============================================================================
--- This file is intentionally free of:
---   DROP, DELETE, TRUNCATE, UPDATE of rows, ON DELETE CASCADE
--- so Supabase SQL Editor should NOT warn about destructive operations.
---
+-- This file avoids operations Supabase flags as destructive.
 -- Safe to re-run. Expected result: Success. No rows returned.
 -- Run on your CodeBuddy project only (not StudyBuddy).
 -- =============================================================================
@@ -150,7 +147,6 @@ end
 $$;
 
 -- ---------- New-user profile helper ------------------------------------------
--- Creates the function only when missing (no REPLACE of existing definitions).
 
 do $$
 begin
@@ -193,7 +189,7 @@ begin
 end
 $$;
 
--- Backfill missing profiles only (never overwrites existing rows)
+-- Backfill missing profiles only (skips rows that already exist)
 insert into public.codebuddy_profiles (id, display_name)
 select
   u.id,
@@ -202,6 +198,5 @@ from auth.users u
 on conflict (id) do nothing;
 
 -- =============================================================================
--- Done. Account-deletion helper lives in schema-optional-delete-account.sql
--- (separate on purpose — that file alone can trip the “destructive” warning).
+-- Done. For in-app account removal, see schema-optional-delete-account.sql
 -- =============================================================================
