@@ -1,0 +1,15 @@
+{
+  "name": "codebuddy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CodeBuddy — learn to code with lessons, examples, and a live practice lab",
+  "scripts": {
+    "dev": "concurrently -n api,web -c lime,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "dev:client": "npm run dev --prefix client",
+    "dev:server": "npm run dev --prefix server",
+    "build": "npm run build --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
