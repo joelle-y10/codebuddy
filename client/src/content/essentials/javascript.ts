@@ -1,121 +1,79 @@
 import type { Module } from '../../types'
 
-/** First module in every coding track: what values are, when to use them, what they can't be. */
+/** First module: define each data type clearly, then practise using them. */
 export const javascriptEssentialsModule: Module = {
   id: 'js-essentials',
   title: 'Values & types',
   summary:
-    'Start here: what a value is, the main data types, when to use each, and what each type can’t do.',
+    'Start here: learn what a number, string, and boolean are — then when to use each and how they print.',
   lessons: [
     {
       id: 'js-ess-values',
       title: 'What is a value?',
-      summary: 'Programs store and use values. Every value has a type that decides what you can do with it.',
+      summary: 'A value is a piece of data. Every value has a type. Learn the four core types by name.',
       runner: 'javascript',
       sections: [
         {
-          heading: 'Values are the data your program works with',
-          body: `A value is a single piece of information: the number 7, the text "Ada", the yes/no answer true, or an array of scores [10, 20, 30].\n\nYou put values in variables (const name = "Ada"), pass them to functions (console.log(name)), and combine them (score + 1).`,
+          heading: 'Value + type',
+          body: `A value is one piece of information your program stores or uses — like 7, "Ada", or true.\n\nEvery value has a type. The type is the category of that value. The type decides what you are allowed to do with it (math? join text? yes/no decisions?).`,
         },
         {
-          heading: 'Type = the rules for that value',
-          body: `The type answers: what kind of value is this, and what operations are allowed?\n\n• number — integers and decimals (count, score, measurements)\n• string — text (names, messages)\n• boolean — true or false only (decisions)\n• array — ordered collection of values (many scores, many names)\n\nconsole.log(typeof x) shows the type when you're unsure.`,
+          heading: 'The core types — memorize these definitions',
+          body: `• Number — a numeric value. Whole numbers (7, -3) and decimals (3.14, 2.0) are both typeof "number" in JavaScript. Use for counts, scores, measurements.\n\n• String — text. Always written in quotes. Examples: "Ada", "hello", "42", "". Use for names and messages.\n\n• Boolean — a true/false value only. In JavaScript: true or false (lowercase, no quotes). Use for yes/no decisions.\n\n• Array — an ordered collection of values in [brackets]. Example: [10, 20, 30]. (You will practise arrays after the basics.)`,
         },
         {
-          heading: 'Wrong type = wrong result or an error',
-          body: `"3" + "4" is "34" (text join). 3 + 4 is 7 (math). Mixing types without converting often surprises you: "level " + 3 becomes "level 3" (JS coerces the number), but "3" - 1 works as math.\n\nRule of thumb: decide the type first, then write the code. Use === to compare value and type together.`,
+          heading: 'Same looking output ≠ same type',
+          body: `console.log(false) and console.log("false") both show false on the screen — but one is a boolean and one is a string.\n\nconsole.log(typeof false) shows boolean. console.log(typeof "false") shows string. Always know which type you meant.`,
         },
       ],
       examples: [
         {
-          title: 'Four core values',
-          code: `const count = 3;          // number\nconst name = "Ada";       // string\nconst ready = true;       // boolean\nconst scores = [10, 20];  // array\nconsole.log(typeof count, typeof name, typeof ready, typeof scores);`,
-          note: 'Same console.log can show several types.',
+          title: 'Each type, named',
+          code: `const count = 7;          // number — whole\nconst price = 3.5;        // number — decimal\nconst name = "Ada";       // string — text in quotes\nconst ready = true;       // boolean — true or false only\n\nconsole.log(typeof count);\nconsole.log(typeof price);\nconsole.log(typeof name);\nconsole.log(typeof ready);`,
+          note: 'typeof(...) tells you the category of the value.',
         },
       ],
       practices: [
         {
           id: 'p1',
-          title: 'Store each kind',
-          prompt: 'Create n = 5, label = "hi", ok = false, then log each on its own line (in that order).',
+          title: 'Make one of each',
+          prompt:
+            'Create number n = 5, number x = 2.5, string label = "hi", and boolean ok = false. Log each on four lines in that order.',
           difficulty: 1,
-          starterCode: `// n, label, ok — then log each\n`,
+          starterCode: `// number n, number x, string label, boolean ok — then log each\n`,
           tests: [
-            { id: 't1', description: 'Prints 5, hi, false', hint: 'console.log(n);\\nconsole.log(label);\\nconsole.log(ok);', kind: 'stdout', expect: '5\nhi\nfalse' },
-            { id: 't2', description: 'Uses false boolean', hint: 'ok = false (no quotes)', kind: 'codeMatches', expect: '\\bfalse\\b' },
+            {
+              id: 't1',
+              description: 'Prints 5, 2.5, hi, false',
+              hint: 'console.log(n);\\nconsole.log(x);\\nconsole.log(label);\\nconsole.log(ok);',
+              kind: 'stdout',
+              expect: '5\n2.5\nhi\nfalse',
+            },
+            {
+              id: 't2',
+              description: 'Uses boolean false',
+              hint: 'ok = false with no quotes',
+              kind: 'codeMatches',
+              expect: '\\bfalse\\b',
+            },
+            {
+              id: 't3',
+              description: 'Uses a decimal number',
+              hint: 'x = 2.5 with a decimal point',
+              kind: 'codeMatches',
+              expect: '2\\.5',
+            },
           ],
         },
         {
           id: 'p2',
-          title: 'Ask the type',
-          prompt: 'Log typeof 7 — output should be number.',
+          title: 'Check a boolean’s type',
+          prompt: 'Log typeof true — the output should be boolean.',
           difficulty: 2,
-          starterCode: `// log typeof 7\n`,
+          starterCode: `// A boolean is true or false. Log its type.\n`,
           tests: [
-            { id: 't1', description: 'Prints number', hint: 'console.log(typeof 7)', kind: 'stdout', expect: 'number' },
+            { id: 't1', description: 'Prints boolean', hint: 'console.log(typeof true)', kind: 'stdout', expect: 'boolean' },
             { id: 't2', description: 'Uses typeof', hint: 'typeof(...)', kind: 'codeIncludes', expect: 'typeof' },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'js-ess-output',
-      title: 'Kinds of output',
-      summary: 'What console.log shows for text, numbers, booleans, and missing values.',
-      runner: 'javascript',
-      sections: [
-        {
-          heading: 'Output is text in the console',
-          body: `console.log(...) prints values so you can see what your program is doing. Different types can look similar — know which one you meant.\n\nconsole.log(42) and console.log("42") both look like 42, but one is a number and one is a string.`,
-        },
-        {
-          heading: 'How common types print',
-          body: `• Strings print their characters (no quotes in the console)\n• Numbers print as digits\n• Booleans print true or false (lowercase in JavaScript)\n• null prints null — intentional empty\n• undefined prints undefined — "no value assigned yet"\n• Arrays print with brackets: [1, 2]\n\nTip: console.log(typeof value) shows "number", "string", "boolean", etc.`,
-        },
-        {
-          heading: 'Several values in one log',
-          body: `console.log("score", 10, true) prints pieces separated by spaces: score 10 true.\n\nGreat for debugging. For neat messages, use templates: console.log(\`score \${10}\`).`,
-        },
-      ],
-      examples: [
-        {
-          title: 'Same look, different types',
-          code: `console.log(42);\nconsole.log("42");\nconsole.log(true);\nconsole.log("true");\nconsole.log(null);\nconsole.log(undefined);\nconsole.log(typeof 42);\nconsole.log(typeof "42");`,
-          note: 'typeof reveals what print alone hides.',
-        },
-      ],
-      practices: [
-        {
-          id: 'p1',
-          title: 'Number then word',
-          prompt: 'Log 7, then log seven on the next line.',
-          difficulty: 1,
-          starterCode: `// number 7, then the word seven\n`,
-          tests: [
-            { id: 't1', description: 'Two-line output', hint: 'console.log(7); console.log("seven");', kind: 'stdout', expect: '7\nseven' },
-          ],
-        },
-        {
-          id: 'p2',
-          title: 'Boolean vs string',
-          prompt: 'Log boolean false, then string false on the next line.',
-          difficulty: 2,
-          starterCode: `// boolean false, then "false"\n`,
-          tests: [
-            { id: 't1', description: 'false then false', hint: 'console.log(false); console.log("false");', kind: 'stdout', expect: 'false\nfalse' },
-            { id: 't2', description: 'Uses boolean false', hint: 'false without quotes first', kind: 'codeMatches', expect: 'console\\.log\\(\\s*false\\s*\\)' },
-            { id: 't3', description: 'Uses string false', hint: 'console.log("false")', kind: 'codeIncludes', expect: '"false"' },
-          ],
-        },
-        {
-          id: 'p3',
-          title: 'Log null',
-          prompt: 'Log null (the value, not a string).',
-          difficulty: 2,
-          starterCode: `// log null\n`,
-          tests: [
-            { id: 't1', description: 'Prints null', hint: 'console.log(null)', kind: 'stdout', expect: 'null' },
-            { id: 't2', description: 'Uses null', hint: 'null without quotes', kind: 'codeMatches', expect: '\\bnull\\b' },
           ],
         },
       ],
@@ -123,60 +81,65 @@ export const javascriptEssentialsModule: Module = {
     {
       id: 'js-ess-numbers',
       title: 'Numbers',
-      summary: 'Whole numbers and decimals — when to use them, and what they can't do.',
+      summary: 'Whole numbers and decimals — both are typeof "number". When to use each.',
       runner: 'javascript',
       sections: [
         {
-          heading: 'Define: number',
-          body: `JavaScript uses one Number type for both integers and decimals: 42 and 3.14 are both typeof "number".\n\nUse numbers for counts, scores, measurements, and anything you do math on.`,
+          heading: 'Definition: whole number',
+          body: `A whole number has no fractional part: 0, 1, 42, -3.\n\nIn JavaScript these are still typeof "number" (there is no separate int type).\n\nNot whole numbers: 3.14 (decimal), "7" (string because of the quotes).`,
         },
         {
-          heading: 'When to use them',
-          body: `• Counting loops, array indexes, "how many?" → whole numbers\n• Division that should keep a fraction → 9 / 2 is 4.5\n• Measurements and averages → decimals\n\nOperators: + - * /, % (remainder), ** (power). Parentheses change order: (1 + 2) * 3 is 9.`,
+          heading: 'Definition: decimal number',
+          body: `A decimal number includes a fractional part: 3.14, 2.0, -0.5, 0.25.\n\nIn JavaScript these are also typeof "number".\n\nEven 2.0 is a number — the decimal point (or math that produces a fraction) tells you it can hold decimals.`,
         },
         {
-          heading: 'What numbers can't be / common mistakes',
-          body: `• A number is not text — "level " + 3 becomes "level 3" (coercion), but you can't rely on that everywhere.\n• "10" + "1" is "101", not 11 — strings join, they don't add.\n• Special values: NaN ("not a number") and Infinity appear when math goes wrong (like 0/0).\n• Don't use a float as an array index without converting to an integer.`,
+          heading: 'When to use which',
+          body: `• Counting, looping indexes, "how many?" → whole numbers\n• Measurements, averages, money-style decimals → decimal numbers\n\nMath: + - * /  % (remainder)  ** (power).\n9 / 2 is 4.5 (true division — not truncated).`,
+        },
+        {
+          heading: 'What numbers can't be',
+          body: `• A number is not text — "level " + 3 becomes "level 3" (coercion), but don't rely on that everywhere.\n• A string of digits like "10" is not a number until you use Number("10").\n• "10" + "1" is "101", not 11 — strings join, they don't add.\n• Don't use a float as an array index without converting to an integer.`,
         },
       ],
       examples: [
         {
-          title: 'Everyday math',
-          code: `console.log(7 / 2);\nconsole.log(17 % 5);\nconsole.log(2 ** 8);\nconsole.log(typeof 3.14);`,
-          note: '7/2 is 3.5 — JS does true division.',
+          title: 'Whole vs decimal',
+          code: `console.log(7);        // whole number\nconsole.log(7.0);      // decimal number\nconsole.log(7 / 2);    // 3.5\nconsole.log(typeof 7);\nconsole.log(typeof 7.0);`,
+          note: '/ gives a decimal result in JavaScript.',
         },
       ],
       practices: [
         {
           id: 'p1',
-          title: 'Remainder',
-          prompt: 'Print 17 % 5 (should be 2).',
+          title: 'Print a whole number',
+          prompt: 'Log the whole number 17 (no quotes, no decimal point).',
           difficulty: 1,
-          starterCode: `// 17 % 5\n`,
+          starterCode: `// Log a whole number\n`,
           tests: [
-            { id: 't1', description: 'Prints 2', hint: 'console.log(17 % 5)', kind: 'stdout', expect: '2' },
-            { id: 't2', description: 'Uses %', hint: '% operator', kind: 'codeIncludes', expect: '%' },
+            { id: 't1', description: 'Prints 17', hint: 'console.log(17)', kind: 'stdout', expect: '17' },
+            { id: 't2', description: 'Uses number literal', hint: '17 without quotes', kind: 'codeMatches', expect: 'console\\.log\\(\\s*17\\s*\\)' },
           ],
         },
         {
           id: 'p2',
-          title: 'Division',
-          prompt: 'Print 9 / 2.',
-          difficulty: 2,
-          starterCode: `// 9 / 2\n`,
+          title: 'Print a decimal',
+          prompt: 'Log the decimal 4.5.',
+          difficulty: 1,
+          starterCode: `// Log a decimal number\n`,
           tests: [
-            { id: 't1', description: 'Prints 4.5', hint: 'console.log(9 / 2)', kind: 'stdout', expect: '4.5' },
+            { id: 't1', description: 'Prints 4.5', hint: 'console.log(4.5)', kind: 'stdout', expect: '4.5' },
+            { id: 't2', description: 'Uses a decimal', hint: '4.5 with a dot', kind: 'codeMatches', expect: '4\\.5' },
           ],
         },
         {
           id: 'p3',
-          title: 'Power',
-          prompt: 'Print 2 ** 8 (256).',
+          title: 'Remainder',
+          prompt: 'Log the remainder of 17 divided by 5 (answer 2).',
           difficulty: 2,
-          starterCode: `// 2 ** 8\n`,
+          starterCode: `// 17 % 5\n`,
           tests: [
-            { id: 't1', description: 'Prints 256', hint: 'console.log(2 ** 8)', kind: 'stdout', expect: '256' },
-            { id: 't2', description: 'Uses **', hint: '** for power', kind: 'codeIncludes', expect: '**' },
+            { id: 't1', description: 'Prints 2', hint: 'console.log(17 % 5)', kind: 'stdout', expect: '2' },
+            { id: 't2', description: 'Uses %', hint: '% operator', kind: 'codeIncludes', expect: '%' },
           ],
         },
       ],
@@ -184,60 +147,60 @@ export const javascriptEssentialsModule: Module = {
     {
       id: 'js-ess-strings',
       title: 'Strings (text)',
-      summary: 'Define text values — when to use them, and what you can't do with them.',
+      summary: 'A string is text in quotes — letters, digits, spaces, anything you read as words.',
       runner: 'javascript',
       sections: [
         {
-          heading: 'Define: string',
-          body: `A string is text in "double", 'single', or \`backtick\` quotes.\n\nEmpty string "" has length 0. "code".length is 4. Indexes start at 0: "code"[0] is "c".`,
+          heading: 'Definition: string',
+          body: `A string is text. You write it inside quotes so JavaScript knows it's text, not a variable name or a number.\n\nExamples: "Ada", 'hello', "42", "" (empty string).\n\nImportant: "42" is a string of characters, not the number 42. "false" is a string, not the boolean false.`,
         },
         {
           heading: 'When to use strings',
-          body: `• Names, messages, file paths, labels on screen\n• Anything the user reads as text\n• Digits that are identifiers, not math (zip codes, phone numbers) — keep them as strings\n\nJoin with + or template literals: \`Hi \${name}\`. Repeat is less common in JS than Python.`,
+          body: `• Names, messages, labels\n• Anything the user should read as text\n• Codes that look like numbers but aren't for math (zip codes, phone numbers) — keep them as strings so leading zeros aren't lost\n\n"code".length is 4. Join with +: "Hi " + "Ada". Template literals: \`Hi \${name}\`.`,
         },
         {
           heading: 'What strings can't do',
-          body: `• "3" + 1 becomes "31" — + prefers string joining when either side is a string.\n• Strings are not arrays of numbers; compare carefully or convert first.\n• Strings are immutable — you build new strings instead of changing characters in place.\n• Use === to compare string content (avoid ==, which coerces types).`,
+          body: `• "3" + 1 becomes "31" — + prefers string joining when either side is a string.\n• A string is not a boolean — "true" is text, true is boolean.\n• Strings are immutable — you build new strings instead of changing characters in place.\n• Use === to compare string content (avoid ==, which coerces types).`,
         },
       ],
       examples: [
         {
-          title: 'Length and join',
-          code: `const word = "code";\nconsole.log(word.length);\nconsole.log(word + "buddy");\nconsole.log(\`go\${2}\`);`,
-          note: '.length counts characters.',
+          title: 'String vs number that looks the same',
+          code: `console.log("42");      // string — text characters\nconsole.log(42);        // number — a numeric value\nconsole.log(typeof "42");\nconsole.log(typeof 42);\nconsole.log("Hi " + "Ada");\nconsole.log("code".length);`,
+          note: 'Quotes make it a string.',
         },
       ],
       practices: [
         {
           id: 'p1',
-          title: 'Join a greeting',
-          prompt: 'Using greeting and name, print Hello Ada.',
+          title: 'Log a string',
+          prompt: 'Log the string hello (with quotes in your code).',
           difficulty: 1,
-          starterCode: `const greeting = "Hello";\nconst name = "Ada";\n// print Hello Ada\n`,
+          starterCode: `// Log a string\n`,
+          tests: [
+            { id: 't1', description: 'Prints hello', hint: 'console.log("hello")', kind: 'stdout', expect: 'hello' },
+            { id: 't2', description: 'Uses quotes', hint: 'Put hello in quotes', kind: 'codeMatches', expect: '["\']hello["\']' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'Join a greeting',
+          prompt: 'Using greeting and name, log Hello Ada (space between).',
+          difficulty: 1,
+          starterCode: `const greeting = "Hello";\nconst name = "Ada";\n// log Hello Ada\n`,
           tests: [
             { id: 't1', description: 'Prints Hello Ada', hint: 'console.log(greeting + " " + name)', kind: 'stdout', expect: 'Hello Ada' },
           ],
         },
         {
-          id: 'p2',
+          id: 'p3',
           title: 'String length',
-          prompt: 'Print the length of word (should be 10).',
+          prompt: 'Log the length of word (should be 10).',
           difficulty: 2,
-          starterCode: `const word = "javascript";\n// print its length\n`,
+          starterCode: `const word = "javascript";\n// log its length\n`,
           tests: [
             { id: 't1', description: 'Prints 10', hint: 'console.log(word.length)', kind: 'stdout', expect: '10' },
             { id: 't2', description: 'Uses .length', hint: 'word.length', kind: 'codeIncludes', expect: '.length' },
-          ],
-        },
-        {
-          id: 'p3',
-          title: 'Template literal',
-          prompt: 'Using a template literal, print level 3.',
-          difficulty: 2,
-          starterCode: `const level = 3;\n// console.log(\`level \${level}\`)\n`,
-          tests: [
-            { id: 't1', description: 'Prints level 3', hint: 'Backticks and ${level}', kind: 'stdout', expect: 'level 3' },
-            { id: 't2', description: 'Uses template', hint: 'Use ` backticks', kind: 'codeIncludes', expect: '`' },
           ],
         },
       ],
@@ -245,52 +208,47 @@ export const javascriptEssentialsModule: Module = {
     {
       id: 'js-ess-booleans',
       title: 'Booleans (true / false)',
-      summary: 'Yes/no values — define them, when to use them, what they can't be.',
+      summary: 'A boolean is a true/false value — only true or false.',
       runner: 'javascript',
       sections: [
         {
-          heading: 'Define: boolean',
-          body: `A boolean is only true or false (lowercase in JavaScript). Nothing else is a boolean — not "true", not 1, not "yes" (those are other types that can be converted).\n\nComparisons produce booleans: 5 > 3 is true. Store them: const ready = true;`,
+          heading: 'Definition: boolean',
+          body: `A boolean is a true/false value. It answers a yes/no question.\n\nIn JavaScript the only boolean values are:\n• true\n• false\n\nThey must be lowercase, and they must NOT be in quotes.\n\n• true  → boolean\n• false → boolean\n• "true" / "false" → strings (text that happens to look similar)\n• 1 and 0 → numbers, not booleans (even though they can act truthy/falsy later)`,
         },
         {
           heading: 'When to use booleans',
-          body: `• Flags: gameOver, isLoggedIn, ready\n• Conditions in if / while\n• Results of checks: score >= 60, name === "Ada"\n\nCombine with && / || / !: age >= 13 && age <= 19.`,
+          body: `• Flags: ready = true, gameOver = false\n• Results of comparisons: score >= 60 produces a boolean\n• Conditions in if / while\n\nCombine with && / || / !: age >= 13 && age <= 19.`,
         },
         {
           heading: 'What booleans aren't',
-          body: `"true" (with quotes) is a string, not a boolean — it's truthy as non-empty text, which is a different rule.\n\nUse === and !== for comparisons (recommended while learning). == tries to convert types first and can surprise you ("5" == 5 is true, but "5" === 5 is false).\n\nDon't use = when you mean ===. = assigns; === compares value and type.`,
+          body: `"false" with quotes is a string, not a boolean.\n\nUse === and !== for comparisons (recommended while learning). == tries to convert types first and can surprise you ("5" == 5 is true, but "5" === 5 is false).\n\nDon't use = when you mean ===. = assigns; === compares value and type.`,
         },
       ],
       examples: [
         {
-          title: 'Comparisons',
-          code: `const score = 85;\nconsole.log(score >= 60);\nconsole.log(score === 100);\nconsole.log(!false);`,
-          note: 'console.log shows true/false.',
-        },
-        {
-          title: 'Combining',
-          code: `const age = 15;\nconsole.log(age >= 13 && age <= 19);\nconsole.log(age < 5 || age > 65);`,
-          note: '&& needs both; || needs one.',
+          title: 'Boolean vs string that looks like one',
+          code: `console.log(false);       // boolean\nconsole.log("false");     // string\nconsole.log(typeof false);\nconsole.log(typeof "false");\n\nconst score = 85;\nconsole.log(score >= 60);   // comparison → boolean true`,
+          note: 'No quotes = boolean. Quotes = string.',
         },
       ],
       practices: [
         {
           id: 'p1',
-          title: 'Log true',
-          prompt: 'Log the boolean true.',
+          title: 'Log a boolean',
+          prompt: 'Log the boolean true (no quotes).',
           difficulty: 1,
-          starterCode: `// log true\n`,
+          starterCode: `// A boolean is true or false. Log true.\n`,
           tests: [
             { id: 't1', description: 'Prints true', hint: 'console.log(true)', kind: 'stdout', expect: 'true' },
-            { id: 't2', description: 'Uses true', hint: 'true without quotes', kind: 'codeMatches', expect: '\\btrue\\b' },
+            { id: 't2', description: 'Uses true boolean', hint: 'true without quotes', kind: 'codeMatches', expect: 'console\\.log\\(\\s*true\\s*\\)' },
           ],
         },
         {
           id: 'p2',
           title: 'Compare with >=',
-          prompt: 'Log whether score >= 60 (should be true).',
+          prompt: 'Log whether score >= 60 (should be true). That comparison creates a boolean.',
           difficulty: 2,
-          starterCode: `const score = 85;\n// log the comparison\n`,
+          starterCode: `const score = 85;\n// log the boolean result of score >= 60\n`,
           tests: [
             { id: 't1', description: 'Prints true', hint: 'console.log(score >= 60)', kind: 'stdout', expect: 'true' },
             { id: 't2', description: 'Uses >=', hint: 'score >= 60', kind: 'codeIncludes', expect: '>=' },
@@ -299,7 +257,7 @@ export const javascriptEssentialsModule: Module = {
         {
           id: 'p3',
           title: 'Use &&',
-          prompt: 'Log whether ready is true AND score >= 60.',
+          prompt: 'Log whether ready is true and score >= 60 (should be true).',
           difficulty: 3,
           starterCode: `const ready = true;\nconst score = 85;\n// log ready && score >= 60\n`,
           tests: [
@@ -310,22 +268,81 @@ export const javascriptEssentialsModule: Module = {
       ],
     },
     {
-      id: 'js-ess-arrays',
-      title: 'Arrays (collections)',
-      summary: 'Ordered collections of values — define, when to use, what they can't be.',
+      id: 'js-ess-output',
+      title: 'How types look when printed',
+      summary: 'Now that you know the definitions — see how console.log shows each type (and how look-alikes can fool you).',
       runner: 'javascript',
       sections: [
         {
-          heading: 'Define: array',
-          body: `An array is an ordered collection of values in square brackets: const scores = [10, 20, 30].\n\nIndexes start at 0: scores[0] is 10. scores.length is 3. Arrays can hold mixed types, but beginners should keep one type per array when possible.`,
+          heading: 'console.log shows characters — type is still real',
+          body: `console.log(...) turns a value into characters on the screen. Two different types can look the same:\n\n• console.log(42) and console.log("42") both show 42\n• console.log(false) and console.log("false") both show false\n\nYou already know the definitions:\n• 42 without quotes → number\n• "42" with quotes → string\n• false without quotes → boolean\n• "false" with quotes → string`,
+        },
+        {
+          heading: 'How each type usually prints',
+          body: `• Number → digits (3.5 for a decimal)\n• String → the text inside (quotes are NOT shown in the console)\n• Boolean → true or false (lowercase)\n• null → null (intentional empty)\n• undefined → undefined ("no value assigned yet")\n• Array → [1, 2, 3]\n\nWhen unsure: console.log(typeof value).`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Look-alikes side by side',
+          code: `console.log(42);\nconsole.log("42");\nconsole.log(false);\nconsole.log("false");\nconsole.log(typeof 42);\nconsole.log(typeof "42");\nconsole.log(typeof false);\nconsole.log(typeof "false");`,
+          note: 'Same looking line, different type.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Number then string',
+          prompt: 'Log the number 7, then on the next line log the string seven.',
+          difficulty: 1,
+          starterCode: `// number 7, then string "seven"\n`,
+          tests: [
+            { id: 't1', description: 'Two-line output', hint: 'console.log(7) then console.log("seven")', kind: 'stdout', expect: '7\nseven' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'Boolean vs string false',
+          prompt:
+            'A boolean is true/false. A string is text in quotes. Log the boolean false, then log the string "false" on the next line.',
+          difficulty: 2,
+          starterCode: `// boolean false (no quotes), then string "false"\n`,
+          tests: [
+            { id: 't1', description: 'false then false', hint: 'console.log(false)\\nconsole.log("false")', kind: 'stdout', expect: 'false\nfalse' },
+            { id: 't2', description: 'Uses boolean false', hint: 'false without quotes first', kind: 'codeMatches', expect: 'console\\.log\\(\\s*false\\s*\\)' },
+            { id: 't3', description: 'Uses string false', hint: 'console.log("false")', kind: 'codeIncludes', expect: '"false"' },
+          ],
+        },
+        {
+          id: 'p3',
+          title: 'Log null',
+          prompt: 'Log null (the special "empty on purpose" value — not a string).',
+          difficulty: 2,
+          starterCode: `// log null\n`,
+          tests: [
+            { id: 't1', description: 'Prints null', hint: 'console.log(null)', kind: 'stdout', expect: 'null' },
+            { id: 't2', description: 'Uses null literal', hint: 'null without quotes', kind: 'codeMatches', expect: '\\bnull\\b' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'js-ess-arrays',
+      title: 'Arrays (collections)',
+      summary: 'An array is an ordered collection of values in [brackets].',
+      runner: 'javascript',
+      sections: [
+        {
+          heading: 'Definition: array',
+          body: `An array is an ordered collection of values inside square brackets.\n\nExample: const scores = [10, 20, 30];\n\n• scores[0] is the first item (10) — indexes start at 0\n• scores.length is how many items (3)\n• Arrays can hold numbers, strings, booleans, or mixes — beginners should usually keep one type per array`,
         },
         {
           heading: 'When to use arrays',
-          body: `• Many related values of the same kind (names, scores, prices)\n• When you'll loop through every item\n• When the collection can grow: scores.push(40)\n\nfor (const n of scores) visits each element. Use scores[i] when you need the index.`,
+          body: `• Many related values (names, scores, prices)\n• When you'll loop through every item\n• When the collection can grow: scores.push(40)`,
         },
         {
-          heading: 'What arrays aren't / can't do',
-          body: `• An array is not a string — "abc"[0] is a character; [1, 2, 3] + 4 becomes "1,2,34" (weird coercion).\n• Index out of range: scores[3] on a length-3 array is undefined (no crash, but wrong data).\n• Don't confuse the array with one element inside it — console.log(scores) vs console.log(scores[0]).\n• A single number is not an array: 5 has no [0].`,
+          heading: 'What arrays aren't',
+          body: `• A single number is not an array — 5 has no [0].\n• A string is not an array of numbers.\n• Index out of range: scores[3] on a length-3 array is undefined (no crash, but wrong data).`,
         },
       ],
       examples: [
@@ -374,7 +391,7 @@ export const javascriptEssentialsModule: Module = {
     {
       id: 'js-ess-convert',
       title: 'Types & conversion',
-      summary: 'typeof, Number, String, Boolean — and when to convert arrays and other values.',
+      summary: 'Convert between number, string, and boolean when you need a different type.',
       runner: 'javascript',
       sections: [
         {
@@ -383,11 +400,11 @@ export const javascriptEssentialsModule: Module = {
         },
         {
           heading: 'Convert between types',
-          body: `• String(5) or "" + 5 → "5" (for joining text)\n• Number("12") → 12; Number("hi") → NaN\n• Boolean(0) is false; Boolean(1) is true; Boolean("") is false; Boolean("hi") is true\n• parseInt("12px", 10) reads leading digits — useful with messy text\n\nArrays don't convert to numbers directly — access elements with nums[0] or loop.`,
+          body: `• String(5) or "" + 5 → "5" (number → text)\n• Number("12") → 12 (digit text → number)\n• Number("3.5") → 3.5\n• Boolean(0) is false; Boolean(1) is true; Boolean("") is false; Boolean("hi") is true\n\nNumber("12.5") works; parseInt("12px", 10) reads leading digits from messy text.`,
         },
         {
           heading: 'Why convert?',
-          body: `User input and some APIs give you strings even when the content looks like numbers. Convert before doing math. Convert numbers to strings when building messages with + (or use template literals).\n\nnull usually means "empty on purpose." undefined usually means "not set yet." Both are falsy in if conditions.`,
+          body: `Input often arrives as strings even when it looks like numbers. Convert before math. Convert numbers to strings when building messages with + (or use template literals).\n\nnull usually means "empty on purpose." undefined usually means "not set yet." Both are falsy in if conditions.`,
         },
       ],
       examples: [
@@ -400,8 +417,8 @@ export const javascriptEssentialsModule: Module = {
       practices: [
         {
           id: 'p1',
-          title: 'Stringify',
-          prompt: 'Print score: 7 using + and String(...).',
+          title: 'Stringify a number',
+          prompt: 'Log score: 7 using + and String(...).',
           difficulty: 2,
           starterCode: `const n = 7;\n// console.log("score: " + ...)\n`,
           tests: [
@@ -412,7 +429,7 @@ export const javascriptEssentialsModule: Module = {
         {
           id: 'p2',
           title: 'Parse digits',
-          prompt: 'Convert raw with Number, add 3, log 15.',
+          prompt: 'Convert raw to a number, add 3, log the result (15).',
           difficulty: 2,
           starterCode: `const raw = "12";\n// Number, add 3, log\n`,
           tests: [
@@ -423,9 +440,9 @@ export const javascriptEssentialsModule: Module = {
         {
           id: 'p3',
           title: 'typeof true',
-          prompt: 'Log typeof true (should be boolean).',
+          prompt: 'Log typeof true — output should be boolean.',
           difficulty: 2,
-          starterCode: `// typeof true\n`,
+          starterCode: `// log typeof true\n`,
           tests: [
             { id: 't1', description: 'Prints boolean', hint: 'console.log(typeof true)', kind: 'stdout', expect: 'boolean' },
             { id: 't2', description: 'Uses typeof', hint: 'typeof', kind: 'codeIncludes', expect: 'typeof' },

@@ -3,49 +3,69 @@ import type { Module } from '../../types'
 const JAVA_HEAD = `public class Main {\n  public static void main(String[] args) {\n`
 const JAVA_TAIL = `  }\n}\n`
 
-/** First module in every coding track: what values are, when to use them, what they can't be. */
+/** First module: define each data type clearly, then practise using them. */
 export const javaEssentialsModule: Module = {
   id: 'java-essentials',
   title: 'Values & types',
   summary:
-    'Start here: what a value is, the main data types, when to use each, and what each type can’t do.',
+    'Start here: learn what an int, double, String, and boolean are — then when to use each and how they print.',
   lessons: [
     {
       id: 'java-ess-values',
       title: 'What is a value?',
-      summary: 'Programs store and use values. Every value has a type that decides what you can do with it.',
+      summary: 'A value is a piece of data. Every value has a type. Learn the four core types by name.',
       runner: 'java',
       sections: [
         {
-          heading: 'Values are the data your program works with',
-          body: `A value is a single piece of information: the number 7, the text "Ada", the yes/no answer true, or an array of scores {10, 20, 30}.\n\nYou put values in variables (String name = "Ada";), pass them to methods (System.out.println(name);), and combine them (score + 1).`,
+          heading: 'Value + type',
+          body: `A value is one piece of information your program stores or uses — like 7, "Ada", or true.\n\nEvery value has a type. The type is the category of that value. The type decides what you are allowed to do with it (math? join text? yes/no decisions?).`,
         },
         {
-          heading: 'Type = the rules for that value',
-          body: `The type answers: what kind of value is this, and what operations are allowed?\n\n• int — whole numbers (count, index, score)\n• double — decimals (measurements, averages)\n• String — text (names, messages)\n• boolean — true or false only (decisions)\n• int[] — ordered collection of ints (many scores)\n\nJava requires you to declare the type: int count = 3;`,
+          heading: 'The core types — memorize these definitions',
+          body: `• Integer (int) — a whole number with no decimal point. Examples: 0, 7, -3, 100. Use for counts, scores, indexes.\n\n• Double — a number that can have a decimal point. Examples: 3.14, 2.0, -0.5. Use for measurements and averages.\n\n• String — text. Always written in double quotes. Examples: "Ada", "hello", "42", "". Use for names and messages.\n\n• Boolean (boolean) — a true/false value only. In Java: true or false (lowercase, no quotes). Use for yes/no decisions.\n\n• int[] — an ordered collection of ints in {braces}. Example: {10, 20, 30}. (You will practise arrays after the basics.)`,
         },
         {
-          heading: 'Wrong type = wrong result or an error',
-          body: `"3" + "4" is "34" (text join). 3 + 4 is 7 (math). Mixing types without converting fails: "level " + 3 works (Java converts 3 to "3"), but you can't do "3" - 1 without parseInt.\n\nRule of thumb: decide the type first, then write the code.`,
+          heading: 'Same looking output ≠ same type',
+          body: `System.out.println(false) and System.out.println("false") both show false on the screen — but one is a boolean and one is a String.\n\nYou can't mix them in math or comparisons without converting. Always know which type you meant.`,
         },
       ],
       examples: [
         {
-          title: 'Four core values',
-          code: `${JAVA_HEAD}    int count = 3;\n    String name = "Ada";\n    boolean ready = true;\n    int[] scores = {10, 20};\n    System.out.println(count);\n    System.out.println(name);\n    System.out.println(ready);\n    System.out.println(scores.length);\n${JAVA_TAIL}`,
-          note: 'Arrays use .length (not a method call).',
+          title: 'Each type, named',
+          code: `${JAVA_HEAD}    int count = 7;          // integer — whole number\n    double price = 3.5;     // double — decimal number\n    String name = "Ada";    // String — text in quotes\n    boolean ready = true;   // boolean — true or false only\n\n    System.out.println(count);\n    System.out.println(price);\n    System.out.println(name);\n    System.out.println(ready);\n${JAVA_TAIL}`,
+          note: 'Java requires you to declare the type: int count = 7;',
         },
       ],
       practices: [
         {
           id: 'p1',
-          title: 'Store each kind',
-          prompt: 'Create int n = 5, String label = "hi", boolean ok = false, then print each on its own line (in that order).',
+          title: 'Make one of each',
+          prompt:
+            'Create int n = 5, double x = 2.5, String label = "hi", and boolean ok = false. Print each on four lines in that order.',
           difficulty: 1,
-          starterCode: `${JAVA_HEAD}    // n, label, ok — then println each\n${JAVA_TAIL}`,
+          starterCode: `${JAVA_HEAD}    // int n, double x, String label, boolean ok — then println each\n${JAVA_TAIL}`,
           tests: [
-            { id: 't1', description: 'Prints 5, hi, false', hint: 'println(n); println(label); println(ok);', kind: 'stdout', expect: '5\nhi\nfalse' },
-            { id: 't2', description: 'Uses false boolean', hint: 'ok = false (no quotes)', kind: 'codeMatches', expect: '\\bfalse\\b' },
+            {
+              id: 't1',
+              description: 'Prints 5, 2.5, hi, false',
+              hint: 'println(n);\\nprintln(x);\\nprintln(label);\\nprintln(ok);',
+              kind: 'stdout',
+              expect: '5\n2.5\nhi\nfalse',
+            },
+            {
+              id: 't2',
+              description: 'Uses boolean false',
+              hint: 'ok = false with no quotes',
+              kind: 'codeMatches',
+              expect: '\\bfalse\\b',
+            },
+            {
+              id: 't3',
+              description: 'Uses a double literal',
+              hint: 'x = 2.5 with a decimal point',
+              kind: 'codeMatches',
+              expect: '2\\.5',
+            },
           ],
         },
         {
@@ -62,99 +82,67 @@ export const javaEssentialsModule: Module = {
       ],
     },
     {
-      id: 'java-ess-output',
-      title: 'Kinds of output',
-      summary: 'What System.out shows for text, numbers, and booleans.',
-      runner: 'java',
-      sections: [
-        {
-          heading: 'println turns values into text',
-          body: `System.out.println(value) converts a value to characters and prints a line.\n\nprintln(42) and println("42") both look like 42 — one is an int, one is a String. Types still matter for math and method calls.`,
-        },
-        {
-          heading: 'How common types print',
-          body: `• String → characters (no quotes in the console)\n• int / double → digits\n• boolean → true or false (lowercase)\n• char → a single character\n• Arrays print like [I@... (reference) — print elements individually or use Arrays.toString later\n\nprint(...) writes without a newline; println(...) adds one.`,
-        },
-      ],
-      examples: [
-        {
-          title: 'Same look, different types',
-          code: `${JAVA_HEAD}    System.out.println(42);\n    System.out.println("42");\n    System.out.println(true);\n    System.out.println("true");\n${JAVA_TAIL}`,
-          note: 'Booleans print lowercase true/false.',
-        },
-      ],
-      practices: [
-        {
-          id: 'p1',
-          title: 'Number then word',
-          prompt: 'Print 7, then seven on the next line.',
-          difficulty: 1,
-          starterCode: `${JAVA_HEAD}    // number 7, then the word seven\n${JAVA_TAIL}`,
-          tests: [
-            { id: 't1', description: 'Two-line output', hint: 'println(7); println("seven");', kind: 'stdout', expect: '7\nseven' },
-          ],
-        },
-        {
-          id: 'p2',
-          title: 'Boolean vs string',
-          prompt: 'Print boolean false, then string false on the next line.',
-          difficulty: 2,
-          starterCode: `${JAVA_HEAD}    // boolean false, then "false"\n${JAVA_TAIL}`,
-          tests: [
-            { id: 't1', description: 'false then false', hint: 'println(false); println("false");', kind: 'stdout', expect: 'false\nfalse' },
-            { id: 't2', description: 'Uses boolean false', hint: 'println(false)', kind: 'codeMatches', expect: 'println\\(\\s*false\\s*\\)' },
-            { id: 't3', description: 'Uses string false', hint: 'println("false")', kind: 'codeIncludes', expect: '"false"' },
-          ],
-        },
-      ],
-    },
-    {
       id: 'java-ess-numbers',
-      title: 'Numbers (int & double)',
-      summary: 'Whole numbers and decimals — when to use each, and what they can't do.',
+      title: 'Integers & doubles',
+      summary: 'Integer = whole number. Double = decimal number. When to use each.',
       runner: 'java',
       sections: [
         {
-          heading: 'Define: int and double',
-          body: `An int is a whole number with no fractional part: 0, 42, -3. A double holds decimals: 3.14, 2.0.\n\nUse ints for counts, indexes, and scores that must stay whole. Use doubles for measurements, averages, and anything that can be "in between."`,
+          heading: 'Definition: integer (int)',
+          body: `An integer is a whole number — no fractional part.\n\nExamples: 0, 1, 42, -3.\n\nNot integers: 3.14 (that's a double), "7" (that's a String because of the quotes).`,
         },
         {
-          heading: 'When to use them',
-          body: `• Counting loops, array indexes, "how many?" → int\n• Division that should keep a fraction → use a double: 9 / 2.0 is 4.5\n• Money/grades you display with decimals → double\n\nWatch integer division: 7 / 2 is 3 when both sides are ints. % gives remainder: 17 % 5 is 2.`,
+          heading: 'Definition: double',
+          body: `A double is a number that can include a decimal point.\n\nExamples: 3.14, 2.0, -0.5, 0.25.\n\nEven 2.0 is a double in Java, because it has a decimal point in how you wrote it.`,
         },
         {
-          heading: 'What numbers can't be / common mistakes',
-          body: `• An int is not text — you can't do math on a String of digits without parseInt.\n• Integer division truncates: 7 / 2 is 3, not 3.5 — mix in 2.0 when you need decimals.\n• Don't use a String of digits as if it were a number: "10" + "1" is "101", not 11.\n• Don't use a double as an array index (indexes must be ints).`,
+          heading: 'When to use which',
+          body: `• Counting, looping indexes, "how many?" → int\n• Measurements, averages, money-style decimals → double\n\nMath: + - * /  % (remainder).\nWatch integer division: 7 / 2 is 3 when both sides are ints. 7 / 2.0 is 3.5.`,
+        },
+        {
+          heading: 'What they can't be',
+          body: `• An int is not text — you can't do math on a String of digits without Integer.parseInt.\n• A String of digits like "10" is not an int until you use Integer.parseInt("10").\n• Integer division truncates: 7 / 2 is 3, not 3.5 — mix in 2.0 when you need decimals.\n• Don't use a double as an array index (indexes must be ints).`,
         },
       ],
       examples: [
         {
-          title: 'Integer vs decimal division',
-          code: `${JAVA_HEAD}    System.out.println(7 / 2);\n    System.out.println(7 / 2.0);\n    System.out.println(17 % 5);\n${JAVA_TAIL}`,
+          title: 'int vs double',
+          code: `${JAVA_HEAD}    System.out.println(7);        // integer\n    System.out.println(7.0);      // double\n    System.out.println(7 / 2);    // integer 3\n    System.out.println(7 / 2.0);  // double 3.5\n    System.out.println(17 % 5);\n${JAVA_TAIL}`,
           note: 'Mix in a .0 when you want a decimal result.',
         },
       ],
       practices: [
         {
           id: 'p1',
-          title: 'Remainder',
-          prompt: 'Print 17 % 5 (2).',
+          title: 'Print an integer',
+          prompt: 'Print the integer 17 (no quotes, no decimal point).',
           difficulty: 1,
-          starterCode: `${JAVA_HEAD}    // 17 % 5\n${JAVA_TAIL}`,
+          starterCode: `${JAVA_HEAD}    // Print an integer\n${JAVA_TAIL}`,
           tests: [
-            { id: 't1', description: 'Prints 2', hint: 'println(17 % 5)', kind: 'stdout', expect: '2' },
-            { id: 't2', description: 'Uses %', hint: '% operator', kind: 'codeIncludes', expect: '%' },
+            { id: 't1', description: 'Prints 17', hint: 'println(17)', kind: 'stdout', expect: '17' },
+            { id: 't2', description: 'Uses int literal', hint: '17 without quotes', kind: 'codeMatches', expect: 'println\\(\\s*17\\s*\\)' },
           ],
         },
         {
           id: 'p2',
-          title: 'Decimal division',
-          prompt: 'Print 9 / 2.0 (4.5).',
-          difficulty: 2,
-          starterCode: `${JAVA_HEAD}    // 9 / 2.0\n${JAVA_TAIL}`,
+          title: 'Print a double',
+          prompt: 'Print the double 4.5.',
+          difficulty: 1,
+          starterCode: `${JAVA_HEAD}    // Print a double\n${JAVA_TAIL}`,
           tests: [
-            { id: 't1', description: 'Prints 4.5', hint: 'println(9 / 2.0)', kind: 'stdoutIncludes', expect: '4.5' },
-            { id: 't2', description: 'Uses 2.0', hint: 'Use 2.0 not 2', kind: 'codeIncludes', expect: '2.0' },
+            { id: 't1', description: 'Prints 4.5', hint: 'println(4.5)', kind: 'stdoutIncludes', expect: '4.5' },
+            { id: 't2', description: 'Uses a decimal', hint: '4.5 with a dot', kind: 'codeMatches', expect: '4\\.5' },
+          ],
+        },
+        {
+          id: 'p3',
+          title: 'Remainder',
+          prompt: 'Print the remainder of 17 divided by 5 (integer answer 2).',
+          difficulty: 2,
+          starterCode: `${JAVA_HEAD}    // 17 % 5\n${JAVA_TAIL}`,
+          tests: [
+            { id: 't1', description: 'Prints 2', hint: 'println(17 % 5)', kind: 'stdout', expect: '2' },
+            { id: 't2', description: 'Uses %', hint: '% operator', kind: 'codeIncludes', expect: '%' },
           ],
         },
       ],
@@ -162,34 +150,45 @@ export const javaEssentialsModule: Module = {
     {
       id: 'java-ess-strings',
       title: 'Strings (text)',
-      summary: 'Define text values — when to use them, and what you can't do with them.',
+      summary: 'A String is text in quotes — letters, digits, spaces, anything you read as words.',
       runner: 'java',
       sections: [
         {
-          heading: 'Define: String',
-          body: `A String holds text in double quotes: "Ada". Single quotes are for char: 'A'.\n\nEmpty string "".length() is 0. "code".length() is 4. charAt(0) gets the first character.`,
+          heading: 'Definition: String',
+          body: `A String is text. You write it inside double quotes so Java knows it's text, not a variable name or a number.\n\nExamples: "Ada", "hello", "42", "" (empty string).\n\nImportant: "42" is a String of characters, not the integer 42. "false" is a String, not the boolean false.`,
         },
         {
           heading: 'When to use strings',
-          body: `• Names, messages, file paths, labels on screen\n• Anything the user reads as text\n• Digits that are identifiers, not math (zip codes, phone numbers) — keep them as strings\n\nConcatenate with +: "Hi " + "Ada". For formatted output, you'll meet printf later.`,
+          body: `• Names, messages, labels\n• Anything the user should read as text\n• Codes that look like numbers but aren't for math (zip codes, phone numbers) — keep them as strings so leading zeros aren't lost\n\n"java".length() is 4. Join with +: "Hi " + "Ada".`,
         },
         {
           heading: 'What strings can't do',
-          body: `• You can't do "3" - 1 without Integer.parseInt("3") first.\n• For String content, use .equals("Ada"), not ==. == on Strings compares references and often surprises beginners.\n• Strings are immutable — you build new strings instead of changing characters in place.\n• A String is not an int[] — different types, different operations.`,
+          body: `• You can't do "3" - 1 without Integer.parseInt("3") first.\n• A String is not a boolean — "true" is text, true is boolean.\n• For String content, use .equals("Ada"), not ==. == on Strings compares references and often surprises beginners.\n• Strings are immutable — you build new strings instead of changing characters in place.`,
         },
       ],
       examples: [
         {
-          title: 'Length and join',
-          code: `${JAVA_HEAD}    String word = "code";\n    System.out.println(word.length());\n    System.out.println(word + "buddy");\n${JAVA_TAIL}`,
-          note: 'length() is a method on String.',
+          title: 'String vs number that looks the same',
+          code: `${JAVA_HEAD}    System.out.println("42");      // String — text characters\n    System.out.println(42);        // int — a number\n    System.out.println("Hi " + "Ada");\n    System.out.println("code".length());\n${JAVA_TAIL}`,
+          note: 'Quotes make it a String.',
         },
       ],
       practices: [
         {
           id: 'p1',
+          title: 'Print a string',
+          prompt: 'Print the String hello (with quotes in your code).',
+          difficulty: 1,
+          starterCode: `${JAVA_HEAD}    // Print a String\n${JAVA_TAIL}`,
+          tests: [
+            { id: 't1', description: 'Prints hello', hint: 'println("hello")', kind: 'stdout', expect: 'hello' },
+            { id: 't2', description: 'Uses quotes', hint: 'Put hello in quotes', kind: 'codeMatches', expect: '["\']hello["\']' },
+          ],
+        },
+        {
+          id: 'p2',
           title: 'Join a greeting',
-          prompt: 'Print Hello Ada using greeting and name.',
+          prompt: 'Using greeting and name, print Hello Ada (space between).',
           difficulty: 1,
           starterCode: `${JAVA_HEAD}    String greeting = "Hello";\n    String name = "Ada";\n    // Print Hello Ada\n${JAVA_TAIL}`,
           tests: [
@@ -197,7 +196,7 @@ export const javaEssentialsModule: Module = {
           ],
         },
         {
-          id: 'p2',
+          id: 'p3',
           title: 'String length',
           prompt: 'Print the length of word (should be 4).',
           difficulty: 2,
@@ -212,47 +211,47 @@ export const javaEssentialsModule: Module = {
     {
       id: 'java-ess-booleans',
       title: 'Booleans (true / false)',
-      summary: 'Yes/no values — define them, when to use them, what they can't be.',
+      summary: 'A boolean is a true/false value — only true or false.',
       runner: 'java',
       sections: [
         {
-          heading: 'Define: boolean',
-          body: `A boolean is only true or false (lowercase in Java). Nothing else is a boolean — not "true", not 1, not "yes".\n\nComparisons produce booleans: score >= 60. Store them: boolean ready = true;`,
+          heading: 'Definition: boolean',
+          body: `A boolean is a true/false value. It answers a yes/no question.\n\nIn Java the only boolean values are:\n• true\n• false\n\nThey must be lowercase, and they must NOT be in quotes.\n\n• true  → boolean\n• false → boolean\n• "true" / "false" → Strings (text that happens to look similar)\n• 1 and 0 → integers, not booleans (even though they can act truthy/falsy in conditions)`,
         },
         {
           heading: 'When to use booleans',
-          body: `• Flags: gameOver, isLoggedIn, ready\n• Conditions in if / while\n• Results of checks: score >= 60, name.equals("Ada")\n\nCombine with && / || / !: age >= 13 && age <= 19.`,
+          body: `• Flags: ready = true, gameOver = false\n• Results of comparisons: score >= 60 produces a boolean\n• Conditions in if / while\n\nCombine with && / || / !: age >= 13 && age <= 19.`,
         },
         {
           heading: 'What booleans aren't',
-          body: `"true" (with quotes) is a String, not a boolean.\n\nUse == for ints and booleans. Use .equals for String text.\n\nDon't use = when you mean ==. = assigns; == compares.`,
+          body: `"false" with quotes is a String, not a boolean.\n\nUse == for ints and booleans. Use .equals for String text.\n\nDon't use = when you mean ==. = assigns; == compares.`,
         },
       ],
       examples: [
         {
-          title: 'Comparisons and logic',
-          code: `${JAVA_HEAD}    int score = 85;\n    boolean ready = true;\n    System.out.println(score >= 60);\n    System.out.println(ready && score >= 60);\n${JAVA_TAIL}`,
-          note: 'Conditions evaluate to boolean.',
+          title: 'Boolean vs string that looks like one',
+          code: `${JAVA_HEAD}    System.out.println(false);       // boolean\n    System.out.println("false");     // String\n\n    int score = 85;\n    System.out.println(score >= 60);   // comparison → boolean true\n${JAVA_TAIL}`,
+          note: 'No quotes = boolean. Quotes = String.',
         },
       ],
       practices: [
         {
           id: 'p1',
-          title: 'Print true',
-          prompt: 'Print the boolean true.',
+          title: 'Print a boolean',
+          prompt: 'Print the boolean true (no quotes).',
           difficulty: 1,
-          starterCode: `${JAVA_HEAD}    // println(true)\n${JAVA_TAIL}`,
+          starterCode: `${JAVA_HEAD}    // A boolean is true or false. Print true.\n${JAVA_TAIL}`,
           tests: [
             { id: 't1', description: 'Prints true', hint: 'println(true)', kind: 'stdout', expect: 'true' },
-            { id: 't2', description: 'Uses true', hint: 'true without quotes', kind: 'codeMatches', expect: '\\btrue\\b' },
+            { id: 't2', description: 'Uses true boolean', hint: 'true without quotes', kind: 'codeMatches', expect: 'println\\(\\s*true\\s*\\)' },
           ],
         },
         {
           id: 'p2',
           title: 'Compare with >=',
-          prompt: 'Print whether score >= 60.',
+          prompt: 'Print whether score >= 60 (should be true). That comparison creates a boolean.',
           difficulty: 2,
-          starterCode: `${JAVA_HEAD}    int score = 85;\n    // print comparison\n${JAVA_TAIL}`,
+          starterCode: `${JAVA_HEAD}    int score = 85;\n    // print the boolean result of score >= 60\n${JAVA_TAIL}`,
           tests: [
             { id: 't1', description: 'Prints true', hint: 'println(score >= 60)', kind: 'stdout', expect: 'true' },
             { id: 't2', description: 'Uses >=', hint: 'score >= 60', kind: 'codeIncludes', expect: '>=' },
@@ -261,12 +260,60 @@ export const javaEssentialsModule: Module = {
         {
           id: 'p3',
           title: 'Use &&',
-          prompt: 'Print ready && score >= 60.',
+          prompt: 'Print whether ready is true and score >= 60 (should be true).',
           difficulty: 3,
           starterCode: `${JAVA_HEAD}    boolean ready = true;\n    int score = 85;\n    // print ready && score >= 60\n${JAVA_TAIL}`,
           tests: [
             { id: 't1', description: 'Prints true', hint: 'println(ready && score >= 60)', kind: 'stdout', expect: 'true' },
-            { id: 't2', description: 'Uses &&', hint: '&&', kind: 'codeIncludes', expect: '&&' },
+            { id: 't2', description: 'Uses &&', hint: '&& between conditions', kind: 'codeIncludes', expect: '&&' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'java-ess-output',
+      title: 'How types look when printed',
+      summary: 'Now that you know the definitions — see how println shows each type (and how look-alikes can fool you).',
+      runner: 'java',
+      sections: [
+        {
+          heading: 'println shows characters — type is still real',
+          body: `System.out.println(...) turns a value into characters on the screen. Two different types can look the same:\n\n• println(42) and println("42") both show 42\n• println(false) and println("false") both show false\n\nYou already know the definitions:\n• 42 without quotes → int\n• "42" with quotes → String\n• false without quotes → boolean\n• "false" with quotes → String`,
+        },
+        {
+          heading: 'How each type usually prints',
+          body: `• int / double → digits (3.5 for a double)\n• String → the text inside (quotes are NOT shown in the console)\n• boolean → true or false (lowercase)\n• char → a single character\n• Arrays print like [I@... (reference) — print elements individually or use Arrays.toString later\n\nprint(...) writes without a newline; println(...) adds one.`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Look-alikes side by side',
+          code: `${JAVA_HEAD}    System.out.println(42);\n    System.out.println("42");\n    System.out.println(false);\n    System.out.println("false");\n    System.out.println(true);\n    System.out.println("true");\n${JAVA_TAIL}`,
+          note: 'Same looking line, different type.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Integer then string',
+          prompt: 'Print the integer 7, then on the next line print the String seven.',
+          difficulty: 1,
+          starterCode: `${JAVA_HEAD}    // int 7, then String "seven"\n${JAVA_TAIL}`,
+          tests: [
+            { id: 't1', description: 'Two-line output', hint: 'println(7) then println("seven")', kind: 'stdout', expect: '7\nseven' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'Boolean vs string false',
+          prompt:
+            'A boolean is true/false. A string is text in quotes. Print the boolean false, then print the String "false" on the next line.',
+          difficulty: 2,
+          starterCode: `${JAVA_HEAD}    // boolean false (no quotes), then String "false"\n${JAVA_TAIL}`,
+          tests: [
+            { id: 't1', description: 'false then false', hint: 'println(false); println("false");', kind: 'stdout', expect: 'false\nfalse' },
+            { id: 't2', description: 'Uses boolean false', hint: 'println(false) first', kind: 'codeMatches', expect: 'println\\(\\s*false\\s*\\)' },
+            { id: 't3', description: 'Uses string false', hint: 'println("false")', kind: 'codeIncludes', expect: '"false"' },
           ],
         },
       ],
@@ -274,20 +321,20 @@ export const javaEssentialsModule: Module = {
     {
       id: 'java-ess-arrays',
       title: 'Arrays (collections)',
-      summary: 'Ordered collections of values — define, when to use, what they can't be.',
+      summary: 'An array is an ordered collection of values in {braces}.',
       runner: 'java',
       sections: [
         {
-          heading: 'Define: array',
-          body: `An array is an ordered collection of values: int[] nums = {3, 6, 9};\n\nIndexes start at 0: nums[0] is 3. nums.length is 3 (a field, not a method). Arrays have a fixed size once created.`,
+          heading: 'Definition: array',
+          body: `An array is an ordered collection of values: int[] nums = {3, 6, 9};\n\n• nums[0] is the first item (3) — indexes start at 0\n• nums.length is how many items (3) — a field, not a method\n• Arrays have a fixed size once created — beginners should usually keep one type per array`,
         },
         {
           heading: 'When to use arrays',
-          body: `• Many related values of the same kind (names, scores, prices)\n• When you'll loop through every item\n• When you know the size upfront\n\nfor (int n : nums) visits each element (enhanced for). Use nums[i] when you need the index.`,
+          body: `• Many related values (names, scores, prices)\n• When you'll loop through every item\n• When you know the size upfront\n\nfor (int n : nums) visits each element (enhanced for). Use nums[i] when you need the index.`,
         },
         {
-          heading: 'What arrays aren't / can't do',
-          body: `• An array is not a String — different types, different operations.\n• Index out of range: nums[3] on a length-3 array throws ArrayIndexOutOfBoundsException.\n• Don't confuse the array with one element inside it — println(nums) vs println(nums[0]).\n• A single int is not an array: 5 has no [0].`,
+          heading: 'What arrays aren't',
+          body: `• A single int is not an array — 5 has no [0].\n• A String is not an int[].\n• Index out of range: nums[3] on a length-3 array throws ArrayIndexOutOfBoundsException.`,
         },
       ],
       examples: [
@@ -336,7 +383,7 @@ export const javaEssentialsModule: Module = {
     {
       id: 'java-ess-convert',
       title: 'Types & conversion',
-      summary: 'Declare types and convert with parseInt / parseDouble — including arrays.',
+      summary: 'Convert between int, double, String, and boolean when you need a different type.',
       runner: 'java',
       sections: [
         {
@@ -345,16 +392,16 @@ export const javaEssentialsModule: Module = {
         },
         {
           heading: 'Convert between types',
-          body: `• Integer.parseInt("12") → 12 (for math on digit strings)\n• Double.parseDouble("3.5") → 3.5\n• String.valueOf(12) or "" + 12 → "12" (for building text)\n\nArrays don't convert to numbers — access elements with nums[0] or loop.`,
+          body: `• Integer.parseInt("12") → 12 (digit text → integer)\n• Double.parseDouble("3.5") → 3.5\n• String.valueOf(12) or "" + 12 → "12" (number → text)\n\nArrays don't convert to numbers — access elements with nums[0] or loop.\n\nInteger.parseInt("12.5") fails — use parseDouble first for decimals.`,
         },
         {
           heading: 'Why convert?',
-          body: `Input and some APIs give you Strings even when the content looks like numbers. Convert before doing math. Convert numbers to strings when building messages with +.\n\nint("12.5") fails — use parseDouble first if you need decimals.`,
+          body: `Input often arrives as Strings even when it looks like numbers. Convert before math. Convert numbers to strings when building messages with +.`,
         },
       ],
       examples: [
         {
-          title: 'Parse and stringify',
+          title: 'Convert for math and text',
           code: `${JAVA_HEAD}    String raw = "12";\n    int n = Integer.parseInt(raw);\n    System.out.println(n + 1);\n    System.out.println("n=" + n);\n${JAVA_TAIL}`,
           note: 'parseInt before math; + with String builds text.',
         },
@@ -362,8 +409,8 @@ export const javaEssentialsModule: Module = {
       practices: [
         {
           id: 'p1',
-          title: 'ParseInt',
-          prompt: 'Parse raw, add 3, print 15.',
+          title: 'Parse digits',
+          prompt: 'Convert raw to an int, add 3, print the result (15).',
           difficulty: 2,
           starterCode: `${JAVA_HEAD}    String raw = "12";\n    // parse, add 3, println\n${JAVA_TAIL}`,
           tests: [
@@ -373,6 +420,17 @@ export const javaEssentialsModule: Module = {
         },
         {
           id: 'p2',
+          title: 'Stringify a number',
+          prompt: 'Print score: 7 using + and String.valueOf (n is int 7).',
+          difficulty: 2,
+          starterCode: `${JAVA_HEAD}    int n = 7;\n    // println("score: " + ...)\n${JAVA_TAIL}`,
+          tests: [
+            { id: 't1', description: 'Prints score: 7', hint: 'println("score: " + String.valueOf(n))', kind: 'stdout', expect: 'score: 7' },
+            { id: 't2', description: 'Uses valueOf or +', hint: 'String.valueOf(n) or "" + n', kind: 'codeMatches', expect: '(valueOf|\\+\\s*n)' },
+          ],
+        },
+        {
+          id: 'p3',
           title: 'Declare a boolean',
           prompt: 'Declare boolean ready = true; then print ready.',
           difficulty: 2,
