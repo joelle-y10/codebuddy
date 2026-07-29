@@ -43,7 +43,7 @@ export function AccountPage() {
     setMessage(
       err ??
         (mode === 'signup'
-          ? 'Account created. If email confirm is on, check your inbox; otherwise sign in.'
+          ? 'Account created — you’re signed in. Progress syncs to the cloud.'
           : 'Signed in — progress loads from the cloud.'),
     )
     if (!err) void refreshCloud()
@@ -106,6 +106,10 @@ export function AccountPage() {
           <p className="lede">Signed in as {user.email}</p>
           <p className="body">
             Your lesson clears sync to Supabase in the cloud — not only this computer’s screen.
+          </p>
+          <p className="body">
+            Open the <strong>Profile</strong> chip in the top bar to change your name, email, or
+            password, or to delete your account.
           </p>
           <button type="button" className="ghost-btn" onClick={() => void refreshCloud()}>
             Refresh from cloud

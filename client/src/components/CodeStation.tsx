@@ -3,6 +3,7 @@ import Editor from '@monaco-editor/react'
 import type { CheckResult, Practice, RunnerId, RunResult } from '../types'
 import { gradePractice } from '../lib/grader'
 import { explainRunnerError } from '../lib/errorExplain'
+import { enableHtmlTagAutoClose } from '../lib/monacoTagClose'
 import { ErrorAssistant } from './ErrorAssistant'
 import {
   buildHtmlPreviewDoc,
@@ -116,6 +117,9 @@ export function CodeStation({ runner, practice, cleared, onPass }: Props) {
             language={monacoLang}
             value={code}
             onChange={(v) => setCode(v ?? '')}
+            onMount={(editor, monaco) => {
+              enableHtmlTagAutoClose(editor, monaco)
+            }}
             options={{
               fontSize: 14,
               minimap: { enabled: false },
@@ -123,6 +127,13 @@ export function CodeStation({ runner, practice, cleared, onPass }: Props) {
               wordWrap: 'on',
               automaticLayout: true,
               tabSize: 2,
+              autoClosingBrackets: 'always',
+              autoClosingQuotes: 'always',
+              autoIndent: 'full',
+              formatOnPaste: true,
+              suggest: {
+                showWords: true,
+              },
             }}
           />
         </div>

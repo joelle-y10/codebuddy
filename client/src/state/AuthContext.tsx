@@ -20,10 +20,16 @@ type AuthContextValue = {
   syncAvailable: boolean
   syncStatus: SyncStatus
   syncMessage: string
+  displayName: string
   progress: ProgressMap
   signUp: (email: string, password: string) => Promise<string | null>
   signIn: (email: string, password: string) => Promise<string | null>
   signOut: () => Promise<void>
+  updateDisplayName: (name: string) => Promise<string | null>
+  updateEmail: (email: string) => Promise<string | null>
+  updatePassword: (password: string) => Promise<string | null>
+  deleteAccount: () => Promise<string | null>
+  refreshProfile: () => Promise<void>
   markPracticeComplete: (
     language: LangId,
     lessonId: string,
@@ -76,6 +82,7 @@ function clearPendingUpload() {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const [displayName, setDisplayName] = useState('')
   const [authReady, setAuthReady] = useState(false)
   const [progress, setProgress] = useState<ProgressMap>(() => loadCache())
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
@@ -205,25 +212,117 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!supabase) return 'Supabase is not configured.'
     const { data, error } = await supabase.auth.signUp({ email, password })
     if (error) return error.message
-    if (data.user && !data.session) {
-      return null // may need email confirm — Account page explains
+    // Confirm-email OFF → session is returned and you're already signed in.
+    if (data.session) return null
+    // Confirm-email ON → no session yet; try password sign-in anyway.
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+    if (!signInError) return null
+    if (/confirm|verification|not confirmed/i.test(signInError.message)) {
+      return 'Email confirmation is still ON in Supabase. Turn it off: Authentication → Providers → Email → Confirm email → disabled. Then sign in with the same email and password.'
     }
-    return null
+    return signInError.message
   }, [])
 
   const signIn = useCallback(async (email: string, password: string) => {
     if (!supabase) return 'Supabase is not configured.'
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    return error?.message ?? null
+    if (!error) return null
+    if (/confirm|verification|not confirmed/i.test(error.message)) {
+      return 'This account still needs email confirmation. In Supabase: Authentication → Providers → Email → turn Confirm email OFF, then try again.'
+    }
+    return error.message
   }, [])
 
   const signOut = useCallback(async () => {
     await supabase?.auth.signOut()
     setProgress({})
     saveCache({})
+    setDisplayName('')
     setSyncStatus('local-only')
     setSyncMessage('Signed out. Sign in again to use cloud progress.')
   }, [])
+
+  const refreshProfile = useCallback(async () => {
+    if (!supabase || !user) {
+      setDisplayName('')
+      return
+    }
+    const { data } = await supabase
+      .from('codebuddy_profiles')
+      .select('display_name')
+      .eq('id', user.id)
+      .maybeSingle()
+    const name =
+      data?.display_name?.trim() ||
+      user.user_metadata?.display_name ||
+      user.email?.split('@')[0] ||
+      ''
+    setDisplayName(String(name))
+  }, [user])
+
+  useEffect(() => {
+    void refreshProfile()
+  }, [refreshProfile])
+
+  const updateDisplayName = useCallback(
+    async (name: string) => {
+      if (!supabase) return 'Supabase is not configured.'
+      if (!user) return 'Sign in first.'
+      const cleaned = name.trim()
+      if (!cleaned) return 'Enter a display name.'
+      const { error } = await supabase.from('codebuddy_profiles').upsert(
+        { id: user.id, display_name: cleaned },
+        { onConflict: 'id' },
+      )
+      if (error) return error.message
+      await supabase.auth.updateUser({ data: { display_name: cleaned } })
+      setDisplayName(cleaned)
+      return null
+    },
+    [user],
+  )
+
+  const updateEmail = useCallback(
+    async (email: string) => {
+      if (!supabase) return 'Supabase is not configured.'
+      if (!user) return 'Sign in first.'
+      const cleaned = email.trim()
+      if (!cleaned) return 'Enter an email.'
+      const { error } = await supabase.auth.updateUser({ email: cleaned })
+      if (error) return error.message
+      return null
+    },
+    [user],
+  )
+
+  const updatePassword = useCallback(
+    async (password: string) => {
+      if (!supabase) return 'Supabase is not configured.'
+      if (!user) return 'Sign in first.'
+      if (password.length < 6) return 'Password must be at least 6 characters.'
+      const { error } = await supabase.auth.updateUser({ password })
+      if (error) return error.message
+      return null
+    },
+    [user],
+  )
+
+  const deleteAccount = useCallback(async () => {
+    if (!supabase) return 'Supabase is not configured.'
+    if (!user) return 'Sign in first.'
+    const { error } = await supabase.rpc('codebuddy_delete_own_account')
+    if (error) {
+      return `${error.message} — If this fails, run the latest supabase/schema.sql (adds delete account).`
+    }
+    setProgress({})
+    saveCache({})
+    clearPendingUpload()
+    setDisplayName('')
+    await supabase.auth.signOut()
+    setSyncStatus('local-only')
+    setSyncMessage('Account deleted.')
+    return null
+  }, [user])
 
   const markPracticeComplete = useCallback(
     async (language: LangId, lessonId: string, practiceId: string, score: number, code: string) => {
@@ -345,10 +444,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       syncAvailable: supabase !== null,
       syncStatus,
       syncMessage,
+      displayName,
       progress,
       signUp,
       signIn,
       signOut,
+      updateDisplayName,
+      updateEmail,
+      updatePassword,
+      deleteAccount,
+      refreshProfile,
       markPracticeComplete,
       isPracticeComplete,
       isLessonComplete,
@@ -360,10 +465,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       authReady,
       syncStatus,
       syncMessage,
+      displayName,
       progress,
       signUp,
       signIn,
       signOut,
+      updateDisplayName,
+      updateEmail,
+      updatePassword,
+      deleteAccount,
+      refreshProfile,
       markPracticeComplete,
       isPracticeComplete,
       isLessonComplete,

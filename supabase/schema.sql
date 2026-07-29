@@ -129,3 +129,23 @@ select
   coalesce(u.raw_user_meta_data->>'display_name', split_part(u.email, '@', 1))
 from auth.users u
 on conflict (id) do nothing;
+
+-- Let a signed-in user permanently delete their own auth account (+ cascaded rows).
+create or replace function public.codebuddy_delete_own_account()
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  uid uuid := auth.uid();
+begin
+  if uid is null then
+    raise exception 'Not signed in';
+  end if;
+  delete from auth.users where id = uid;
+end;
+$$;
+
+revoke all on function public.codebuddy_delete_own_account() from public;
+grant execute on function public.codebuddy_delete_own_account() to authenticated;
