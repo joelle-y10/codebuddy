@@ -2,7 +2,18 @@ import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../state/AuthContext'
 
 export function Shell({ children }: { children: React.ReactNode }) {
-  const { user, signOut, syncAvailable } = useAuth()
+  const { user, signOut, syncAvailable, syncStatus, syncMessage } = useAuth()
+
+  const pill =
+    !syncAvailable
+      ? 'No cloud'
+      : syncStatus === 'cloud'
+        ? 'Cloud synced'
+        : syncStatus === 'needs-schema'
+          ? 'Setup needed'
+          : user
+            ? 'Signed in'
+            : 'Sign in for cloud'
 
   return (
     <div className="app-shell">
@@ -16,13 +27,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <NavLink to="/university">University</NavLink>
           <NavLink to="/account">{user ? 'Account' : 'Sign in'}</NavLink>
         </nav>
-        <div className="topbar-meta">
-          {user ? (
+        <div className="topbar-meta" title={syncMessage}>
+          <span className="sync-pill">{pill}</span>
+          {user && (
             <button type="button" className="ghost-btn" onClick={() => void signOut()}>
               Sign out
             </button>
-          ) : (
-            <span className="sync-pill">{syncAvailable ? 'Cloud ready' : 'Local mode'}</span>
           )}
         </div>
       </header>

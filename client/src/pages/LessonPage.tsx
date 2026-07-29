@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getLesson, isUniversityUnlocked, nextLesson, tierPath, trackProgress } from '../content'
 import type { LangId, TrackTier } from '../types'
 import { CodeStation } from '../components/CodeStation'
+import { CloudSignInGate } from '../components/CloudSignInGate'
 import { useAuth } from '../state/AuthContext'
 
 export function LessonPage({ tier }: { tier: TrackTier }) {
@@ -98,26 +99,28 @@ export function LessonPage({ tier }: { tier: TrackTier }) {
         <p className="eyebrow">Practice stations</p>
         <h2>Work through every station</h2>
         <p className="lede">
-          Warm-ups build confidence, then harder stations lock the idea in. Clear all of them to
-          finish the lesson.
+          Warm-ups build confidence, then harder stations lock the idea in. Clears save to
+          Supabase cloud when you are signed in.
         </p>
-        <div className="practice-stack">
-          {lesson.practices.map((practice, i) => (
-            <div key={practice.id}>
-              <p className="practice-index">
-                Station {i + 1} of {lesson.practices.length}
-              </p>
-              <CodeStation
-                runner={lesson.runner}
-                practice={practice}
-                cleared={isPracticeComplete(track.id, lesson.id, practice.id)}
-                onPass={(score, code) => {
-                  void markPracticeComplete(track.id, lesson.id, practice.id, score, code)
-                }}
-              />
-            </div>
-          ))}
-        </div>
+        <CloudSignInGate>
+          <div className="practice-stack">
+            {lesson.practices.map((practice, i) => (
+              <div key={practice.id}>
+                <p className="practice-index">
+                  Station {i + 1} of {lesson.practices.length}
+                </p>
+                <CodeStation
+                  runner={lesson.runner}
+                  practice={practice}
+                  cleared={isPracticeComplete(track.id, lesson.id, practice.id)}
+                  onPass={(score, code) => {
+                    void markPracticeComplete(track.id, lesson.id, practice.id, score, code)
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </CloudSignInGate>
       </section>
 
       <div className="lesson-footer">
