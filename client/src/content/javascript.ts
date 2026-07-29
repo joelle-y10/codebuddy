@@ -1,4 +1,5 @@
 import type { LanguageTrack } from '../types'
+import { javascriptCraftModule } from './craft/javascript'
 
 export const javascriptTrack: LanguageTrack = {
   id: 'javascript',
@@ -7,6 +8,7 @@ export const javascriptTrack: LanguageTrack = {
   accent: '#c8f542',
   tier: 'basic',
   modules: [
+    javascriptCraftModule,
     {
       id: 'js-start',
       title: 'Getting started',

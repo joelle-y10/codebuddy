@@ -1,4 +1,5 @@
 import type { LanguageTrack } from '../types'
+import { javaCraftModule } from './craft/java'
 
 export const javaTrack: LanguageTrack = {
   id: 'java',
@@ -7,6 +8,7 @@ export const javaTrack: LanguageTrack = {
   accent: '#ff7a59',
   tier: 'basic',
   modules: [
+    javaCraftModule,
     {
       id: 'java-start',
       title: 'Getting started',

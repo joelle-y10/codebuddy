@@ -1,4 +1,5 @@
 import type { LanguageTrack } from '../types'
+import { processingCraftModule } from './craft/processing'
 
 export const processingTrack: LanguageTrack = {
   id: 'processing',
@@ -7,6 +8,7 @@ export const processingTrack: LanguageTrack = {
   accent: '#d4a1ff',
   tier: 'basic',
   modules: [
+    processingCraftModule,
     {
       id: 'p5-start',
       title: 'Canvas & setup',

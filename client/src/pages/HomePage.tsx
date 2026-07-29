@@ -19,8 +19,8 @@ export function HomePage() {
           <p className="brand-hero">CodeBuddy</p>
           <h1>Learn to code by doing — then level up to University.</h1>
           <p className="lede">
-            Start in Basics. When you master a language, unlock CodeBuddy University for advanced
-            lessons, examples, and tougher practice stations.
+            Start with Coding craft (symbols, punctuation, etiquette), then build up through
+            Basics. Finish a language to unlock CodeBuddy University.
           </p>
           <div className="cta-row">
             <Link className="primary-btn" to="/learn">

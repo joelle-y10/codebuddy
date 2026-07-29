@@ -1,4 +1,5 @@
 import type { LanguageTrack } from '../types'
+import { cppCraftModule } from './craft/cpp'
 
 export const cppTrack: LanguageTrack = {
   id: 'cpp',
@@ -7,6 +8,7 @@ export const cppTrack: LanguageTrack = {
   accent: '#ffb86b',
   tier: 'basic',
   modules: [
+    cppCraftModule,
     {
       id: 'cpp-start',
       title: 'Getting started',

@@ -1,4 +1,5 @@
 import type { LanguageTrack } from '../types'
+import { pythonCraftModule } from './craft/python'
 
 export const pythonTrack: LanguageTrack = {
   id: 'python',
@@ -7,6 +8,7 @@ export const pythonTrack: LanguageTrack = {
   accent: '#5ec8ff',
   tier: 'basic',
   modules: [
+    pythonCraftModule,
     {
       id: 'py-start',
       title: 'Getting started',
