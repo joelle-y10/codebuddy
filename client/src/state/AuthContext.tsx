@@ -439,7 +439,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!user) return 'Sign in first.'
     const { error } = await supabase.rpc('codebuddy_delete_own_account')
     if (error) {
-      return `${error.message} — If this fails, run the latest supabase/schema.sql (adds delete account).`
+      return `${error.message} — Optional: run supabase/schema-optional-delete-account.sql if you want in-app delete.`
     }
     setProgress({})
     saveCache({})
