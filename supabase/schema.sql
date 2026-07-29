@@ -198,5 +198,5 @@ from auth.users u
 on conflict (id) do nothing;
 
 -- =============================================================================
--- Done. For in-app account removal, see schema-optional-delete-account.sql
+-- Done. Optional account-removal helper is a separate SQL file in /supabase.
 -- =============================================================================
