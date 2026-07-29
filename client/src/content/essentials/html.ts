@@ -14,12 +14,43 @@ export const htmlEssentialsModule: Module = {
       runner: 'html',
       sections: [
         {
-          heading: 'No variables like Python or JavaScript',
-          body: `In Python or p5.js you write let score = 10 to store a value in a variable.\n\nHTML doesn’t work that way. You don’t declare variables in HTML.\n\nInstead, values live in two places:\n\n• Text between tags — <p>Ada</p> holds the value Ada\n• Attributes on tags — <a href="https://example.com"> holds the value https://example.com in the href attribute\n\nThink of HTML as describing what’s on the page, not running code.`,
+          heading: 'HTML does not use programming variables',
+          body: `In Python or JavaScript you write score = 10 to store a value in a variable.
+
+HTML does not work that way. You do not declare variables in HTML.
+
+Instead, values live in two places:
+
+• Text between tags — <p>Ada</p> holds the value Ada
+• Attributes on tags — <a href="https://example.com"> holds https://example.com in the href attribute
+
+Think of HTML as describing what is on the page, not running code.`,
+        },
+        {
+          heading: 'Kinds of values you will see',
+          body: `Even though HTML is not a programming language, the same ideas still show up on the page:
+
+• Text is a string of letters (and other characters) between tags — like a string in other languages: <p>Ada</p>
+• Number-looking values can be whole numbers or decimals, but in HTML they are still written as text: <p>42</p>, value="3.5"
+• On/off attributes are like a true/false statement — checked means on; leave it off to mean false
+• Empty / missing content means nothing is there yet — <p></p> or an input with no value
+• Lists hold several items in order with <ul>/<ol> and <li>
+
+The next lessons explain each of these carefully.`,
         },
         {
           heading: 'Content vs attributes',
-          body: `Content is what you see between opening and closing tags:\n\n<h1>Scoreboard</h1>\n<p>Player: Ada</p>\n\nAttributes are name="value" pairs on a tag:\n\n<a href="https://example.com">Docs</a>\n<input type="number" value="42">\n\nAttribute values are always text, even when they look like numbers: value="42".`,
+          body: `Content is what you see between opening and closing tags:
+
+<h1>Scoreboard</h1>
+<p>Player: Ada</p>
+
+Attributes are name="value" pairs on a tag:
+
+<a href="https://example.com">Docs</a>
+<input type="number" value="42">
+
+Attribute values are always text, even when they look like numbers: value="42".`,
         },
       ],
       examples: [

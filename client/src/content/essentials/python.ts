@@ -1,43 +1,82 @@
 import type { Module } from '../../types'
 
-/** First module: values, variables, and simple type practice. */
+/** First module: detailed definitions of values, variables, and types. */
 export const pythonEssentialsModule: Module = {
   id: 'py-essentials',
   title: 'Values, variables & types',
   summary:
-    'Start here: what a value is, what a variable is, then integers, floats, strings, and booleans — with simple practice.',
+    'Learn what values and variables are, then study each type in detail: numbers, strings, booleans, missing values, and lists.',
   lessons: [
     {
       id: 'py-ess-values',
       title: 'What is a value?',
-      summary: 'A value is a piece of data. Every value has a type.',
+      summary: 'A value is a piece of data. Every value has a type that says what kind of data it is.',
       runner: 'python',
       sections: [
         {
-          heading: 'Value + type',
-          body: `A value is one piece of information — like 7, "Ada", or True.\n\nEvery value has a type (its category):\n\n• Integer (int) — a whole number: 0, 7, -3\n• Float — a decimal number: 3.14, 2.0\n• String (str) — text in quotes: "hello", "42"\n• Boolean (bool) — True or False only (no quotes)`,
+          heading: 'Definition: value',
+          body: `A value is one piece of information your program can work with.
+
+Examples of values:
+• 7
+• 3.14
+• "hello"
+• True
+• None
+
+Values are the actual data. Later you will store them in variables so you can reuse them by name.`,
+        },
+        {
+          heading: 'Definition: type',
+          body: `Every value has a type. The type tells you what kind of information it is and what you can do with it.
+
+Here are the main types you need first:
+
+• A number can be an integer (whole number) or a float (decimal). Examples: 0, 7, -3, 3.14, 2.0
+• A string is a string of letters (and other characters) written in quotes. Examples: "Ada", "hi", "42"
+• A boolean is a true/false statement. In Python the only boolean values are True and False
+• A missing value means “there is no value here yet.” In Python that value is called None
+• A list is an ordered collection of values in square brackets. Example: [3, 6, 9]
+
+The type matters. You can add 3 + 4, but you cannot add 3 + "hello" without converting first.`,
+        },
+        {
+          heading: 'Why types matter',
+          body: `Programs treat different types differently:
+
+• Numbers are for counting, measuring, and math
+• Strings are for names, messages, and any text
+• Booleans are for yes/no decisions (later used in if statements)
+• None is for “empty / unknown / not set”
+• Lists are for several related values together
+
+In the next lessons you will learn each type carefully, and also learn variables — names that hold values.`,
         },
       ],
       examples: [
         {
-          title: 'Four values',
-          code: `print(7)\nprint(3.5)\nprint("Ada")\nprint(True)`,
-          note: 'Each line prints one value.',
+          title: 'Different kinds of values',
+          code: `print(7)        # number (integer)
+print(3.5)      # number (float / decimal)
+print("Ada")    # string
+print(True)     # boolean
+print(None)     # missing value`,
+          note: 'Each line is a different type of value.',
         },
       ],
       practices: [
         {
           id: 'p1',
-          title: 'Print a number',
-          prompt: 'Print 10.',
+          title: 'A number value',
+          prompt: 'Print the number 10.',
           difficulty: 1,
-          starterCode: `# Print 10\n`,
+          starterCode: `# Print the number 10\n`,
           tests: [{ id: 't1', description: 'Prints 10', hint: 'print(10)', kind: 'stdout', expect: '10' }],
         },
         {
           id: 'p2',
-          title: 'Print text',
-          prompt: 'Print the word hi.',
+          title: 'A string value',
+          prompt: 'Print the string hi (use quotes).',
           difficulty: 1,
           starterCode: `# Print "hi"\n`,
           tests: [
@@ -50,38 +89,77 @@ export const pythonEssentialsModule: Module = {
     {
       id: 'py-ess-variables',
       title: 'Variables',
-      summary: 'A variable is a name that holds a value.',
+      summary: 'A variable is a name that stores a value so you can use it later.',
       runner: 'python',
       sections: [
         {
           heading: 'Definition: variable',
-          body: `A variable is a name that stores a value so you can use it later.\n\nYou create one with = (assignment):\n\nscore = 10\nname = "Ada"\nready = True\n\n• The name is on the left (score, name, ready)\n• The value is on the right (10, "Ada", True)\n• = means “put this value into that name” — it is not the same as == (which asks “are these equal?”)`,
+          body: `A variable is a named box that holds a value.
+
+You create a variable with = (called assignment):
+
+score = 10
+name = "Ada"
+ready = True
+
+Read it as: “the variable score now holds the value 10.”
+
+• The name is on the left (score, name, ready)
+• The value is on the right (10, "Ada", True)
+• = means “store this value in that name”
+• = is not the same as ==. == asks “are these two things equal?”`,
         },
         {
-          heading: 'Using a variable',
-          body: `After you store a value, use the name to get it back:\n\nscore = 10\nprint(score)   → prints 10\n\nYou can change it later:\n\nscore = 10\nscore = 11\nprint(score)   → prints 11`,
+          heading: 'Using and changing a variable',
+          body: `After you store a value, use the variable’s name to get the value back:
+
+score = 10
+print(score)   → prints 10
+
+You can replace the value later:
+
+score = 10
+score = 11
+print(score)   → prints 11
+
+The variable still has the same name. Only the value inside changed.`,
         },
         {
-          heading: 'Good names',
-          body: `Use clear names: score, name, total — not s or x (unless x is a position).\n\nNames cannot start with a digit. They cannot have spaces. Use underscore for multi-word names: player_name.`,
+          heading: 'Rules for variable names',
+          body: `• Use clear names: age, score, player_name
+• Names cannot start with a digit (1score is illegal)
+• Names cannot contain spaces (player name is illegal)
+• Use underscore for multi-word names: player_name
+• Prefer readable names over short ones like x or s (unless x really means a position)
+
+A variable can hold any type of value: a number, a string, a boolean, None, or a list.`,
         },
       ],
       examples: [
         {
-          title: 'Store and print',
-          code: `age = 15\nname = "Ada"\nprint(age)\nprint(name)`,
-          note: 'print the variable name — not the word in quotes unless you want text.',
+          title: 'Store different types in variables',
+          code: `age = 15
+name = "Ada"
+ready = True
+nickname = None
+print(age)
+print(name)
+print(ready)
+print(nickname)`,
+          note: 'Each variable holds one value of a specific type.',
         },
         {
           title: 'Change a variable',
-          code: `score = 0\nscore = 5\nprint(score)`,
-          note: 'The last value assigned is what print shows.',
+          code: `score = 0
+score = 5
+print(score)`,
+          note: 'The last assignment is the value that remains.',
         },
       ],
       practices: [
         {
           id: 'p1',
-          title: 'Make a variable',
+          title: 'Make a number variable',
           prompt: 'Make a variable called age set to 12. Then print age.',
           difficulty: 1,
           starterCode: `# age = 12\n# print age\n`,
@@ -92,7 +170,7 @@ export const pythonEssentialsModule: Module = {
         },
         {
           id: 'p2',
-          title: 'Store a name',
+          title: 'Make a string variable',
           prompt: 'Make a variable called name set to Ada. Then print name.',
           difficulty: 1,
           starterCode: `# name = "Ada"\n# print name\n`,
@@ -103,7 +181,7 @@ export const pythonEssentialsModule: Module = {
         },
         {
           id: 'p3',
-          title: 'Change it',
+          title: 'Change a variable',
           prompt: 'Set score to 0, then set score to 7, then print score.',
           difficulty: 1,
           starterCode: `# score = 0\n# score = 7\n# print score\n`,
@@ -116,50 +194,72 @@ export const pythonEssentialsModule: Module = {
     },
     {
       id: 'py-ess-numbers',
-      title: 'Integers & floats',
-      summary: 'Integer = whole number. Float = decimal number.',
+      title: 'Numbers (integers & decimals)',
+      summary: 'A number can be an integer (whole) or a float (decimal). Both are numeric values.',
       runner: 'python',
       sections: [
         {
-          heading: 'Definition: integer (int)',
-          body: `An integer is a whole number — no decimal point.\n\nExamples: 0, 1, 42, -3.`,
+          heading: 'Definition: number',
+          body: `A number is a numeric value you can use in math.
+
+In Python, numbers come in two common forms:
+
+• Integer (int) — a whole number with no decimal point
+  Examples: 0, 1, 42, -3
+• Float — a number that can have a decimal (fractional) part
+  Examples: 3.14, 2.0, -0.5, 0.25
+
+So: a number can have decimals and integers. Integers are whole; floats can include a decimal point.`,
         },
         {
-          heading: 'Definition: float',
-          body: `A float is a number with a decimal point.\n\nExamples: 3.14, 2.0, -0.5.`,
+          heading: 'When to use each',
+          body: `• Counting people, lives, or items → usually an integer
+  lives = 3
+• Money, height, averages, measurements → usually a float
+  price = 2.5
+  height = 1.75
+
+Both are numbers. The difference is whether you need whole values only, or values with decimal places.`,
         },
         {
-          heading: 'When to use which',
-          body: `• Counting (“how many?”) → integer\n• Measurements and averages → float\n\nYou can store them in variables: count = 3 or price = 2.5.`,
+          heading: 'What numbers are not',
+          body: `• "7" in quotes is a string of characters, not a number
+• True and False are booleans, not numbers (even though True can act like 1 in some math)
+• None is missing — it is not zero
+
+You can store numbers in variables:
+
+count = 7
+price = 3.5`,
         },
       ],
       examples: [
         {
-          title: 'int and float',
-          code: `count = 7\nprice = 3.5\nprint(count)\nprint(price)`,
-          note: '7 is an integer. 3.5 is a float.',
+          title: 'Integer and float variables',
+          code: `count = 7
+price = 3.5
+print(count)
+print(price)
+print(count + 1)
+print(price * 2)`,
+          note: '7 is an integer. 3.5 is a float. Both are numbers.',
         },
       ],
       practices: [
         {
           id: 'p1',
-          title: 'Print an integer',
-          prompt: 'Print 17.',
+          title: 'An integer variable',
+          prompt: 'Make a variable called lives set to 3. Print lives.',
           difficulty: 1,
-          starterCode: `# Print 17\n`,
-          tests: [{ id: 't1', description: 'Prints 17', hint: 'print(17)', kind: 'stdout', expect: '17' }],
+          starterCode: `# lives = 3\n# print lives\n`,
+          tests: [
+            { id: 't1', description: 'Prints 3', hint: 'lives = 3 then print(lives)', kind: 'stdout', expect: '3' },
+            { id: 't2', description: 'Uses lives', hint: 'lives = 3', kind: 'codeMatches', expect: '\\blives\\s*=' },
+          ],
         },
         {
           id: 'p2',
-          title: 'Print a float',
-          prompt: 'Print 4.5.',
-          difficulty: 1,
-          starterCode: `# Print 4.5\n`,
-          tests: [{ id: 't1', description: 'Prints 4.5', hint: 'print(4.5)', kind: 'stdout', expect: '4.5' }],
-        },
-        {
-          id: 'p3',
-          title: 'Store a float',
+          title: 'A decimal variable',
           prompt: 'Make a variable called price set to 2.5. Print price.',
           difficulty: 1,
           starterCode: `# price = 2.5\n# print price\n`,
@@ -168,43 +268,82 @@ export const pythonEssentialsModule: Module = {
             { id: 't2', description: 'Uses price', hint: 'price = 2.5', kind: 'codeMatches', expect: '\\bprice\\s*=' },
           ],
         },
+        {
+          id: 'p3',
+          title: 'Simple math',
+          prompt: 'Make a variable called n set to 10. Print n + 2.',
+          difficulty: 1,
+          starterCode: `# n = 10\n# print n + 2\n`,
+          tests: [
+            { id: 't1', description: 'Prints 12', hint: 'n = 10 then print(n + 2)', kind: 'stdout', expect: '12' },
+            { id: 't2', description: 'Uses n', hint: 'n = 10', kind: 'codeMatches', expect: '\\bn\\s*=' },
+          ],
+        },
       ],
     },
     {
       id: 'py-ess-strings',
-      title: 'Strings (text)',
-      summary: 'A string is text in quotes.',
+      title: 'Strings',
+      summary: 'A string is a string of letters (and other characters) written in quotes.',
       runner: 'python',
       sections: [
         {
-          heading: 'Definition: string (str)',
-          body: `A string is text. Write it in quotes so Python knows it is text.\n\nExamples: "Ada", "hello", "42".\n\n"42" is a string (text). 42 without quotes is an integer (a number).`,
+          heading: 'Definition: string',
+          body: `A string is a string of letters — text made of characters.
+
+In Python, write a string in quotes:
+
+"Ada"
+"hello"
+"42"
+""
+
+• Letters: "Ada"
+• Words and spaces: "hello world"
+• Digits as text: "42" (this is text, not the number forty-two)
+• An empty string: "" (a string with no characters)
+
+You can use single quotes or double quotes: 'hi' and "hi" are both strings.`,
         },
         {
-          heading: 'Variables hold strings too',
-          body: `name = "Ada"\nprint(name)\n\nJoin two strings with +: "Hi " + "Ada" → Hi Ada.`,
+          heading: 'Strings in variables',
+          body: `Store text in a variable the same way you store a number:
+
+name = "Ada"
+city = "Calgary"
+print(name)
+
+Join two strings with + :
+
+greeting = "Hello"
+name = "Ada"
+print(greeting + " " + name)   → Hello Ada
+
++ joins strings. It does not add numbers when both sides are strings.`,
+        },
+        {
+          heading: 'What a string is not',
+          body: `• "7" is a string. 7 (no quotes) is a number
+• "True" is a string. True (no quotes) is a boolean
+• You cannot do "3" + 4 until you convert one side to the matching type
+
+Rule: if it is in quotes, it is a string — even if it looks like a number or a boolean.`,
         },
       ],
       examples: [
         {
-          title: 'String in a variable',
-          code: `word = "code"\nprint(word)\nprint("Hi " + "Ada")`,
+          title: 'String variables',
+          code: `word = "code"
+city = "Calgary"
+print(word)
+print(city)
+print("Hi " + "Ada")`,
           note: 'Quotes make text a string.',
         },
       ],
       practices: [
         {
           id: 'p1',
-          title: 'Print a string',
-          prompt: 'Print hello.',
-          difficulty: 1,
-          starterCode: `# Print "hello"\n`,
-          tests: [
-            { id: 't1', description: 'Prints hello', hint: 'print("hello")', kind: 'stdout', expect: 'hello' },
-          ],
-        },
-        {
-          id: 'p2',
           title: 'Store a string',
           prompt: 'Make a variable called city set to Calgary. Print city.',
           difficulty: 1,
@@ -215,7 +354,7 @@ export const pythonEssentialsModule: Module = {
           ],
         },
         {
-          id: 'p3',
+          id: 'p2',
           title: 'Join two strings',
           prompt: 'Print Hello Ada by joining greeting and name with a space.',
           difficulty: 1,
@@ -228,40 +367,72 @@ export const pythonEssentialsModule: Module = {
     },
     {
       id: 'py-ess-booleans',
-      title: 'Booleans (True / False)',
-      summary: 'A boolean is a true/false value.',
+      title: 'Booleans',
+      summary: 'A boolean is a true/false statement.',
       runner: 'python',
       sections: [
         {
-          heading: 'Definition: boolean (bool)',
-          body: `A boolean is a true/false value. It answers a yes/no question.\n\nIn Python the only boolean values are:\n• True\n• False\n\nNo quotes. Capital T and F.\n\n"True" with quotes is a string, not a boolean.`,
+          heading: 'Definition: boolean',
+          body: `A boolean is a true/false statement. It answers a yes/no question with only two possible answers.
+
+In Python, the only boolean values are:
+
+• True
+• False
+
+Important details:
+• No quotes — True and False are not strings
+• Capital T and F — true and false (lowercase) are wrong in Python
+• A boolean is not the words "yes" / "no", and not the numbers 1 / 0 (even if those ideas feel related)
+
+Examples of boolean meaning:
+• ready = True   → yes, ready
+• game_over = False   → no, not over`,
         },
         {
-          heading: 'Booleans in variables',
-          body: `ready = True\nprint(ready)\n\nComparisons also make booleans: score >= 60.`,
+          heading: 'Booleans from comparisons',
+          body: `Comparisons create boolean values automatically:
+
+score = 85
+print(score >= 60)   → True
+print(score < 50)    → False
+
+Common comparison operators:
+• == equal to
+• != not equal to
+• < less than
+• > greater than
+• <= less than or equal
+• >= greater than or equal
+
+Later, if statements use booleans to decide what code runs.`,
+        },
+        {
+          heading: 'What a boolean is not',
+          body: `• "True" with quotes is a string, not a boolean
+• None means missing — it is not False
+• 0 is a number, not a boolean (even though it can be treated as “falsey” in some checks)
+
+Store booleans in variables when you need a yes/no fact:
+
+ready = True
+passed = score >= 60`,
         },
       ],
       examples: [
         {
-          title: 'Boolean values',
-          code: `ready = True\nprint(ready)\nprint(False)\nprint(type(True))`,
-          note: 'True and False are booleans.',
+          title: 'Boolean values and a comparison',
+          code: `ready = True
+print(ready)
+print(False)
+score = 85
+print(score >= 60)`,
+          note: 'True and False are booleans. Comparisons also produce booleans.',
         },
       ],
       practices: [
         {
           id: 'p1',
-          title: 'Print a boolean',
-          prompt: 'Print True.',
-          difficulty: 1,
-          starterCode: `# Print True (no quotes)\n`,
-          tests: [
-            { id: 't1', description: 'Prints True', hint: 'print(True)', kind: 'stdout', expect: 'True' },
-            { id: 't2', description: 'Uses True', hint: 'True without quotes', kind: 'codeMatches', expect: 'print\\(\\s*True\\s*\\)' },
-          ],
-        },
-        {
-          id: 'p2',
           title: 'Store a boolean',
           prompt: 'Make a variable called ready set to True. Print ready.',
           difficulty: 1,
@@ -269,6 +440,17 @@ export const pythonEssentialsModule: Module = {
           tests: [
             { id: 't1', description: 'Prints True', hint: 'ready = True then print(ready)', kind: 'stdout', expect: 'True' },
             { id: 't2', description: 'Uses ready', hint: 'ready = True', kind: 'codeMatches', expect: '\\bready\\s*=' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'A false value',
+          prompt: 'Make a variable called done set to False. Print done.',
+          difficulty: 1,
+          starterCode: `# done = False\n# print done\n`,
+          tests: [
+            { id: 't1', description: 'Prints False', hint: 'done = False then print(done)', kind: 'stdout', expect: 'False' },
+            { id: 't2', description: 'Uses done', hint: 'done = False', kind: 'codeMatches', expect: '\\bdone\\s*=' },
           ],
         },
         {
@@ -285,44 +467,65 @@ export const pythonEssentialsModule: Module = {
       ],
     },
     {
-      id: 'py-ess-output',
-      title: 'How types look when printed',
-      summary: 'Different types can look the same when printed — know which one you meant.',
+      id: 'py-ess-missing',
+      title: 'Missing values (None)',
+      summary: 'None means there is no value yet — a missing value.',
       runner: 'python',
       sections: [
         {
-          heading: 'Look-alikes',
-          body: `print(42) and print("42") both show 42 — but one is an integer and one is a string.\n\nprint(False) and print("False") both show False — but one is a boolean and one is a string.\n\nRule: quotes → string. No quotes on True/False → boolean. No quotes on digits → number.`,
+          heading: 'Definition: missing value',
+          body: `A missing value means “there is nothing here yet” or “unknown.”
+
+In Python, the missing value is called None.
+
+Examples of when None is useful:
+• nickname = None   → the player has no nickname yet
+• answer = None     → no answer has been entered
+• winner = None     → the game has not chosen a winner
+
+None is its own type. It is not a string, not a number, and not a boolean.`,
+        },
+        {
+          heading: 'What None is not',
+          body: `• None is not 0 (zero is a number)
+• None is not "" (empty string is still a string)
+• None is not False (False is a boolean true/false statement)
+• "None" in quotes is a string spelling the word None — not the real missing value
+
+Use None when you want to say clearly: this variable exists, but it has no real value yet.`,
         },
       ],
       examples: [
         {
-          title: 'Side by side',
-          code: `print(42)\nprint("42")\nprint(False)\nprint("False")`,
-          note: 'Same looking output, different types.',
+          title: 'A missing value in a variable',
+          code: `nickname = None
+print(nickname)
+nickname = "Ace"
+print(nickname)`,
+          note: 'First there is no nickname. Later you store a real string.',
         },
       ],
       practices: [
         {
           id: 'p1',
-          title: 'Number then word',
-          prompt: 'Print 7. Then print seven on the next line.',
+          title: 'Store None',
+          prompt: 'Make a variable called nickname set to None. Print nickname.',
           difficulty: 1,
-          starterCode: `# print 7\n# print "seven"\n`,
+          starterCode: `# nickname = None\n# print nickname\n`,
           tests: [
-            { id: 't1', description: 'Two lines', hint: 'print(7) then print("seven")', kind: 'stdout', expect: '7\nseven' },
+            { id: 't1', description: 'Prints None', hint: 'nickname = None then print(nickname)', kind: 'stdout', expect: 'None' },
+            { id: 't2', description: 'Uses nickname', hint: 'nickname = None', kind: 'codeMatches', expect: '\\bnickname\\s*=' },
           ],
         },
         {
           id: 'p2',
-          title: 'Boolean then string',
-          prompt: 'Print the boolean False. Then print the string False on the next line.',
+          title: 'Replace None later',
+          prompt: 'Set answer to None, then set answer to yes, then print answer.',
           difficulty: 1,
-          starterCode: `# print False\n# print "False"\n`,
+          starterCode: `# answer = None\n# answer = "yes"\n# print answer\n`,
           tests: [
-            { id: 't1', description: 'False then False', hint: 'print(False) then print("False")', kind: 'stdout', expect: 'False\nFalse' },
-            { id: 't2', description: 'Uses boolean False', hint: 'False without quotes first', kind: 'codeMatches', expect: 'print\\(\\s*False\\s*\\)' },
-            { id: 't3', description: 'Uses string False', hint: 'print("False")', kind: 'codeIncludes', expect: '"False"' },
+            { id: 't1', description: 'Prints yes', hint: 'Assign "yes" last, then print(answer)', kind: 'stdout', expect: 'yes' },
+            { id: 't2', description: 'Uses None', hint: 'answer = None first', kind: 'codeIncludes', expect: 'None' },
           ],
         },
       ],
@@ -335,13 +538,34 @@ export const pythonEssentialsModule: Module = {
       sections: [
         {
           heading: 'Definition: list',
-          body: `A list is an ordered group of values in square brackets.\n\nnums = [3, 6, 9]\n\n• nums[0] is the first item (3)\n• len(nums) is how many items (3)`,
+          body: `A list is an ordered group of values inside square brackets.
+
+nums = [3, 6, 9]
+names = ["Ada", "Lin"]
+
+• The values stay in order
+• Indexes start at 0 — nums[0] is the first item
+• len(nums) tells you how many items are in the list
+
+A list can hold numbers, strings, booleans, or even mixed types — but beginners usually keep one kind of value per list.`,
+        },
+        {
+          heading: 'Lists and variables',
+          body: `A list is itself a value, so you store it in a variable:
+
+scores = [10, 20, 30]
+print(scores[0])   → 10
+print(len(scores)) → 3
+
+The variable scores holds the whole list. Each slot inside the list holds one value.`,
         },
       ],
       examples: [
         {
           title: 'A short list',
-          code: `nums = [3, 6, 9]\nprint(nums[0])\nprint(len(nums))`,
+          code: `nums = [3, 6, 9]
+print(nums[0])
+print(len(nums))`,
           note: 'Indexes start at 0.',
         },
       ],
@@ -376,14 +600,25 @@ export const pythonEssentialsModule: Module = {
       runner: 'python',
       sections: [
         {
-          heading: 'Common conversions',
-          body: `• int("12") → 12 (text digits → integer)\n• str(5) → "5" (number → text)\n• float("3.5") → 3.5\n\nUse int before math on digit text. Use str when joining text with +.`,
+          heading: 'Why convert?',
+          body: `Sometimes you have the right information in the wrong type.
+
+Common conversions:
+• int("12") → 12   (digit text → integer)
+• float("3.5") → 3.5
+• str(5) → "5"     (number → text)
+• You cannot turn None into a useful number without choosing a real value first
+
+Use int or float before math on digit text. Use str when joining text with +.`,
         },
       ],
       examples: [
         {
           title: 'Convert then use',
-          code: `raw = "12"\nn = int(raw)\nprint(n + 1)\nprint("n=" + str(n))`,
+          code: `raw = "12"
+n = int(raw)
+print(n + 1)
+print("n=" + str(n))`,
           note: 'int for math; str for joining text.',
         },
       ],
