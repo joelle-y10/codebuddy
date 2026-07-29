@@ -30,7 +30,7 @@ type Props = {
   onPass: (score: number, code: string, checks: CheckResult[]) => void
 }
 
-const diffLabel = { 1: 'Warm-up', 2: 'Practice', 3: 'Challenge' }
+const diffLabel = { 1: 'Warm-up', 2: 'Practice', 3: 'Assignment' }
 
 export function CodeStation({ runner, language, lessonId, practice, cleared, onPass }: Props) {
   const { recordPracticeHelp, getPracticeHelp } = useAuth()
@@ -214,6 +214,9 @@ export function CodeStation({ runner, language, lessonId, practice, cleared, onP
 
   const allPassed = Boolean(checks && checks.length > 0 && checks.every((c) => c.passed))
   const anyFailed = Boolean(checks && checks.some((c) => !c.passed))
+  const passedCount = checks?.filter((c) => c.passed).length ?? 0
+  const totalChecks = checks?.length ?? 0
+  const isCorrect = allPassed && !hadRuntimeError
   const badge = struggleLabel({
     failedAttempts,
     usedHint,
@@ -311,7 +314,9 @@ export function CodeStation({ runner, language, lessonId, practice, cleared, onP
                             ? '(no output)'
                             : null,
                           runner === 'html' && !result.stderr && result.exitCode === 0
-                            ? '(no HTML syntax errors)'
+                            ? anyFailed
+                              ? '(HTML syntax OK — but checks still failing)'
+                              : '(no HTML syntax errors)'
                             : null,
                         ]
                           .filter(Boolean)
@@ -368,21 +373,39 @@ export function CodeStation({ runner, language, lessonId, practice, cleared, onP
             )}
           </aside>
 
-          <div className="feedback">
-            <p className="pane-label">Checks</p>
-            {!checks && <p className="muted">Run to see what you got right and wrong.</p>}
-            {checks && (
-              <ul className="check-list">
-                {checks.map((c) => (
-                  <li key={c.id} className={c.passed ? 'ok' : 'bad'}>
-                    <strong>{c.passed ? 'Right' : 'Wrong'}</strong>
-                    <span>{c.description}</span>
-                    <em>{c.message}</em>
-                  </li>
-                ))}
-              </ul>
+          <div className="feedback" aria-live="polite">
+            <p className="pane-label">Result</p>
+            {!checks && !error && (
+              <p className="muted">Hit Run to see if your answer is correct.</p>
             )}
-            {allPassed && !hadRuntimeError && <p className="pass-banner">Practice cleared.</p>}
+            {error && !checks && <p className="fail-banner">Not correct — Run failed.</p>}
+            {checks && (
+              <>
+                {isCorrect ? (
+                  <p className="pass-banner">Correct — all checks passed.</p>
+                ) : allPassed && hadRuntimeError ? (
+                  <p className="fail-banner">
+                    Checks look OK, but the program still has an error.
+                  </p>
+                ) : (
+                  <p className="fail-banner">
+                    Not correct — {passedCount}/{totalChecks} checks passed.
+                  </p>
+                )}
+                <p className="check-summary">
+                  Checks: {passedCount}/{totalChecks} passed
+                </p>
+                <ul className="check-list">
+                  {checks.map((c) => (
+                    <li key={c.id} className={c.passed ? 'ok' : 'bad'}>
+                      <strong>{c.passed ? 'Right' : 'Wrong'}</strong>
+                      <span>{c.description}</span>
+                      <em>{c.message}</em>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
         </div>
       </div>

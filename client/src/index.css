@@ -520,9 +520,29 @@ h2,
 }
 
 .pass-banner {
-  margin-top: 0.8rem;
+  margin: 0.2rem 0 0.75rem;
+  padding: 0.75rem 0.9rem;
   color: var(--ok);
-  font-weight: 500;
+  font-weight: 650;
+  font-size: 1.05rem;
+  border: 1px solid rgba(125, 255, 179, 0.45);
+  background: rgba(125, 255, 179, 0.08);
+}
+
+.fail-banner {
+  margin: 0.2rem 0 0.75rem;
+  padding: 0.75rem 0.9rem;
+  color: var(--danger);
+  font-weight: 650;
+  font-size: 1.05rem;
+  border: 1px solid rgba(255, 138, 122, 0.45);
+  background: rgba(255, 138, 122, 0.08);
+}
+
+.check-summary {
+  margin: 0 0 0.65rem;
+  color: var(--muted);
+  font-size: 0.88rem;
 }
 
 .lesson-footer {

@@ -231,5 +231,82 @@ export const processingUniversity: LanguageTrack = {
         },
       ],
     },
+    {
+      id: 'p5-u-projects',
+      title: 'Assignments',
+      summary: 'Draw a full scene: a house with a person standing beside it.',
+      lessons: [
+        {
+          id: 'p5-u-scene',
+          title: 'Person next to a house',
+          summary: 'Compose shapes into a readable neighborhood scene.',
+          runner: 'processing',
+          sections: [
+            {
+              heading: 'Assignment brief',
+              body: `Draw a house and a person standing next to it on the canvas.
+
+Required shapes:
+• House body — a rect
+• Roof — a triangle (or three lines that form a roof)
+• Person head — an ellipse / circle
+• Person body — a rect
+
+Also call text() so the canvas shows the word House and the word Person (labels are fine).`,
+            },
+          ],
+          examples: [
+            {
+              title: 'Scene sketch',
+              code: `function setup() {
+  createCanvas(320, 220);
+  background(180, 210, 240);
+  // house
+  fill(245, 215, 110);
+  rect(40, 110, 100, 70);
+  fill(139, 69, 19);
+  triangle(40, 110, 90, 60, 140, 110);
+  fill(100, 60, 30);
+  rect(78, 140, 24, 40); // door
+  fill(135, 206, 235);
+  rect(55, 125, 22, 22); // window
+  text("House", 60, 200);
+  // person
+  fill(255, 204, 153);
+  ellipse(220, 120, 28, 28);
+  fill(60, 110, 170);
+  rect(206, 134, 28, 50);
+  fill(20);
+  text("Person", 200, 200);
+}`,
+              note: 'House on the left, person on the right.',
+            },
+          ],
+          practices: [
+            {
+              id: 'p1',
+              title: 'Neighborhood scene',
+              prompt:
+                'Draw a house (rect + triangle roof) and a person (ellipse head + rect body) side by side. Include text labels House and Person.',
+              difficulty: 3,
+              starterCode: `function setup() {
+  createCanvas(320, 220);
+  background(180, 210, 240);
+  // Assignment: house (rect + triangle) and person (ellipse + rect)
+  // Also text("House", ...) and text("Person", ...)
+}
+`,
+              tests: [
+                { id: 't1', description: 'Draws a rect (walls/body)', hint: 'rect(...)', kind: 'codeIncludes', expect: 'rect(' },
+                { id: 't2', description: 'Draws a triangle roof', hint: 'triangle(...)', kind: 'codeIncludes', expect: 'triangle(' },
+                { id: 't3', description: 'Draws an ellipse head', hint: 'ellipse(...)', kind: 'codeIncludes', expect: 'ellipse(' },
+                { id: 't4', description: 'Labels House', hint: 'text("House", x, y)', kind: 'codeIncludes', expect: 'House' },
+                { id: 't5', description: 'Labels Person', hint: 'text("Person", x, y)', kind: 'codeIncludes', expect: 'Person' },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 }

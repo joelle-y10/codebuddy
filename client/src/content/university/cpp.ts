@@ -229,5 +229,79 @@ export const cppUniversity: LanguageTrack = {
         },
       ],
     },
+    {
+      id: 'cpp-u-projects',
+      title: 'Assignments',
+      summary: 'Build a grocery checkout with vectors or arrays.',
+      lessons: [
+        {
+          id: 'cpp-u-grocery',
+          title: 'Grocery checkout',
+          summary: 'Print a receipt and a total.',
+          runner: 'cpp',
+          sections: [
+            {
+              heading: 'Assignment brief',
+              body: `Build a tiny grocery checkout in C++.
+
+Print exactly:
+milk: 3
+bread: 2
+eggs: 4
+total: 9
+
+Use arrays, vectors, or plain variables — the receipt must match.`,
+            },
+          ],
+          examples: [
+            {
+              title: 'Receipt sketch',
+              code: `#include <iostream>
+#include <string>
+int main() {
+  std::string items[] = {"milk", "bread", "eggs"};
+  int prices[] = {3, 2, 4};
+  int total = 0;
+  for (int i = 0; i < 3; i++) {
+    std::cout << items[i] << ": " << prices[i] << std::endl;
+    total += prices[i];
+  }
+  std::cout << "total: " << total << std::endl;
+  return 0;
+}`,
+              note: 'Keep names and prices aligned by index.',
+            },
+          ],
+          practices: [
+            {
+              id: 'p1',
+              title: 'Print three items',
+              prompt: 'Print milk, bread, and eggs each on its own line.',
+              difficulty: 2,
+              starterCode: `#include <iostream>\nint main() {\n  // print milk, bread, eggs\n  return 0;\n}\n`,
+              tests: [
+                { id: 't1', description: 'Prints three items', hint: 'std::cout << "milk" << std::endl;', kind: 'stdout', expect: 'milk\nbread\neggs' },
+              ],
+            },
+            {
+              id: 'p2',
+              title: 'Full checkout',
+              prompt: 'Print milk: 3, bread: 2, eggs: 4, then total: 9.',
+              difficulty: 3,
+              starterCode: `#include <iostream>\n#include <string>\nint main() {\n  // Assignment: grocery receipt ending with total: 9\n  return 0;\n}\n`,
+              tests: [
+                {
+                  id: 't1',
+                  description: 'Full receipt',
+                  hint: 'Loop items and prices, then print total',
+                  kind: 'stdout',
+                  expect: 'milk: 3\nbread: 2\neggs: 4\ntotal: 9',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 }

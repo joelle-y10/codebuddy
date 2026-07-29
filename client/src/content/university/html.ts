@@ -237,5 +237,126 @@ export const htmlUniversity: LanguageTrack = {
         },
       ],
     },
+    {
+      id: 'html-u-projects',
+      title: 'Assignments',
+      summary: 'Build a full mini-project: a neighborhood scene with a person and a house.',
+      lessons: [
+        {
+          id: 'html-u-scene',
+          title: 'Person next to a house',
+          summary: 'Use HTML and CSS to draw a simple scene: a house and a person standing beside it.',
+          runner: 'html',
+          sections: [
+            {
+              heading: 'Assignment brief',
+              body: `Build a small picture with HTML and CSS (inline styles are fine).
+
+You need:
+• A house — walls, a roof, a door, and at least one window
+• A person standing next to the house — a head and a body
+
+Use class names house and person so the checks can find your scene. Put them side by side (for example with display: flex on a wrapper).`,
+            },
+            {
+              heading: 'Tips',
+              body: `• Use <div> boxes with background colors and sizes
+• A triangle roof can be a div with borders, or a simple colored rectangle labeled Roof
+• The person can be a circle head (border-radius) plus a rectangle body
+• Keep it simple — this is about structure and layout, not perfect art`,
+            },
+          ],
+          examples: [
+            {
+              title: 'Tiny scene sketch',
+              code: `<div style="display:flex; align-items:flex-end; gap:24px; padding:20px; background:#cfe8ff; min-height:220px;">
+  <div class="house">
+    <div style="width:0; height:0; border-left:50px solid transparent; border-right:50px solid transparent; border-bottom:40px solid #8b4513;"></div>
+    <div style="width:100px; height:80px; background:#f5d76e; position:relative;">
+      <div class="door" style="width:24px; height:36px; background:#6b3e26; position:absolute; bottom:0; left:38px;"></div>
+      <div class="window" style="width:22px; height:22px; background:#87ceeb; position:absolute; top:12px; left:12px;"></div>
+    </div>
+    <p>House</p>
+  </div>
+  <div class="person">
+    <div style="width:28px; height:28px; border-radius:50%; background:#ffcc99; margin:0 auto;"></div>
+    <div style="width:36px; height:50px; background:#3b6ea5; margin:4px auto 0;"></div>
+    <p>Person</p>
+  </div>
+</div>`,
+              note: 'House on the left, person on the right — both labeled with classes.',
+            },
+          ],
+          practices: [
+            {
+              id: 'p1',
+              title: 'Neighborhood scene',
+              prompt:
+                'Build a scene with a house (class="house") and a person (class="person") standing next to it. The house needs a door and a window. Use a flex (or similar) layout so they sit side by side. Include the word House and the word Person somewhere in the page (for example in alt text, titles, or visible labels).',
+              difficulty: 3,
+              starterCode: `<!-- Assignment: person standing next to a house.
+  Build a house and a person side by side.
+-->
+<div style="display:flex; align-items:flex-end; gap:24px; padding:20px; background:#cfe8ff; min-height:220px;">
+  <!-- add house (with door + window parts) and person -->
+  <!-- add visible labels House and Person -->
+</div>
+`,
+              tests: [
+                {
+                  id: 't1',
+                  description: 'Has a house',
+                  hint: 'class="house"',
+                  kind: 'codeIncludes',
+                  expect: 'class="house"',
+                },
+                {
+                  id: 't2',
+                  description: 'Has a person',
+                  hint: 'class="person"',
+                  kind: 'codeIncludes',
+                  expect: 'class="person"',
+                },
+                {
+                  id: 't3',
+                  description: 'Has a door element',
+                  hint: 'class="door" on a div inside the house',
+                  kind: 'codeIncludes',
+                  expect: 'class="door"',
+                },
+                {
+                  id: 't4',
+                  description: 'Has a window element',
+                  hint: 'class="window" on a div inside the house',
+                  kind: 'codeIncludes',
+                  expect: 'class="window"',
+                },
+                {
+                  id: 't5',
+                  description: 'Side-by-side layout',
+                  hint: 'display:flex or display: flex',
+                  kind: 'codeMatches',
+                  expect: 'display\\s*:\\s*flex',
+                },
+                {
+                  id: 't6',
+                  description: 'Mentions House',
+                  hint: 'Put House in visible text',
+                  kind: 'htmlIncludes',
+                  expect: 'House',
+                },
+                {
+                  id: 't7',
+                  description: 'Mentions Person',
+                  hint: 'Put Person in visible text',
+                  kind: 'htmlIncludes',
+                  expect: 'Person',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 }

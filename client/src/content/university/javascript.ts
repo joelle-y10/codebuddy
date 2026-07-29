@@ -255,5 +255,79 @@ export const javascriptUniversity: LanguageTrack = {
         },
       ],
     },
+    {
+      id: 'js-u-projects',
+      title: 'Assignments',
+      summary: 'Build a mini shopping-cart app with array tools.',
+      lessons: [
+        {
+          id: 'js-u-cart',
+          title: 'Shopping cart',
+          summary: 'Price lookup, cart lines, and a checkout total.',
+          runner: 'javascript',
+          sections: [
+            {
+              heading: 'Assignment brief',
+              body: `Build a tiny store checkout in JavaScript.
+
+You need:
+• A prices object (milk, bread, eggs)
+• A cart array of item names
+• Printed lines like milk: 3
+• A final total: 9
+
+Use map / reduce or a plain loop — University cares that the program works end to end.`,
+            },
+          ],
+          examples: [
+            {
+              title: 'Checkout sketch',
+              code: `const prices = { milk: 3, bread: 2, eggs: 4 };
+const cart = ["milk", "bread", "eggs"];
+let total = 0;
+for (const item of cart) {
+  const cost = prices[item];
+  console.log(item + ": " + cost);
+  total += cost;
+}
+console.log("total: " + total);`,
+              note: 'Object for prices, array for the cart.',
+            },
+          ],
+          practices: [
+            {
+              id: 'p1',
+              title: 'List the cart',
+              prompt: 'cart = ["milk","bread","eggs"]. Print each item on its own line.',
+              difficulty: 2,
+              starterCode: `const cart = ["milk", "bread", "eggs"];\n// print each item\n`,
+              tests: [
+                { id: 't1', description: 'Prints three items', hint: 'for (const item of cart) console.log(item)', kind: 'stdout', expect: 'milk\nbread\neggs' },
+                { id: 't2', description: 'Uses cart', hint: 'cart array', kind: 'codeIncludes', expect: 'cart' },
+              ],
+            },
+            {
+              id: 'p2',
+              title: 'Full checkout',
+              prompt:
+                'prices: milk=3, bread=2, eggs=4. cart: milk, bread, eggs. Print item: price for each, then total: 9.',
+              difficulty: 3,
+              starterCode: `// Assignment: grocery checkout\nconst prices = { milk: 3, bread: 2, eggs: 4 };\nconst cart = ["milk", "bread", "eggs"];\n// print each item: price, then total: 9\n`,
+              tests: [
+                {
+                  id: 't1',
+                  description: 'Full receipt',
+                  hint: 'Loop cart and accumulate total',
+                  kind: 'stdout',
+                  expect: 'milk: 3\nbread: 2\neggs: 4\ntotal: 9',
+                },
+                { id: 't2', description: 'Uses prices', hint: 'prices object', kind: 'codeIncludes', expect: 'prices' },
+                { id: 't3', description: 'Uses cart', hint: 'cart array', kind: 'codeIncludes', expect: 'cart' },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 }

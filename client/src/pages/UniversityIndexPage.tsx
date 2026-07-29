@@ -20,8 +20,9 @@ export function UniversityIndexPage() {
       <p className="eyebrow">CodeBuddy University</p>
       <h1>Advanced tracks for graduates</h1>
       <p className="lede">
-        Harder concepts, same practice-station rhythm. Unlock a University language by finishing
-        its basic track ({unlockedCount}/{universityTracks.length} open).
+        Harder concepts, then real Assignments — mini-projects like an HTML neighborhood scene or a
+        Python grocery checkout. Unlock a University language by finishing its basic track (
+        {unlockedCount}/{universityTracks.length} open).
       </p>
 
       {!grad.graduated && (

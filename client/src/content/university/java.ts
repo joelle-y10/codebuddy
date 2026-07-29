@@ -219,5 +219,78 @@ export const javaUniversity: LanguageTrack = {
         },
       ],
     },
+    {
+      id: 'java-u-projects',
+      title: 'Assignments',
+      summary: 'Build a grocery inventory with classes and an ArrayList cart.',
+      lessons: [
+        {
+          id: 'java-u-grocery',
+          title: 'Grocery inventory',
+          summary: 'Store items and print a checkout total.',
+          runner: 'java',
+          sections: [
+            {
+              heading: 'Assignment brief',
+              body: `Build a tiny grocery checkout in Java.
+
+Print:
+milk: 3
+bread: 2
+eggs: 4
+total: 9
+
+You can use parallel arrays, a Map, or simple variables — but the printed receipt must match exactly.`,
+            },
+          ],
+          examples: [
+            {
+              title: 'Receipt sketch',
+              code: `public class Main {
+  public static void main(String[] args) {
+    String[] items = {"milk", "bread", "eggs"};
+    int[] prices = {3, 2, 4};
+    int total = 0;
+    for (int i = 0; i < items.length; i++) {
+      System.out.println(items[i] + ": " + prices[i]);
+      total += prices[i];
+    }
+    System.out.println("total: " + total);
+  }
+}`,
+              note: 'Parallel arrays keep names and prices aligned.',
+            },
+          ],
+          practices: [
+            {
+              id: 'p1',
+              title: 'Print three items',
+              prompt: 'Print milk, bread, and eggs each on its own line.',
+              difficulty: 2,
+              starterCode: `public class Main {\n  public static void main(String[] args) {\n    // print milk, bread, eggs\n  }\n}\n`,
+              tests: [
+                { id: 't1', description: 'Prints three items', hint: 'System.out.println for each', kind: 'stdout', expect: 'milk\nbread\neggs' },
+              ],
+            },
+            {
+              id: 'p2',
+              title: 'Full checkout',
+              prompt: 'Print milk: 3, bread: 2, eggs: 4, then total: 9.',
+              difficulty: 3,
+              starterCode: `public class Main {\n  public static void main(String[] args) {\n    // Assignment: grocery receipt ending with total: 9\n  }\n}\n`,
+              tests: [
+                {
+                  id: 't1',
+                  description: 'Full receipt',
+                  hint: 'Loop items and prices, then print total',
+                  kind: 'stdout',
+                  expect: 'milk: 3\nbread: 2\neggs: 4\ntotal: 9',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 }

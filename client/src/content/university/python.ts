@@ -251,5 +251,143 @@ export const pythonUniversity: LanguageTrack = {
         },
       ],
     },
+    {
+      id: 'py-u-projects',
+      title: 'Assignments',
+      summary: 'Build a mini grocery-store program: inventory, prices, and checkout.',
+      lessons: [
+        {
+          id: 'py-u-grocery',
+          title: 'Grocery store checkout',
+          summary: 'Use dictionaries and loops to run a tiny grocery store.',
+          runner: 'python',
+          sections: [
+            {
+              heading: 'Assignment brief',
+              body: `You are building a tiny grocery store program.
+
+You will:
+1. Store item prices in a dictionary
+2. Keep a shopping cart (a list of item names)
+3. Print each item with its price
+4. Print the total cost at checkout
+
+This is a University assignment — put the ideas together (dicts, loops, math), not just one tiny drill.`,
+            },
+            {
+              heading: 'Suggested shape',
+              body: `prices = {"milk": 3, "bread": 2, "eggs": 4}
+cart = ["milk", "bread", "eggs"]
+
+Loop over the cart, look up each price, and add to a total.
+Print lines like: milk: 3
+Then print: total: 9`,
+            },
+          ],
+          examples: [
+            {
+              title: 'Checkout sketch',
+              code: `prices = {"milk": 3, "bread": 2, "eggs": 4}
+cart = ["milk", "bread", "eggs"]
+total = 0
+for item in cart:
+    cost = prices[item]
+    print(item + ": " + str(cost))
+    total = total + cost
+print("total: " + str(total))`,
+              note: 'Dictionary for prices, list for the cart, loop for checkout.',
+            },
+          ],
+          practices: [
+            {
+              id: 'p1',
+              title: 'Print the inventory',
+              prompt:
+                'Make a prices dictionary with milk=3, bread=2, eggs=4. Print each item name on its own line (milk, then bread, then eggs).',
+              difficulty: 2,
+              starterCode: `# prices = {"milk": 3, "bread": 2, "eggs": 4}
+# print each item name on its own line
+`,
+              tests: [
+                {
+                  id: 't1',
+                  description: 'Prints milk, bread, eggs',
+                  hint: 'for item in prices: print(item)',
+                  kind: 'stdout',
+                  expect: 'milk\nbread\neggs',
+                },
+                {
+                  id: 't2',
+                  description: 'Uses a prices dict',
+                  hint: 'prices = {"milk": 3, ...}',
+                  kind: 'codeIncludes',
+                  expect: 'prices',
+                },
+              ],
+            },
+            {
+              id: 'p2',
+              title: 'Look up a price',
+              prompt:
+                'Make prices with milk=3, bread=2, eggs=4. Print the price of milk only.',
+              difficulty: 2,
+              starterCode: `# prices dictionary, then print prices["milk"]
+`,
+              tests: [
+                {
+                  id: 't1',
+                  description: 'Prints 3',
+                  hint: 'print(prices["milk"])',
+                  kind: 'stdout',
+                  expect: '3',
+                },
+                {
+                  id: 't2',
+                  description: 'Looks up milk',
+                  hint: 'prices["milk"]',
+                  kind: 'codeIncludes',
+                  expect: 'milk',
+                },
+              ],
+            },
+            {
+              id: 'p3',
+              title: 'Full checkout',
+              prompt:
+                'prices: milk=3, bread=2, eggs=4. cart: milk, bread, eggs. For each cart item print "item: price". Then print "total: 9".',
+              difficulty: 3,
+              starterCode: `# Grocery checkout assignment
+# prices = {"milk": 3, "bread": 2, "eggs": 4}
+# cart = ["milk", "bread", "eggs"]
+# print each item: price, then total: 9
+`,
+              tests: [
+                {
+                  id: 't1',
+                  description: 'Full receipt',
+                  hint: 'Loop cart, print item + ": " + str(prices[item]), then total',
+                  kind: 'stdout',
+                  expect: 'milk: 3\nbread: 2\neggs: 4\ntotal: 9',
+                },
+                {
+                  id: 't2',
+                  description: 'Uses a cart',
+                  hint: 'cart = [...]',
+                  kind: 'codeIncludes',
+                  expect: 'cart',
+                },
+                {
+                  id: 't3',
+                  description: 'Uses prices',
+                  hint: 'prices = {...}',
+                  kind: 'codeIncludes',
+                  expect: 'prices',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 }
