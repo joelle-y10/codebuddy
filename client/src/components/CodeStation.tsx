@@ -49,6 +49,9 @@ export function CodeStation({ runner, language, lessonId, practice, cleared, onP
   const [hintText, setHintText] = useState<string | null>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
+  // Reset editor only when the practice itself changes — not when helpMap updates.
+  // recordPracticeHelp (called after a failed Run) recreates getPracticeHelp; if that
+  // were a dependency, every Run would wipe the learner's code back to starterCode.
   useEffect(() => {
     const help = getPracticeHelp(language, lessonId, practice.id)
     setCode(practice.starterCode)
@@ -61,7 +64,8 @@ export function CodeStation({ runner, language, lessonId, practice, cleared, onP
     setUsedAnswer(help.usedAnswer)
     setHintLevel(help.usedAnswer ? 2 : help.usedHint ? 1 : 0)
     setHintText(null)
-  }, [practice.id, practice.starterCode, language, lessonId, getPracticeHelp])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- omit getPracticeHelp on purpose
+  }, [practice.id, practice.starterCode, language, lessonId])
 
   const monacoLang = useMemo(() => {
     if (runner === 'cpp') return 'cpp'
