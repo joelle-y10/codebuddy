@@ -31,14 +31,52 @@ jobs:
           cache: npm
           cache-dependency-path: client/package-lock.json
       - run: npm ci
-      - run: npm run build
+
+      # Cloud build (Supabase wired in) → /codebuddy/
+      - name: Build cloud site
+        run: npm run build
         env:
-          # Public anon key — same values shipped in the client bundle
           VITE_SUPABASE_URL: https://wsqpiqznqwsbsdskfhdb.supabase.co
           VITE_SUPABASE_ANON_KEY: sb_publishable_ZGWlJ8b6NJead0u2kj7L9g_wskxKXye
+          VITE_SITE_EDITION: cloud
+      - name: Stage cloud output
+        run: |
+          mkdir -p ../site
+          cp -R dist/. ../site/
+
+      # Offline build (no Supabase keys) → /codebuddy/offline/
+      - name: Build offline site
+        run: npm run build -- --base=/codebuddy/offline/
+        env:
+          VITE_SITE_EDITION: offline
+      - name: Stage offline output
+        run: |
+          mkdir -p ../site/offline
+          cp -R dist/. ../site/offline/
+          # Tiny index pointer so people can find both versions
+          cat > ../site/versions.html << 'EOF'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>CodeBuddy versions</title>
+            <style>
+              body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; line-height: 1.5; }
+              a { color: #0a7; }
+            </style>
+          </head>
+          <body>
+            <h1>CodeBuddy versions</h1>
+            <p><a href="./">Cloud version</a> — accounts &amp; cloud progress (Supabase)</p>
+            <p><a href="./offline/">Offline / local version</a> — no Supabase; progress stays in this browser only</p>
+          </body>
+          </html>
+          EOF
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: client/dist
+          path: site
 
   deploy:
     needs: build

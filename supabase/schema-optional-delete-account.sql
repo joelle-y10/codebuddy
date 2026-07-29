@@ -1,14 +1,17 @@
 -- =============================================================================
--- OPTIONAL — CodeBuddy “delete my account” helper
+-- OPTIONAL — remove ONLY the signed-in CodeBuddy user's login
 -- =============================================================================
--- Supabase may warn that this contains destructive operations because it
--- defines a function with a DELETE inside. That is expected for this file.
+-- Supabase may warn about a destructive keyword. That is expected here.
 --
--- Running this does NOT delete anyone by itself.
--- It only creates a function the app calls when a signed-in user clicks
--- “Delete my account” in CodeBuddy (deletes only that user’s auth row).
+-- Scope (intentionally narrow):
+--   • Affects ONLY auth.uid() — the person currently signed in
+--   • Does NOT touch other users
+--   • Does NOT touch StudyBuddy tables or any non-codebuddy data
+--   • Does NOT run until the app calls this function after the user confirms
 --
--- Run AFTER schema.sql if you want in-app account deletion.
+-- Running this SQL file alone does not remove anyone; it only defines the helper.
+-- Run AFTER schema.sql if you want “Delete my account” to remove the login too.
+-- (The app already removes that user’s codebuddy_* rows via RLS before calling this.)
 -- =============================================================================
 
 do $$
@@ -31,6 +34,7 @@ begin
         if uid is null then
           raise exception 'Not signed in';
         end if;
+        -- Single-user only
         delete from auth.users where id = uid;
       end;
       $body$;

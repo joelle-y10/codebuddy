@@ -50,7 +50,9 @@ export function ProfileDrawer({ open, onClose }: Props) {
     setEmail(user?.email ?? '')
     setDraftAvatar(avatar)
     void refreshProfile()
-  }, [open, user, displayName, avatar, refreshProfile])
+    // Only re-init when the drawer opens — not on every avatar refresh (that caused flicker)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: open edge only
+  }, [open])
 
   useEffect(() => {
     if (!open) return

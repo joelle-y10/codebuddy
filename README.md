@@ -4,7 +4,11 @@ Learn HTML, JavaScript, Processing, Python, C++, and Java with lessons, examples
 
 Progression: **CodeBuddy Basics** → clear a language → **CodeBuddy University** (advanced tracks).
 
-**Live site:** https://joelle-y10.github.io/codebuddy/
+**Live sites:**
+
+- **Cloud (Supabase accounts / sync):** https://joelle-y10.github.io/codebuddy/
+- **Offline (no Supabase — browser-only progress):** https://joelle-y10.github.io/codebuddy/offline/
+- **Version picker:** https://joelle-y10.github.io/codebuddy/versions.html
 
 
 ## Stack
@@ -31,7 +35,10 @@ npm run dev
 
 ## Deploy
 
-Pushing to `main` triggers the GitHub Pages workflow in `.github/workflows/deploy.yml`. The Vite `base` is set to `/codebuddy/` for project-pages hosting.
+Pushing to `main` deploys **two** GitHub Pages builds:
+
+1. `/codebuddy/` — cloud edition (Supabase keys baked in)
+2. `/codebuddy/offline/` — offline edition (no Supabase; local progress only)
 
 ## Supabase (required for cloud sync)
 

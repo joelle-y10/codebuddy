@@ -103,21 +103,41 @@ export function AccountPage() {
   }
 
   if (!syncAvailable) {
+    const offline = import.meta.env.VITE_SITE_EDITION === 'offline'
     return (
       <div className="page narrow">
-        <h1>Connect Supabase</h1>
-        <p className="lede">Create a <strong>new</strong> Supabase project for CodeBuddy (safest).</p>
-        <ol className="setup-steps">
-          <li>Supabase Dashboard → New project named codebuddy</li>
-          <li>Settings → API → copy Project URL + anon key</li>
-          <li>
-            Put them in <code>client/.env</code> (see <code>.env.example</code>)
-          </li>
-          <li>Restart <code>npm run dev</code></li>
-          <li>
-            SQL Editor → paste <code>supabase/schema.sql</code> → Run
-          </li>
-        </ol>
+        <h1>{offline ? 'Offline edition' : 'Connect Supabase'}</h1>
+        {offline ? (
+          <>
+            <p className="lede">
+              This site has no Supabase keys. Progress stays in this browser only — useful if the
+              cloud edition is down.
+            </p>
+            <p className="body">
+              Prefer accounts &amp; sync?{' '}
+              <a href="/codebuddy/">Open the cloud version</a>.
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="lede">
+              Create a <strong>new</strong> Supabase project for CodeBuddy (safest).
+            </p>
+            <ol className="setup-steps">
+              <li>Supabase Dashboard → New project named codebuddy</li>
+              <li>Settings → API → copy Project URL + anon key</li>
+              <li>
+                Put them in <code>client/.env</code> (see <code>.env.example</code>)
+              </li>
+              <li>
+                Restart <code>npm run dev</code>
+              </li>
+              <li>
+                SQL Editor → paste <code>supabase/schema.sql</code> → Run
+              </li>
+            </ol>
+          </>
+        )}
       </div>
     )
   }

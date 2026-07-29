@@ -435,21 +435,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const deleteAccount = useCallback(async () => {
-    if (!supabase) return 'Supabase is not configured.'
     if (!user) return 'Sign in first.'
-    const { error } = await supabase.rpc('codebuddy_delete_own_account')
-    if (error) {
-      return `${error.message} — Optional: run supabase/schema-optional-delete-account.sql if you want in-app delete.`
-    }
+
+    // Always clear local caches for this browser
     setProgress({})
     saveCache({})
     clearPendingUpload()
+    setHelpMap({})
+    saveHelpMap({})
     setDisplayName('')
     setAvatar(DEFAULT_AVATAR)
     setPasswordRecovery(false)
-    await supabase.auth.signOut()
+
+    if (supabase) {
+      const uid = user.id
+      // Scoped to the signed-in user only (RLS also enforces this)
+      await supabase.from('codebuddy_practice_help').delete().eq('user_id', uid)
+      await supabase.from('codebuddy_submissions').delete().eq('user_id', uid)
+      await supabase.from('codebuddy_progress').delete().eq('user_id', uid)
+      await supabase.from('codebuddy_profiles').delete().eq('id', uid)
+
+      // Optional: remove auth login too (only this uid). Needs optional SQL once.
+      const { error } = await supabase.rpc('codebuddy_delete_own_account')
+      if (error && !/Could not find the function|PGRST202|schema cache/i.test(error.message)) {
+        // Auth row may remain, but CodeBuddy data for this user is gone
+        console.warn('auth remove:', error.message)
+      }
+      await supabase.auth.signOut()
+    }
+
     setSyncStatus('local-only')
-    setSyncMessage('Account deleted.')
+    setSyncMessage('Your CodeBuddy account data for this user was removed.')
     return null
   }, [user])
 
@@ -501,27 +517,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const markPracticeComplete = useCallback(
     async (language: LangId, lessonId: string, practiceId: string, score: number, code: string) => {
-      if (!supabase) return 'Supabase is not configured.'
-      if (!user) return 'Sign in to save progress to the cloud.'
-
-      const schemaOk = await refreshSchemaStatus()
-      if (!schemaOk) {
-        // Keep a pending upload so nothing is lost once schema is installed
-        const k = practiceKey(language, lessonId, practiceId)
-        const pending = loadPendingUpload()
-        pending[k] = { completed: true, bestScore: score }
-        savePendingUpload(pending)
-        setProgress((prev) => {
-          const next = { ...prev, [k]: { completed: true, bestScore: score } }
-          saveCache(next)
-          return next
-        })
-        return 'Cloud tables are not installed yet. Your clear is saved temporarily — run the safe schema SQL, then sign in again.'
-      }
-
-      const storageId = `${lessonId}::${practiceId}`
       const k = practiceKey(language, lessonId, practiceId)
+      const storageId = `${lessonId}::${practiceId}`
 
+      // Always keep a local clear (works on the offline site and as a cache)
       setProgress((prev) => {
         const next = {
           ...prev,
@@ -533,6 +532,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         saveCache(next)
         return next
       })
+
+      if (!supabase || !user) {
+        setSyncStatus('local-only')
+        setSyncMessage('Saved in this browser only (offline / not signed in).')
+        return null
+      }
+
+      const schemaOk = await refreshSchemaStatus()
+      if (!schemaOk) {
+        const pending = loadPendingUpload()
+        pending[k] = { completed: true, bestScore: score }
+        savePendingUpload(pending)
+        return 'Cloud tables are not installed yet. Clear saved in this browser — run the safe schema SQL when ready.'
+      }
 
       const { error: progressError } = await supabase.from('codebuddy_progress').upsert(
         {
@@ -562,7 +575,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         score,
       })
 
-      // Ensure profile row exists
       await supabase.from('codebuddy_profiles').upsert(
         {
           id: user.id,
