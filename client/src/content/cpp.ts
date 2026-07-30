@@ -14,7 +14,7 @@ export const cppTrack: LanguageTrack = {
     {
       id: 'cpp-start',
       title: 'Getting started',
-      summary: 'iostream, main, and your first console programs.',
+      summary: 'After coding terms & types: iostream, main, and your first console programs.',
       lessons: [
         {
           id: 'cpp-hello',

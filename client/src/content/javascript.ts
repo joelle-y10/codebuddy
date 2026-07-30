@@ -14,7 +14,7 @@ export const javascriptTrack: LanguageTrack = {
     {
       id: 'js-start',
       title: 'Getting started',
-      summary: 'How programs talk to you, and how to read errors.',
+      summary: 'After coding terms & types: how programs talk to you with console.log, and how to read errors.',
       lessons: [
         {
           id: 'js-hello',

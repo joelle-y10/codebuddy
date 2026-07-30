@@ -44,18 +44,22 @@ export function TrackPage({ tier }: { tier: TrackTier }) {
       <h1>{track.tagline}</h1>
       <p className="lede">
         {overall.done}/{overall.total} lessons complete across {track.modules.length} modules.
-        Lessons get harder as you go — finish every practice station before moving on.
+        {tier === 'basic'
+          ? ' Start with Module 01 (coding terms & data types) before print, setup, or later topics.'
+          : ' Lessons get harder as you go — finish every practice station before moving on.'}
       </p>
 
       <div className="module-list">
         {track.modules.map((mod, mi) => {
           const mp = moduleProgress(track, mod.id, isLessonComplete)
+          const isFoundation = tier === 'basic' && mi === 0
           return (
-            <section key={mod.id} className="module-block">
+            <section key={mod.id} className={`module-block${isFoundation ? ' module-foundation' : ''}`}>
               <header className="module-head">
                 <div>
                   <p className="eyebrow">
                     Module {String(mi + 1).padStart(2, '0')}
+                    {isFoundation ? ' · Start here' : ''}
                     {mp.complete ? ' · Cleared' : ''}
                   </p>
                   <h2>{mod.title}</h2>

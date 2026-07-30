@@ -781,6 +781,13 @@ code {
   margin-bottom: 0.75rem;
 }
 
+.module-block.module-foundation {
+  outline: 1px solid color-mix(in srgb, var(--lime, #c8f542) 40%, transparent);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  background: color-mix(in srgb, var(--lime, #c8f542) 6%, transparent);
+}
+
 .module-head h2 {
   margin: 0.2rem 0 0.35rem;
 }

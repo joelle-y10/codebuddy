@@ -1,12 +1,113 @@
 import type { Module } from '../../types'
 
-/** First module: detailed definitions of values, variables, and types. */
+/** First module on every basic track: coding terms, values, variables, and types. */
 export const cppEssentialsModule: Module = {
   id: 'cpp-essentials',
-  title: 'Values, variables & types',
+  title: 'Start here: coding terms & data types',
   summary:
-    'Learn what values and variables are, then study each type in detail: numbers, strings, booleans, missing values, and lists (vectors).',
+    'Module 1 — learn the words first (value, type, variable), then numbers, strings, booleans, missing values, and lists (vectors). Do this before cout drills or later modules.',
   lessons: [
+    {
+      id: 'cpp-ess-terms',
+      title: 'Coding terms you need',
+      summary: 'Learn the basic vocabulary before writing programs: value, type, variable, and statement.',
+      runner: 'cpp',
+      sections: [
+        {
+          heading: 'Why start with terms?',
+          body: `Before you print messages or build big programs, you need the same words every coder uses.
+
+This module is first on purpose. Later lessons (cout, if, loops) assume you already know:
+
+• what a value is
+• what a type is
+• what a variable is
+
+If those words feel fuzzy, stay here until they feel obvious.`,
+        },
+        {
+          heading: 'Glossary',
+          body: `• Value — one piece of data, like 7, "Ada", or true
+• Type — the kind of value it is (int, string, bool, …). The type decides what you can do with it
+• Variable — a name that stores a value so you can use it later (int score = 10)
+• Assignment — the = that puts a value into a variable (not the same as ==, which asks “are these equal?”)
+• Statement — one instruction in your program, usually one line ending with ;
+• Expression — something that produces a value, like 3 + 4 or score >= 60
+• Console / output — where std::cout << ... shows results so you can see a value
+
+cout is only a flashlight: it shows a value. It is not more important than understanding what that value is.`,
+        },
+        {
+          heading: 'The types you will meet first',
+          body: `Memorize these definitions — you will use them in every language track:
+
+• A boolean is a true/false statement (true or false in C++)
+• A string is a string of letters (and other characters) in quotes: "hello"
+• A number can be an integer (whole, int) or a decimal (double): 7 or 3.14
+• A missing value means nothing is stored yet — for pointers that is nullptr; for an empty string use ""
+• A list (vector) holds several values in order: {3, 6, 9}
+
+Next lessons go through each idea slowly, with short practice.`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Same ideas, written in code',
+          code: `#include <iostream>
+#include <string>
+int main() {
+  // value → 10 (type: int)
+  // variable name → score
+  int score = 10;
+  std::string name = "Ada";      // string
+  bool ready = true;             // boolean
+  // cout only shows the value — it does not define the type
+  std::cout << score << std::endl;
+  std::cout << name << std::endl;
+  std::cout << std::boolalpha << ready << std::endl;
+  return 0;
+}`,
+          note: 'Read the comments first. cout is just how we peek at the stored values.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Store then show',
+          prompt: 'Make a variable called age set to 12. Then print age.',
+          difficulty: 1,
+          starterCode: `#include <iostream>
+int main() {
+  // Remember: age is the variable name, 12 is the value (an int)
+  // int age = 12;
+  // std::cout << age << std::endl;
+  return 0;
+}
+`,
+          tests: [
+            { id: 't1', description: 'Prints 12', hint: 'int age = 12; then std::cout << age', kind: 'stdout', expect: '12' },
+            { id: 't2', description: 'Uses age', hint: 'age = ...', kind: 'codeMatches', expect: '\\bage\\s*=' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'A string value in a variable',
+          prompt: 'Make a variable called word set to hi. Then print word.',
+          difficulty: 1,
+          starterCode: `#include <iostream>
+#include <string>
+int main() {
+  // word holds a string value — use quotes
+  return 0;
+}
+`,
+          tests: [
+            { id: 't1', description: 'Prints hi', hint: 'std::string word = "hi"; then std::cout << word', kind: 'stdout', expect: 'hi' },
+            { id: 't2', description: 'Uses word', hint: 'word = "hi"', kind: 'codeMatches', expect: '\\bword\\s*=' },
+          ],
+        },
+      ],
+    },
     {
       id: 'cpp-ess-values',
       title: 'What is a value?',

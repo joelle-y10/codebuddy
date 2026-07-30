@@ -14,7 +14,7 @@ export const htmlTrack: LanguageTrack = {
     {
       id: 'html-start',
       title: 'Getting started',
-      summary: 'Tags, headings, and paragraphs — the bones of every page.',
+      summary: 'After page values & terms: tags, headings, and paragraphs — the bones of every page.',
       lessons: [
         {
           id: 'html-hello',

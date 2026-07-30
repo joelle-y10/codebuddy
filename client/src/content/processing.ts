@@ -14,7 +14,7 @@ export const processingTrack: LanguageTrack = {
     {
       id: 'p5-start',
       title: 'Canvas & setup',
-      summary: 'Create a drawing surface and clear it with color.',
+      summary: 'After coding terms & types: create a drawing surface and clear it with color.',
       lessons: [
         {
           id: 'p5-canvas',

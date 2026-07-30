@@ -14,7 +14,7 @@ export const pythonTrack: LanguageTrack = {
     {
       id: 'py-start',
       title: 'Getting started',
-      summary: 'How Python talks to you, and how to read mistakes.',
+      summary: 'After coding terms & types: how Python talks to you with print(), and how to read mistakes.',
       lessons: [
         {
           id: 'py-hello',

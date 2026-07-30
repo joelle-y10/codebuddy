@@ -1,12 +1,95 @@
 import type { Module } from '../../types'
 
-/** First module: detailed definitions of values, variables, and types. */
+/** First module on every basic track: coding terms, values, variables, and types. */
 export const javascriptEssentialsModule: Module = {
   id: 'js-essentials',
-  title: 'Values, variables & types',
+  title: 'Start here: coding terms & data types',
   summary:
-    'Learn what values and variables are, then study each type in detail: numbers, strings, booleans, missing values, and arrays.',
+    'Module 1 — learn the words first (value, type, variable), then numbers, strings, booleans, missing values, and arrays. Do this before console.log drills or later modules.',
   lessons: [
+    {
+      id: 'js-ess-terms',
+      title: 'Coding terms you need',
+      summary: 'Learn the basic vocabulary before writing programs: value, type, variable, and statement.',
+      runner: 'javascript',
+      sections: [
+        {
+          heading: 'Why start with terms?',
+          body: `Before you log messages or build big programs, you need the same words every coder uses.
+
+This module is first on purpose. Later lessons (console.log, if, loops) assume you already know:
+
+• what a value is
+• what a type is
+• what a variable is
+
+If those words feel fuzzy, stay here until they feel obvious.`,
+        },
+        {
+          heading: 'Glossary',
+          body: `• Value — one piece of data, like 7, "Ada", or true
+• Type — the kind of value it is (number, string, boolean, …). The type decides what you can do with it
+• Variable — a name that stores a value so you can use it later (score = 10)
+• Assignment — the = that puts a value into a variable (not the same as ===, which asks “are these equal?”)
+• Statement — one instruction in your program, usually one line
+• Expression — something that produces a value, like 3 + 4 or score >= 60
+• Console / output — where console.log(...) shows results so you can see a value
+
+console.log is only a flashlight: it shows a value. It is not more important than understanding what that value is.`,
+        },
+        {
+          heading: 'The types you will meet first',
+          body: `Memorize these definitions — you will use them in every language track:
+
+• A boolean is a true/false statement (true or false in JavaScript)
+• A string is a string of letters (and other characters) in quotes: "hello"
+• A number can be an integer (whole) or a decimal: 7 or 3.14
+• A missing value means nothing is stored yet — in JavaScript that is null or undefined
+• An array holds several values in order: [3, 6, 9]
+
+Next lessons go through each idea slowly, with short practice.`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Same ideas, written in code',
+          code: `// value → 10 (type: number)
+// variable name → score
+const score = 10;
+const name = "Ada";      // string
+const ready = true;      // boolean
+// console.log only shows the value — it does not define the type
+console.log(score);
+console.log(name);
+console.log(ready);`,
+          note: 'Read the comments first. console.log is just how we peek at the stored values.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Store then show',
+          prompt: 'Make a variable called age set to 12. Then print age.',
+          difficulty: 1,
+          starterCode: `// Remember: age is the variable name, 12 is the value (a number)\n// const age = 12;\n// console.log(age);\n`,
+          tests: [
+            { id: 't1', description: 'Prints 12', hint: 'age = 12 then console.log(age)', kind: 'stdout', expect: '12' },
+            { id: 't2', description: 'Uses age', hint: 'age = ...', kind: 'codeMatches', expect: '\\bage\\s*=' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'A string value in a variable',
+          prompt: 'Make a variable called word set to hi. Then print word.',
+          difficulty: 1,
+          starterCode: `// word holds a string value — use quotes\n`,
+          tests: [
+            { id: 't1', description: 'Prints hi', hint: 'word = "hi" then console.log(word)', kind: 'stdout', expect: 'hi' },
+            { id: 't2', description: 'Uses word', hint: 'word = "hi"', kind: 'codeMatches', expect: '\\bword\\s*=' },
+          ],
+        },
+      ],
+    },
     {
       id: 'js-ess-values',
       title: 'What is a value?',

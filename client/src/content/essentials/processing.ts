@@ -1,12 +1,113 @@
 import type { Module } from '../../types'
 
-/** First module: detailed definitions of values, variables, and types for Processing/p5.js. */
+/** First module on every basic track: coding terms, values, variables, and types. */
 export const processingEssentialsModule: Module = {
   id: 'p5-essentials',
-  title: 'Values, variables & types',
+  title: 'Start here: coding terms & data types',
   summary:
-    'Learn what values and variables are, then study each type in detail: numbers, strings, booleans, missing values, and arrays — shown on the canvas with text().',
+    'Module 1 — learn the words first (value, type, variable), then numbers, strings, booleans, missing values, and arrays. Do this before text()/setup drills or later modules.',
   lessons: [
+    {
+      id: 'p5-ess-terms',
+      title: 'Coding terms you need',
+      summary: 'Learn the basic vocabulary before writing sketches: value, type, variable, and statement.',
+      runner: 'processing',
+      sections: [
+        {
+          heading: 'Why start with terms?',
+          body: `Before you draw text on the canvas or build big sketches, you need the same words every coder uses.
+
+This module is first on purpose. Later lessons (text, if, loops) assume you already know:
+
+• what a value is
+• what a type is
+• what a variable is
+
+If those words feel fuzzy, stay here until they feel obvious.`,
+        },
+        {
+          heading: 'Glossary',
+          body: `• Value — one piece of data, like 7, "Ada", or true
+• Type — the kind of value it is (number, string, boolean, …). The type decides what you can do with it
+• Variable — a name that stores a value so you can use it later (let score = 10)
+• Assignment — the = that puts a value into a variable (not the same as ===, which asks “are these equal?”)
+• Statement — one instruction in your program, usually one line
+• Expression — something that produces a value, like 3 + 4 or score >= 60
+• Canvas / output — where text(...) shows results so you can see a value
+
+text is only a flashlight: it shows a value on the canvas. It is not more important than understanding what that value is.`,
+        },
+        {
+          heading: 'The types you will meet first',
+          body: `Memorize these definitions — you will use them in every language track:
+
+• A boolean is a true/false statement (true or false in p5.js)
+• A string is a string of letters (and other characters) in quotes: "hello"
+• A number can be an integer (whole) or a decimal: 7 or 3.14
+• A missing value means nothing is stored yet — in p5.js that is null or undefined
+• An array holds several values in order: [3, 6, 9]
+
+Next lessons go through each idea slowly, with short practice.`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Same ideas, written in code',
+          code: `function setup() {
+  createCanvas(320, 160);
+  background(20, 30, 40);
+  fill(255);
+  // value → 10 (type: number)
+  // variable name → score
+  let score = 10;
+  let name = "Ada";      // string
+  let ready = true;      // boolean
+  // text only shows the value — it does not define the type
+  text(score, 20, 40);
+  text(name, 20, 70);
+  text(ready, 20, 100);
+}`,
+          note: 'Read the comments first. text is just how we peek at the stored values on the canvas.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Store then show',
+          prompt: 'Make let age = 12. Then show age with text.',
+          difficulty: 1,
+          starterCode: `function setup() {
+  createCanvas(320, 160);
+  background(20);
+  fill(255);
+  // Remember: age is the variable name, 12 is the value (a number)
+  // let age = 12; text(age, x, y)
+}
+`,
+          tests: [
+            { id: 't1', description: 'Uses age', hint: 'let age = 12', kind: 'codeMatches', expect: '\\bage\\s*=' },
+            { id: 't2', description: 'Uses text', hint: 'text(age, x, y)', kind: 'codeIncludes', expect: 'text(' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'A string value in a variable',
+          prompt: 'Make let word = "hi". Then show word with text.',
+          difficulty: 1,
+          starterCode: `function setup() {
+  createCanvas(320, 160);
+  background(20);
+  fill(255);
+  // word holds a string value — use quotes
+}
+`,
+          tests: [
+            { id: 't1', description: 'Uses word', hint: 'let word = "hi"', kind: 'codeMatches', expect: '\\bword\\s*=' },
+            { id: 't2', description: 'Uses text', hint: 'text(word, x, y)', kind: 'codeIncludes', expect: 'text(' },
+          ],
+        },
+      ],
+    },
     {
       id: 'p5-ess-values',
       title: 'What is a value?',

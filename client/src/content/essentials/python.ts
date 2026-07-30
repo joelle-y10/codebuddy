@@ -1,12 +1,95 @@
 import type { Module } from '../../types'
 
-/** First module: detailed definitions of values, variables, and types. */
+/** First module on every basic track: coding terms, values, variables, and types. */
 export const pythonEssentialsModule: Module = {
   id: 'py-essentials',
-  title: 'Values, variables & types',
+  title: 'Start here: coding terms & data types',
   summary:
-    'Learn what values and variables are, then study each type in detail: numbers, strings, booleans, missing values, and lists.',
+    'Module 1 — learn the words first (value, type, variable), then numbers, strings, booleans, missing values, and lists. Do this before print() drills or later modules.',
   lessons: [
+    {
+      id: 'py-ess-terms',
+      title: 'Coding terms you need',
+      summary: 'Learn the basic vocabulary before writing programs: value, type, variable, and statement.',
+      runner: 'python',
+      sections: [
+        {
+          heading: 'Why start with terms?',
+          body: `Before you print messages or build big programs, you need the same words every coder uses.
+
+This module is first on purpose. Later lessons (print, if, loops) assume you already know:
+
+• what a value is
+• what a type is
+• what a variable is
+
+If those words feel fuzzy, stay here until they feel obvious.`,
+        },
+        {
+          heading: 'Glossary',
+          body: `• Value — one piece of data, like 7, "Ada", or True
+• Type — the kind of value it is (number, string, boolean, …). The type decides what you can do with it
+• Variable — a name that stores a value so you can use it later (score = 10)
+• Assignment — the = that puts a value into a variable (not the same as ==, which asks “are these equal?”)
+• Statement — one instruction in your program, usually one line
+• Expression — something that produces a value, like 3 + 4 or score >= 60
+• Console / output — where print(...) shows results so you can see a value
+
+print is only a flashlight: it shows a value. It is not more important than understanding what that value is.`,
+        },
+        {
+          heading: 'The types you will meet first',
+          body: `Memorize these definitions — you will use them in every language track:
+
+• A boolean is a true/false statement (True or False in Python)
+• A string is a string of letters (and other characters) in quotes: "hello"
+• A number can be an integer (whole) or a float (decimal): 7 or 3.14
+• A missing value means nothing is stored yet — in Python that is None
+• A list holds several values in order: [3, 6, 9]
+
+Next lessons go through each idea slowly, with short practice.`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Same ideas, written in code',
+          code: `# value → 10 (type: integer)
+# variable name → score
+score = 10
+name = "Ada"      # string
+ready = True      # boolean
+# print only shows the value — it does not define the type
+print(score)
+print(name)
+print(ready)`,
+          note: 'Read the comments first. print is just how we peek at the stored values.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'Store then show',
+          prompt: 'Make a variable called age set to 12. Then print age.',
+          difficulty: 1,
+          starterCode: `# Remember: age is the variable name, 12 is the value (an integer)\n# age = 12\n# print(age)\n`,
+          tests: [
+            { id: 't1', description: 'Prints 12', hint: 'age = 12 then print(age)', kind: 'stdout', expect: '12' },
+            { id: 't2', description: 'Uses age', hint: 'age = ...', kind: 'codeMatches', expect: '\\bage\\s*=' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'A string value in a variable',
+          prompt: 'Make a variable called word set to hi. Then print word.',
+          difficulty: 1,
+          starterCode: `# word holds a string value — use quotes\n`,
+          tests: [
+            { id: 't1', description: 'Prints hi', hint: 'word = "hi" then print(word)', kind: 'stdout', expect: 'hi' },
+            { id: 't2', description: 'Uses word', hint: 'word = "hi"', kind: 'codeMatches', expect: '\\bword\\s*=' },
+          ],
+        },
+      ],
+    },
     {
       id: 'py-ess-values',
       title: 'What is a value?',

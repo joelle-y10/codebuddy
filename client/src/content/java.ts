@@ -14,7 +14,7 @@ export const javaTrack: LanguageTrack = {
     {
       id: 'java-start',
       title: 'Getting started',
-      summary: 'public class Main, System.out, and your first programs.',
+      summary: 'After coding terms & types: public class Main, System.out, and your first programs.',
       lessons: [
         {
           id: 'java-hello',

@@ -1,12 +1,94 @@
 import type { Module } from '../../types'
 
-/** First module: what values are on a page — content, attributes, and lists. */
+/** First module on every basic track: coding terms and page values. */
 export const htmlEssentialsModule: Module = {
   id: 'html-essentials',
-  title: 'Values on the page',
+  title: 'Start here: coding terms & page values',
   summary:
-    'Start here: how HTML holds values in content and attributes — text, number-looking values, on/off attributes, and lists.',
+    'Module 1 — learn value/type ideas first (text, numbers-as-text, on/off attributes, empty/missing), then practice each carefully. Do this before tags drills or later modules.',
   lessons: [
+    {
+      id: 'html-ess-terms',
+      title: 'Coding terms you need',
+      summary: 'Learn the basic vocabulary before writing pages: value, type ideas, content, and attributes.',
+      runner: 'html',
+      sections: [
+        {
+          heading: 'Why start with terms?',
+          body: `Before you drill tags or build full pages, you need the same words every coder uses — even in HTML.
+
+This module is first on purpose. Later lessons (headings, links, lists) assume you already know:
+
+• what a value-like idea is on a page
+• how text, numbers-as-text, and on/off attributes differ
+• that HTML does not use programming variables
+
+If those ideas feel fuzzy, stay here until they feel obvious.`,
+        },
+        {
+          heading: 'Glossary (HTML edition)',
+          body: `HTML is not a programming language. You do not write score = 10. Still, pages hold value-like pieces of data:
+
+• Value — one piece of data shown or stored on the page, like Ada in <p>Ada</p> or a URL in href="..."
+• Type ideas — the kind of value it feels like (text/string, number-looking text, on/off, empty)
+• Content — text between tags: <p>Ada</p>
+• Attribute — a name="value" pair on a tag: href="https://example.com"
+• Element — a tag pair and what it contains: <h1>Title</h1>
+• Empty / missing — nothing is there yet: <p></p> or an input with no value
+
+Tags describe structure. Content and attributes hold the values you see.`,
+        },
+        {
+          heading: 'The “types” you will meet first',
+          body: `Memorize these definitions — they map to the same ideas in other language tracks:
+
+• A boolean-like idea is a true/false statement — checked means on; leave it off to mean false
+• A string is a string of letters (and other characters) between tags or in quotes in an attribute: <p>hello</p>
+• A number can look like an integer or decimal, but in HTML it is still text: <p>7</p>, value="3.14"
+• A missing value means nothing is stored yet — empty tags or a missing attribute
+• A list holds several items in order with <ul>/<ol> and <li>
+
+Next lessons go through each idea slowly, with short practice.`,
+        },
+      ],
+      examples: [
+        {
+          title: 'Same ideas, written in HTML',
+          code: `<!-- content value → Ada (like a string) -->
+<h1>Scoreboard</h1>
+<p>Ada</p>
+<!-- number-looking text — still characters, not a typed int -->
+<p>12</p>
+<!-- attribute value -->
+<a href="https://example.com">Docs</a>`,
+          note: 'Read the comments first. Tags hold structure; content and attributes hold the values.',
+        },
+      ],
+      practices: [
+        {
+          id: 'p1',
+          title: 'A heading value',
+          prompt: 'Add an h1 that says CodeBuddy.',
+          difficulty: 1,
+          starterCode: `<!-- h1 holds a text value between tags -->\n`,
+          tests: [
+            { id: 't1', description: 'Has h1', hint: '<h1>CodeBuddy</h1>', kind: 'htmlIncludes', expect: '<h1' },
+            { id: 't2', description: 'Says CodeBuddy', hint: 'CodeBuddy inside h1', kind: 'htmlIncludes', expect: 'CodeBuddy' },
+          ],
+        },
+        {
+          id: 'p2',
+          title: 'A paragraph value',
+          prompt: 'Add a p that says hi.',
+          difficulty: 1,
+          starterCode: `<!-- p holds a string of letters -->\n`,
+          tests: [
+            { id: 't1', description: 'Has p', hint: '<p>hi</p>', kind: 'htmlIncludes', expect: '<p' },
+            { id: 't2', description: 'Says hi', hint: 'hi inside p', kind: 'htmlIncludes', expect: 'hi' },
+          ],
+        },
+      ],
+    },
     {
       id: 'html-ess-values',
       title: 'What is a value in HTML?',
