@@ -3,9 +3,9 @@ import type { Module } from '../../types'
 /** First module on every basic track: coding terms, values, variables, and types. */
 export const pythonEssentialsModule: Module = {
   id: 'py-essentials',
-  title: 'Start here: coding terms & data types',
+  title: 'Values, variables & types',
   summary:
-    'Module 1 — learn the words first (value, type, variable), then numbers, strings, booleans, missing values, and lists. Do this before print() drills or later modules.',
+    'After Getting started: learn coding terms, then numbers, strings, booleans, missing values, and lists — now that you know print().',
   lessons: [
     {
       id: 'py-ess-terms',
@@ -14,16 +14,16 @@ export const pythonEssentialsModule: Module = {
       runner: 'python',
       sections: [
         {
-          heading: 'Why start with terms?',
-          body: `Before you print messages or build big programs, you need the same words every coder uses.
+          heading: 'Why learn these terms now?',
+          body: `You already know print() from Getting started — that is how you see results.
 
-This module is first on purpose. Later lessons (print, if, loops) assume you already know:
+Now learn the words every coder uses for the data itself:
 
 • what a value is
 • what a type is
 • what a variable is
 
-If those words feel fuzzy, stay here until they feel obvious.`,
+Later lessons (if, loops, lists in more depth) assume you know these words.`,
         },
         {
           heading: 'Glossary',

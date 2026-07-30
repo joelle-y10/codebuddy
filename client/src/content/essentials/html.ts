@@ -3,9 +3,9 @@ import type { Module } from '../../types'
 /** First module on every basic track: coding terms and page values. */
 export const htmlEssentialsModule: Module = {
   id: 'html-essentials',
-  title: 'Start here: coding terms & page values',
+  title: 'Values on the page',
   summary:
-    'Module 1 — learn value/type ideas first (text, numbers-as-text, on/off attributes, empty/missing), then practice each carefully. Do this before tags drills or later modules.',
+    'After Getting started: learn how HTML holds values (text, number-looking text, on/off attributes, empty/missing) — now that you know basic tags.',
   lessons: [
     {
       id: 'html-ess-terms',
@@ -14,16 +14,17 @@ export const htmlEssentialsModule: Module = {
       runner: 'html',
       sections: [
         {
-          heading: 'Why start with terms?',
-          body: `Before you drill tags or build full pages, you need the same words every coder uses — even in HTML.
+          heading: 'Why learn these terms now?',
+          body: `You already know basic tags from Getting started.
 
-This module is first on purpose. Later lessons (headings, links, lists) assume you already know:
+Now connect those tags to the same data ideas used in other languages:
 
-• what a value-like idea is on a page
-• how text, numbers-as-text, and on/off attributes differ
-• that HTML does not use programming variables
+• text as a string of letters
+• number-looking values that are still text
+• on/off attributes like true/false
+• empty / missing content
 
-If those ideas feel fuzzy, stay here until they feel obvious.`,
+Later HTML lessons assume you know these words.`,
         },
         {
           heading: 'Glossary (HTML edition)',

@@ -9,12 +9,11 @@ export const javascriptTrack: LanguageTrack = {
   accent: '#c8f542',
   tier: 'basic',
   modules: [
-    javascriptEssentialsModule,
-    javascriptCraftModule,
     {
+
       id: 'js-start',
-      title: 'Getting started',
-      summary: 'After coding terms & types: how programs talk to you with console.log, and how to read errors.',
+      title: 'Start here: Getting started',
+      summary: 'Start here — learn console.log so you can see output, then move on to values and types.',
       lessons: [
         {
           id: 'js-hello',
@@ -117,7 +116,11 @@ export const javascriptTrack: LanguageTrack = {
           ],
         },
       ],
+    
     },
+    javascriptEssentialsModule,
+    javascriptCraftModule,
+    
     {
       id: 'js-errors',
       title: 'Error messages',

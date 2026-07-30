@@ -9,12 +9,11 @@ export const pythonTrack: LanguageTrack = {
   accent: '#5ec8ff',
   tier: 'basic',
   modules: [
-    pythonEssentialsModule,
-    pythonCraftModule,
     {
+
       id: 'py-start',
-      title: 'Getting started',
-      summary: 'After coding terms & types: how Python talks to you with print(), and how to read mistakes.',
+      title: 'Start here: Getting started',
+      summary: 'Start here — learn print() so you can see output, then move on to values and types.',
       lessons: [
         {
           id: 'py-hello',
@@ -132,7 +131,11 @@ export const pythonTrack: LanguageTrack = {
           ],
         },
       ],
+    
     },
+    pythonEssentialsModule,
+    pythonCraftModule,
+    
     {
       id: 'py-errors',
       title: 'Error messages',

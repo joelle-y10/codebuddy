@@ -9,12 +9,10 @@ export const htmlTrack: LanguageTrack = {
   accent: '#7dffb3',
   tier: 'basic',
   modules: [
-    htmlEssentialsModule,
-    htmlCraftModule,
     {
       id: 'html-start',
-      title: 'Getting started',
-      summary: 'After page values & terms: tags, headings, and paragraphs — the bones of every page.',
+      title: 'Start here: Getting started',
+      summary: 'Start here — learn your first tags (headings and paragraphs), then move on to page values and types.',
       lessons: [
         {
           id: 'html-hello',
@@ -149,6 +147,8 @@ export const htmlTrack: LanguageTrack = {
         },
       ],
     },
+    htmlEssentialsModule,
+    htmlCraftModule,
     {
       id: 'html-lists-links',
       title: 'Lists & links',

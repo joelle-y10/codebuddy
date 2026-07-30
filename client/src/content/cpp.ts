@@ -9,12 +9,11 @@ export const cppTrack: LanguageTrack = {
   accent: '#ffb86b',
   tier: 'basic',
   modules: [
-    cppEssentialsModule,
-    cppCraftModule,
     {
+
       id: 'cpp-start',
-      title: 'Getting started',
-      summary: 'After coding terms & types: iostream, main, and your first console programs.',
+      title: 'Start here: Getting started',
+      summary: 'Start here — learn std::cout so you can see output, then move on to values and types.',
       lessons: [
         {
           id: 'cpp-hello',
@@ -133,7 +132,11 @@ export const cppTrack: LanguageTrack = {
           ],
         },
       ],
+    
     },
+    cppEssentialsModule,
+    cppCraftModule,
+    
     {
       id: 'cpp-vars',
       title: 'Variables & types',

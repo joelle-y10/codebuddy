@@ -9,12 +9,11 @@ export const processingTrack: LanguageTrack = {
   accent: '#d4a1ff',
   tier: 'basic',
   modules: [
-    processingEssentialsModule,
-    processingCraftModule,
     {
+
       id: 'p5-start',
-      title: 'Canvas & setup',
-      summary: 'After coding terms & types: create a drawing surface and clear it with color.',
+      title: 'Start here: Canvas & setup',
+      summary: 'Start here — learn setup, createCanvas, and how to show things on the canvas, then move on to values and types.',
       lessons: [
         {
           id: 'p5-canvas',
@@ -84,7 +83,11 @@ export const processingTrack: LanguageTrack = {
           ],
         },
       ],
+    
     },
+    processingEssentialsModule,
+    processingCraftModule,
+    
     {
       id: 'p5-drawing',
       title: 'Shapes & style',

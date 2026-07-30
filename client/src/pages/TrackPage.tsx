@@ -45,7 +45,7 @@ export function TrackPage({ tier }: { tier: TrackTier }) {
       <p className="lede">
         {overall.done}/{overall.total} lessons complete across {track.modules.length} modules.
         {tier === 'basic'
-          ? ' Start with Module 01 (coding terms & data types) before print, setup, or later topics.'
+          ? ' Start with Module 01 (Getting started — print/tags/setup), then Module 02 (values, variables & types).'
           : ' Lessons get harder as you go — finish every practice station before moving on.'}
       </p>
 

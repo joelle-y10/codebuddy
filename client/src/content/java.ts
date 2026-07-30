@@ -9,12 +9,11 @@ export const javaTrack: LanguageTrack = {
   accent: '#ff7a59',
   tier: 'basic',
   modules: [
-    javaEssentialsModule,
-    javaCraftModule,
     {
+
       id: 'java-start',
-      title: 'Getting started',
-      summary: 'After coding terms & types: public class Main, System.out, and your first programs.',
+      title: 'Start here: Getting started',
+      summary: 'Start here — learn System.out.println so you can see output, then move on to values and types.',
       lessons: [
         {
           id: 'java-hello',
@@ -128,7 +127,11 @@ export const javaTrack: LanguageTrack = {
           ],
         },
       ],
+    
     },
+    javaEssentialsModule,
+    javaCraftModule,
+    
     {
       id: 'java-vars',
       title: 'Variables & types',

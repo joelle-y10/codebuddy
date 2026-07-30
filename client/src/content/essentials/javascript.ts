@@ -3,9 +3,9 @@ import type { Module } from '../../types'
 /** First module on every basic track: coding terms, values, variables, and types. */
 export const javascriptEssentialsModule: Module = {
   id: 'js-essentials',
-  title: 'Start here: coding terms & data types',
+  title: 'Values, variables & types',
   summary:
-    'Module 1 — learn the words first (value, type, variable), then numbers, strings, booleans, missing values, and arrays. Do this before console.log drills or later modules.',
+    'After Getting started: learn coding terms, then numbers, strings, booleans, missing values, and arrays — now that you know console.log.',
   lessons: [
     {
       id: 'js-ess-terms',
@@ -14,16 +14,16 @@ export const javascriptEssentialsModule: Module = {
       runner: 'javascript',
       sections: [
         {
-          heading: 'Why start with terms?',
-          body: `Before you log messages or build big programs, you need the same words every coder uses.
+          heading: 'Why learn these terms now?',
+          body: `You already know console.log from Getting started — that is how you see results.
 
-This module is first on purpose. Later lessons (console.log, if, loops) assume you already know:
+Now learn the words every coder uses for the data itself:
 
 • what a value is
 • what a type is
 • what a variable is
 
-If those words feel fuzzy, stay here until they feel obvious.`,
+Later lessons (if, loops, arrays in more depth) assume you know these words.`,
         },
         {
           heading: 'Glossary',
